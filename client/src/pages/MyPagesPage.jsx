@@ -291,7 +291,7 @@ function MyPagesPage() {
             </button>
           ))}
         </nav>
-        <Link to="/products" className="mp-sidebar__back">← Back to store</Link>
+        <Link to="/products" className="mp-sidebar__back">← All Products</Link>
       </aside>
 
       <main className="mp-content">

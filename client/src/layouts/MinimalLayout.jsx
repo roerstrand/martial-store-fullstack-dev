@@ -121,6 +121,9 @@ function MinimalLayout() {
             <div className="ml-cat-divider" style={{ margin: "0.25rem 0" }} />
             {user ? (
               <>
+                {user.role === "admin" && (
+                  <Link to="/admin" className="ml-mobile-link ml-nav-link--sale" onClick={() => setMenuOpen(false)}>Admin Page</Link>
+                )}
                 <Link to="/my-pages" className="ml-mobile-link" onClick={() => setMenuOpen(false)}>Profile</Link>
                 <button className="ml-mobile-link" onClick={() => { handleLogout(); setMenuOpen(false); }}>Log out</button>
               </>

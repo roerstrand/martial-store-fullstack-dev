@@ -3,6 +3,7 @@ import "./App.css";
 import ErrorBoundary from "./components/ErrorBoundary";
 import CartToast from "./components/CartToast";
 import FavoriteToast from "./components/favorites/FavoriteToast";
+import ScrollToTop from "./components/ScrollToTop";
 
 import MainLayout from "./layouts/MainLayout";
 import MinimalLayout from "./layouts/MinimalLayout";
@@ -29,6 +30,7 @@ import AdminPage from "./pages/admin/AdminPage";
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
