@@ -4,8 +4,11 @@ import { useAuth } from "../context/AuthContext";
 import PageNav from "../components/PageNav";
 import { useFavorites } from "../context/FavoriteContext";
 import { getMyOrders } from "../services/orderService";
+import { changePassword } from "../services/authService";
 import useFetch from "../hooks/useFetch.jsx";
 import "./Pages.css";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const STATUS_LABELS = {
   pending:    "Pending",
@@ -182,9 +185,15 @@ function ProfileSettings({ user }) {
   const [saved, setSaved] = useState(false);
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
+  const [emailError, setEmailError] = useState("");
 
   const handleSave = (e) => {
     e.preventDefault();
+    if (!EMAIL_RE.test(email.trim())) {
+      setEmailError("Please enter a valid email address (e.g. name@domain.com).");
+      return;
+    }
+    setEmailError("");
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -196,7 +205,8 @@ function ProfileSettings({ user }) {
         <label className="mp-label">Username</label>
         <input className="mp-input" value={name} onChange={(e) => setName(e.target.value)} required />
         <label className="mp-label">Email</label>
-        <input className="mp-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input className="mp-input" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(""); }} required />
+        {emailError && <p className="product-detail__size-error">{emailError}</p>}
         <div className="mp-form__actions">
           <button type="submit" className="mp-btn-primary">Save Changes</button>
         </div>
@@ -211,14 +221,20 @@ function ChangePassword() {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     setError("");
     if (form.next !== form.confirm) { setError("Passwords do not match."); return; }
     if (form.next.length < 6) { setError("Password must be at least 6 characters."); return; }
-    setSaved(true);
-    setForm({ current: "", next: "", confirm: "" });
-    setTimeout(() => setSaved(false), 2500);
+
+    try {
+      await changePassword({ currentPassword: form.current, newPassword: form.next });
+      setSaved(true);
+      setForm({ current: "", next: "", confirm: "" });
+      setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to update password.");
+    }
   };
 
   return (
@@ -275,7 +291,7 @@ function MyPagesPage() {
             </button>
           ))}
         </nav>
-        <Link to="/" className="mp-sidebar__back">← Back to store</Link>
+        <Link to="/products" className="mp-sidebar__back">← Back to store</Link>
       </aside>
 
       <main className="mp-content">

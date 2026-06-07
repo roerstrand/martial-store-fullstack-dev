@@ -106,6 +106,9 @@ function Navbar({ isOpen, onToggleMenu }) {
         <Link to="/cart" className="apex-nav-link" onClick={onToggleMenu}>Cart</Link>
         {user ? (
           <>
+            {user.role === "admin" && (
+              <Link to="/admin" className="apex-nav-link apex-nav-link--sale" onClick={onToggleMenu}>Admin Page</Link>
+            )}
             <Link to="/my-pages" className="apex-nav-link" onClick={onToggleMenu}>Profile</Link>
             <button onClick={handleLogout} className="apex-nav-link">Log out</button>
           </>

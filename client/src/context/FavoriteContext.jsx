@@ -30,6 +30,19 @@ export function FavoriteProvider({ children }) {
     }
   }, [user]);
 
+  async function clearFavorites() {
+    if (user) {
+      const ids = favorites.map((f) => f._id);
+      setFavorites([]);
+      for (const id of ids) {
+        try { await removeProductFromFavorites(id); } catch {}
+      }
+    } else {
+      localStorage.removeItem("favorites");
+      setFavorites([]);
+    }
+  }
+
   async function toggleFavorites(product) {
     if (!user) {
       const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -57,7 +70,7 @@ export function FavoriteProvider({ children }) {
   }
 
   return (
-    <FavoriteContext.Provider value={[toggleFavorites, favorites, toast]}>
+    <FavoriteContext.Provider value={[toggleFavorites, favorites, toast, clearFavorites]}>
       {children}
     </FavoriteContext.Provider>
   );

@@ -4,6 +4,8 @@ import "../Pages.css";
 import useInput from "../../hooks/useInput.jsx";
 import { register } from "../../services/authService";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 function RegisterPage() {
   const username = useInput("");
   const email = useInput("");
@@ -17,6 +19,10 @@ function RegisterPage() {
     e.preventDefault();
     setError("");
 
+    if (!EMAIL_RE.test(email.value.trim())) {
+      setError("Please enter a valid email address (e.g. name@domain.com).");
+      return;
+    }
     if (password.value !== repeatPassword.value) {
       setError("Passwords do not match.");
       return;

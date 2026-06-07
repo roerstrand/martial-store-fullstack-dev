@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const {
   registerUserService,
   loginUserService,
+  changePasswordService,
 } = require("../services/userService");
 
 // @desc Register a user
@@ -50,4 +51,19 @@ const getUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
-module.exports = { registerUser, loginUser, getCurrentUser, getUsers };
+// @desc Change current user's password
+// @route PUT /api/users/password
+// @access private
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    res.status(400);
+    throw new Error("Please fill in all fields");
+  }
+
+  await changePasswordService({ userId: req.user.id, currentPassword, newPassword });
+  res.status(200).json({ message: "Password updated successfully" });
+});
+
+module.exports = { registerUser, loginUser, getCurrentUser, getUsers, changePassword };

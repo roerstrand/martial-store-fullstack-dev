@@ -12,4 +12,8 @@ const createUser = async (userData) => {
   return await User.create(userData);
 };
 
-module.exports = { findUserByEmail, findUserByName, createUser };
+const updateUserPassword = async (userId, hashedPassword) => {
+  return await User.findByIdAndUpdate(userId, { password: hashedPassword });
+};
+
+module.exports = { findUserByEmail, findUserByName, createUser, updateUserPassword };

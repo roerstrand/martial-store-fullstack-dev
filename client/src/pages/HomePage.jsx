@@ -255,6 +255,7 @@ function HomePage() {
   const sale = searchParams.get("sale");
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [newsletterError, setNewsletterError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -545,8 +546,17 @@ function HomePage() {
         {subscribed ? (
           <p className="home-newsletter__success">You're in. Welcome to the community.</p>
         ) : (
-          <form className="home-newsletter__form" onSubmit={(e) => { e.preventDefault(); if (email) setSubscribed(true); }}>
-            <input className="home-newsletter__input" type="email" placeholder="Your email address" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <form className="home-newsletter__form" onSubmit={(e) => {
+            e.preventDefault();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
+              setNewsletterError("Please enter a valid email address (e.g. name@domain.com).");
+              return;
+            }
+            setNewsletterError("");
+            setSubscribed(true);
+          }}>
+            <input className="home-newsletter__input" type="email" placeholder="Your email address" value={email} onChange={(e) => { setEmail(e.target.value); setNewsletterError(""); }} required />
+            {newsletterError && <p className="product-detail__size-error" style={{ marginTop: "0.4rem" }}>{newsletterError}</p>}
             <button type="submit" className="home-newsletter__btn">Subscribe</button>
           </form>
         )}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../Pages.css";
 import useInput from "../../hooks/useInput.jsx";
 import { login as loginService } from "../../services/authService";
@@ -11,7 +11,9 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const [, , login] = useAuth();
+  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ function LoginPage() {
         password: password.value,
       });
       login(data.user, data.token);
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err.response) {
         setError("Cannot connect to server. Is the backend running?");

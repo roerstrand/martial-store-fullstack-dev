@@ -68,13 +68,14 @@ const updateCart = asyncHandler(async (req, res) => {
 // @route   POST /api/carts/:id/products
 // @access  private
 const addProductToCart = asyncHandler(async (req, res) => {
-  const { product_id, quantity } = req.body;
+  const { product_id, size, quantity } = req.body;
   if (!product_id) {
     res.status(400);
     throw new Error("product_id is required");
   }
   const cart = await addProductToCartService(req.params.id, {
     product_id,
+    size,
     quantity: quantity || 1,
   });
   if (!cart) {

@@ -1,9 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 const {
   findUserByEmail,
   findUserByName,
   createUser,
+  updateUserPassword,
 } = require("../repositories/userRepository");
 
 const registerUserService = async ({ name, email, password }) => {
@@ -47,4 +49,23 @@ const loginUserService = async ({ username, password }) => {
   };
 };
 
-module.exports = { registerUserService, loginUserService };
+const changePasswordService = async ({ userId, currentPassword, newPassword }) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    const error = new Error("Current password is incorrect");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await updateUserPassword(userId, hashedPassword);
+};
+
+module.exports = { registerUserService, loginUserService, changePasswordService };

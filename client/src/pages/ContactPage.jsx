@@ -3,6 +3,8 @@ import useInput from "../hooks/useInput.jsx";
 import "./Pages.css";
 import PageNav from "../components/PageNav";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 const INFO = [
   { label: "Email",   value: "hello@apexcore.com" },
   { label: "Phone",   value: "+44 (0) 20 1234 5678" },
@@ -15,9 +17,15 @@ function ContactPage() {
   const email   = useInput("");
   const message = useInput("");
   const [submitted, setSubmitted] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!EMAIL_RE.test(email.value.trim())) {
+      setEmailError("Please enter a valid email address (e.g. name@domain.com).");
+      return;
+    }
+    setEmailError("");
     setSubmitted(true);
     name.reset();
     email.reset();
@@ -78,6 +86,7 @@ function ContactPage() {
                 <div className="contact-field">
                   <label className="contact-label">Email</label>
                   <input className="contact-input" type="email" placeholder="your@email.com" {...email} required />
+                  {emailError && <p className="contact-field-error">{emailError}</p>}
                 </div>
               </div>
               <div className="contact-field">

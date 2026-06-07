@@ -74,6 +74,7 @@ function ProductListPage() {
   const [, addToCart] = useCart();
   const { data: products, loading, error } = useFetch(getProducts);
   const [urlParams, setUrlParams] = useSearchParams();
+  const saleParam        = urlParams.get("sale")        === "true";
   const limitedSaleParam = urlParams.get("limitedSale") === "true";
   const newArrivalParam  = urlParams.get("newArrival")  === "true";
   const category = urlParams.get("category") || "all";
@@ -93,6 +94,7 @@ function ProductListPage() {
   if (error) return <p className="loading">Could not load products</p>;
 
   let displayed = loading ? [] : applyFilters(products, category, filters, search);
+  if (!loading && saleParam)        displayed = displayed.filter((p) => p.sale > 0);
   if (!loading && limitedSaleParam) displayed = displayed.filter((p) => p.isLimitedSale);
   if (!loading && newArrivalParam)  displayed = displayed.filter((p) => p.isNewArrival);
 
@@ -103,6 +105,7 @@ function ProductListPage() {
     filters.maxPrice !== "" ||
     filters.onSale ||
     filters.minRating > 0 ||
+    saleParam ||
     limitedSaleParam ||
     newArrivalParam;
 
@@ -110,6 +113,7 @@ function ProductListPage() {
     setUrlParams((prev) => {
       const next = new URLSearchParams(prev);
       next.delete("category");
+      next.delete("sale");
       next.delete("limitedSale");
       next.delete("newArrival");
       return next;
@@ -216,12 +220,6 @@ function ProductListPage() {
                   </span>
                 </div>
 
-                <button
-                  className="product-card__cart-btn"
-                  onClick={(e) => { e.preventDefault(); addToCart(product, null); }}
-                >
-                  <img src="/icons/Cart add.svg" alt="Add to cart" />
-                </button>
               </div>
 
               <div className="product-card__footer">
@@ -247,15 +245,24 @@ function ProductListPage() {
                   <StockBadge stock={product.stock} />
                 </div>
 
-                <button
-                  className={`home-product-card__fav-btn${isFav ? " active" : ""}`}
-                  onClick={(e) => { e.preventDefault(); toggleFavorites(product); }}
-                >
-                  <img
-                    src={isFav ? "/icons/FavoritesFilled.png" : "/icons/Favorites.png"}
-                    alt="Favorite"
-                  />
-                </button>
+                <div className="product-card__actions">
+                  <button
+                    className="product-card__cart-btn"
+                    onClick={(e) => { e.preventDefault(); addToCart(product, null); }}
+                    title="Add to cart"
+                  >
+                    <img src="/icons/Cart add.svg" alt="Add to cart" />
+                  </button>
+                  <button
+                    className={`home-product-card__fav-btn${isFav ? " active" : ""}`}
+                    onClick={(e) => { e.preventDefault(); toggleFavorites(product); }}
+                  >
+                    <img
+                      src={isFav ? "/icons/FavoritesFilled.png" : "/icons/Favorites.png"}
+                      alt="Favorite"
+                    />
+                  </button>
+                </div>
               </div>
             </Link>
           );

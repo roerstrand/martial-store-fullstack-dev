@@ -5,7 +5,7 @@ import "../Pages.css";
 import PageNav from "../../components/PageNav";
 
 function CartPage() {
-  const [cart] = useCart();
+  const [cart, , , clearCart] = useCart();
   const navigate = useNavigate();
 
   const subtotal = cart.reduce(
@@ -26,12 +26,17 @@ function CartPage() {
           <span>›</span>
           <span>CONFIRMATION</span>
         </div>
-        <h1>
-          Your Cart
+        <div className="cart-header__title-row">
+          <h1>
+            Your Cart
+            {cart.length > 0 && (
+              <span className="cart-count">{cart.length}</span>
+            )}
+          </h1>
           {cart.length > 0 && (
-            <span className="cart-count">{cart.length}</span>
+            <button className="clear-btn" onClick={clearCart}>Clear cart</button>
           )}
-        </h1>
+        </div>
       </div>
 
       {cart.length === 0 ? (

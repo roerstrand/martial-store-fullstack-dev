@@ -22,12 +22,12 @@ function Stars({ rating }) {
 function ProductDetailPage() {
   const { productId } = useParams();
   const [selectedSize, setSelectedSize] = useState(null);
-  const [activeThumb, setActiveThumb] = useState(0);
+  const [sizeError, setSizeError] = useState(false);
   const [, addToCart] = useCart();
   const navigate = useNavigate();
   const { items: recentItems, addProduct } = useRecentlyViewed();
 
-  const { data: product, loading, error } = useFetch(() => getProduct(productId));
+  const { data: product, loading, error } = useFetch(() => getProduct(productId), [productId]);
 
   const { data: relatedData } = useFetch(
     () => product?.category ? getProducts({ category: product.category }) : Promise.resolve([]),
@@ -35,10 +35,26 @@ function ProductDetailPage() {
   );
 
   useEffect(() => {
+    setSelectedSize(null);
+  }, [productId]);
+
+  useEffect(() => {
     if (product?._id) addProduct(product);
   }, [product?._id]);
 
-  if (loading) return <p className="loading">Loading product...</p>;
+  if (loading) return (
+    <div className="skeleton-detail">
+      <div className="skeleton-detail__img" />
+      <div className="skeleton-detail__info">
+        <div className="skeleton-detail__line" style={{ height: "1.4rem", width: "60%" }} />
+        <div className="skeleton-detail__line" style={{ height: "0.8rem", width: "40%" }} />
+        <div className="skeleton-detail__line" style={{ height: "1.1rem", width: "25%" }} />
+        <div className="skeleton-detail__line" style={{ height: "0.7rem", width: "80%" }} />
+        <div className="skeleton-detail__line" style={{ height: "0.7rem", width: "70%" }} />
+        <div className="skeleton-detail__line" style={{ height: "2.5rem", width: "50%", marginTop: "0.5rem" }} />
+      </div>
+    </div>
+  );
   if (error)   return <p className="loading">Something went wrong.</p>;
   if (!product || !product._id) return <p className="loading">Product not found.</p>;
 
@@ -49,15 +65,13 @@ function ProductDetailPage() {
     ? (product.price * (1 - product.sale / 100)).toFixed(2)
     : null;
 
-  const thumbPositions = ["top center", "center center"];
-
   const handleAddToCart = async () => {
-    if (!selectedSize) return;
+    if (!selectedSize) { setSizeError(true); return; }
     await addToCart(product, selectedSize);
   };
 
   const handleBuyNow = async () => {
-    if (!selectedSize) return;
+    if (!selectedSize) { setSizeError(true); return; }
     await addToCart(product, selectedSize);
     navigate("/cart");
   };
@@ -74,23 +88,7 @@ function ProductDetailPage() {
               src={`/images/products/${product.image}`}
               alt={product.title}
               loading="lazy"
-              style={{ objectPosition: thumbPositions[activeThumb] }}
             />
-          </div>
-          <div className="product-detail__thumbnails">
-            {thumbPositions.map((pos, i) => (
-              <button
-                key={i}
-                className={`product-detail__thumb ${activeThumb === i ? "product-detail__thumb--active" : ""}`}
-                onClick={() => setActiveThumb(i)}
-              >
-                <img
-                  src={`/images/products/${product.image}`}
-                  alt={`${product.title} view ${i + 1}`}
-                  style={{ objectPosition: pos }}
-                />
-              </button>
-            ))}
           </div>
         </div>
 
@@ -144,12 +142,15 @@ function ProductDetailPage() {
               <button
                 key={size}
                 className={`size-btn ${selectedSize === size ? "size-btn--active" : ""}`}
-                onClick={() => setSelectedSize(size)}
+                onClick={() => { setSelectedSize(size); setSizeError(false); }}
               >
                 {size}
               </button>
             ))}
           </div>
+          {sizeError && (
+            <p className="product-detail__size-error">Please select a size before continuing.</p>
+          )}
 
           <div className="product-detail__cta-row">
             <button className="product-detail__add-cart" onClick={handleAddToCart}>

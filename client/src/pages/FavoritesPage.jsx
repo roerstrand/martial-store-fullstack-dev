@@ -7,7 +7,7 @@ import FavoriteItem from "../components/favorites/FavoriteItem";
 import PageNav from "../components/PageNav";
 
 function FavoritesPage() {
-  const [, favorites] = useFavorites();
+  const [, favorites, , clearFavorites] = useFavorites();
   const [, addToCart] = useCart();
   const [bulkSize, setBulkSize] = useState(null);
 
@@ -22,7 +22,10 @@ function FavoritesPage() {
       <div className="favorites-header">
         <h1>Favorites</h1>
         {favorites.length > 0 && (
-          <span className="favorites-count">{favorites.length} items</span>
+          <div className="favorites-header__meta">
+            <span className="favorites-count">{favorites.length} items</span>
+            <button className="clear-btn" onClick={clearFavorites}>Clear all</button>
+          </div>
         )}
       </div>
 

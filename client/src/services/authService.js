@@ -21,3 +21,8 @@ export const getCurrentUser = async () => {
   const response = await api.get("users/current");
   return response.data;
 };
+
+export const changePassword = async ({ currentPassword, newPassword }) => {
+  const response = await api.put("users/password", { currentPassword, newPassword });
+  return response.data;
+};
