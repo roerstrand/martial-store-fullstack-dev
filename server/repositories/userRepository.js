@@ -16,4 +16,8 @@ const updateUserPassword = async (userId, hashedPassword) => {
   return await User.findByIdAndUpdate(userId, { password: hashedPassword });
 };
 
-module.exports = { findUserByEmail, findUserByName, createUser, updateUserPassword };
+const updateUserProfile = async (userId, fields) => {
+  return await User.findByIdAndUpdate(userId, fields, { new: true, runValidators: true });
+};
+
+module.exports = { findUserByEmail, findUserByName, createUser, updateUserPassword, updateUserProfile };

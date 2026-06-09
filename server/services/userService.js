@@ -6,6 +6,7 @@ const {
   findUserByName,
   createUser,
   updateUserPassword,
+  updateUserProfile,
 } = require("../repositories/userRepository");
 
 const registerUserService = async ({ name, email, password }) => {
@@ -68,4 +69,28 @@ const changePasswordService = async ({ userId, currentPassword, newPassword }) =
   await updateUserPassword(userId, hashedPassword);
 };
 
-module.exports = { registerUserService, loginUserService, changePasswordService };
+const updateProfileService = async ({ userId, name, email }) => {
+  if (name) {
+    const existing = await findUserByName(name);
+    if (existing && String(existing._id) !== String(userId)) {
+      const error = new Error("Username already taken");
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+  if (email) {
+    const existing = await findUserByEmail(email);
+    if (existing && String(existing._id) !== String(userId)) {
+      const error = new Error("Email already in use");
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+  const fields = {};
+  if (name)  fields.name  = name;
+  if (email) fields.email = email;
+  const updated = await updateUserProfile(userId, fields);
+  return { name: updated.name, email: updated.email };
+};
+
+module.exports = { registerUserService, loginUserService, changePasswordService, updateProfileService };

@@ -15,7 +15,7 @@ export function FavoriteProvider({ children }) {
 
   const showToast = useCallback(() => {
     setToast(true);
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), 5000);
   }, []);
 
   useEffect(() => {

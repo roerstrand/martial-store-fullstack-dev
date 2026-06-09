@@ -1,6 +1,7 @@
-﻿import { useState } from "react";
+﻿import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import PaymentForm from "../../components/cart/PaymentForm";
 import KlarnaModal from "../../components/cart/KlarnaModal";
 import SwishModal from "../../components/cart/SwishModal";
@@ -13,9 +14,25 @@ const SHIPPING_COSTS = { standard: 5, express: 19, pickup: 0 };
 
 function CheckoutPage() {
   const [cart, , , clearCart] = useCart();
+  const [user] = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [pendingData, setPendingData] = useState(null);
+
+  const initialValues = useMemo(() => {
+    const addresses = (() => {
+      try { return JSON.parse(localStorage.getItem("saved_addresses")) || []; }
+      catch { return []; }
+    })();
+    const addr = addresses[0];
+    return {
+      name:    user?.name  ?? "",
+      email:   user?.email ?? "",
+      address: addr?.street  ?? "",
+      zip:     addr?.zip     ?? "",
+      city:    addr?.city    ?? "",
+    };
+  }, [user]);
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -67,7 +84,7 @@ function CheckoutPage() {
       )}
 
       <div className="checkout-layout">
-        <PaymentForm onSubmit={handleFormSubmit} />
+        <PaymentForm onSubmit={handleFormSubmit} initialValues={initialValues} />
 
         <div className="checkout-summary">
           <p className="checkout-section-title">Your order</p>
@@ -105,11 +122,8 @@ function CheckoutPage() {
             You will be redirected to your payment provider — Stripe, Klarna or Swish — to complete your purchase securely.
           </p>
 
-          <Link to="/cart" className="auth-btn-secondary">
-            BACK TO CART ›
-          </Link>
-          <Link to="/" className="auth-btn-secondary">
-            BACK TO HOME ›
+          <Link to="/" className="checkout-home-btn">
+            ← BACK TO HOME
           </Link>
         </div>
       </div>

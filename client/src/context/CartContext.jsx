@@ -26,7 +26,7 @@ export function CartProvider({ children }) {
 
   const showToast = useCallback((title) => {
     setToast({ title });
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), 5000);
   }, []);
 
   useEffect(() => {
@@ -123,6 +123,29 @@ export function CartProvider({ children }) {
     }
   };
 
+  const updateSize = async (product, oldSize, newSize) => {
+    if (token) {
+      if (!cartId) return;
+      try {
+        await removeCartItem(cartId, product._id);
+        const data = await addCartItem(cartId, product._id, newSize);
+        setCart(normalize(data.products));
+      } catch {
+        return;
+      }
+    } else {
+      setCart((prev) => {
+        const updated = prev.map((i) =>
+          i.product._id === product._id && i.size === oldSize
+            ? { ...i, size: newSize }
+            : i
+        );
+        localStorage.setItem("cart", JSON.stringify(updated));
+        return updated;
+      });
+    }
+  };
+
   const clearCart = async () => {
     if (token && cartId) {
       await resetCart(cartId);
@@ -132,7 +155,7 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider value={[cart, addToCart, removeFromCart, clearCart, cartId, increaseItem, decreaseItem, toast]}>
+    <CartContext.Provider value={[cart, addToCart, removeFromCart, clearCart, cartId, increaseItem, decreaseItem, toast, updateSize]}>
       {children}
     </CartContext.Provider>
   );

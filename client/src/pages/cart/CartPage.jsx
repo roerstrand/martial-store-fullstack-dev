@@ -8,6 +8,8 @@ function CartPage() {
   const [cart, , , clearCart] = useCart();
   const navigate = useNavigate();
 
+  const missingSize = cart.some((item) => !item.size);
+
   const subtotal = cart.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
@@ -78,9 +80,15 @@ function CartPage() {
                   <span>{total} EUR</span>
                 </div>
               </div>
+              {missingSize && (
+                <p className="cart-size-warning">
+                  Select a size for all items before checking out.
+                </p>
+              )}
               <button
                 className="cart-checkout-btn"
-                onClick={() => navigate("/checkout")}
+                onClick={() => !missingSize && navigate("/checkout")}
+                disabled={missingSize}
               >
                 CHECKOUT ›
               </button>

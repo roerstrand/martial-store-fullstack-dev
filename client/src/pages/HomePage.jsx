@@ -341,7 +341,7 @@ function HomePage() {
           <input
             className="home-search__input"
             type="text"
-            placeholder="Search products..."
+            placeholder="Search gear, brands, categories…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             autoComplete="off"

@@ -24,7 +24,7 @@ function FavoritesPage() {
         {favorites.length > 0 && (
           <div className="favorites-header__meta">
             <span className="favorites-count">{favorites.length} items</span>
-            <button className="clear-btn" onClick={clearFavorites}>Clear all</button>
+            <button className="clear-btn" onClick={clearFavorites}>Clear All Favorites</button>
           </div>
         )}
       </div>
@@ -50,13 +50,17 @@ function FavoritesPage() {
                 </button>
               ))}
             </div>
-            <button
-              className="favorites-bulk__btn"
-              onClick={handleAddAll}
-              disabled={!bulkSize}
-            >
-              ADD ALL TO CART
-            </button>
+            <div className="favorites-bulk__actions">
+              <button
+                className="favorites-bulk__btn"
+                onClick={handleAddAll}
+                disabled={!bulkSize}
+              >
+                ADD ALL TO CART
+              </button>
+              <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART ›</Link>
+              <Link to="/checkout" className="favorites-bulk__nav-btn favorites-bulk__nav-btn--checkout">CHECKOUT ›</Link>
+            </div>
           </div>
 
           <div className="favorites-grid">

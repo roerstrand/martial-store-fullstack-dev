@@ -860,7 +860,7 @@
 .ml-auth-btn:hover { opacity: 0.85; }
 
 .ml-burger {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 2.4rem;
@@ -922,10 +922,19 @@
   color: var(--color-dark);
 }
 
-@media (max-width: 768px) {
+/* ─── Nav visibility breakpoint: desktop nav ↔ burger ─── */
+@media (max-width: 992px) {
+  /* MinimalLayout */
   .ml-header__nav { display: none; }
   .ml-auth-link, .ml-auth-btn { display: none; }
+  .ml-burger { display: flex; }
 
+  /* MainLayout */
+  .apex-navbar { display: none; }
+  .apex-hero__burger { display: flex; }
+}
+
+@media (max-width: 768px) {
   .ml-header__top {
     height: 3rem;
     padding: 0 1rem;
@@ -1527,6 +1536,26 @@
   white-space: nowrap;
 }
 
+.admin-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.18s ease;
+}
+.admin-back-btn:hover { opacity: 0.85; }
+
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
   /* Compact app-style header bar */
@@ -1587,9 +1616,8 @@
     height: 1.05rem;
   }
 
-  /* Burger — styled to match icons */
+  /* Burger — compact sizing for mobile header bar */
   .apex-hero__burger {
-    display: flex;
     align-items: center;
     justify-content: center;
     top: 50%;
@@ -1605,10 +1633,6 @@
   .apex-hero__burger img {
     width: 1.05rem;
     height: 1.05rem;
-  }
-
-  .apex-navbar {
-    display: none;
   }
 }
 
@@ -1652,12 +1676,15 @@
 /* ─── Admin responsive ─── */
 @media (max-width: 768px) {
   .admin-content      { padding: 1rem 1rem 2rem; }
-  .admin-header       { padding: 1.25rem 1rem 1rem; }
+  .admin-header       { padding: 1.25rem 1rem 1rem; flex-wrap: wrap; gap: 0.75rem; }
   .admin-form__grid   { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
   /* Tables: horizontal scroll instead of column collapse */
   .admin-table        { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .admin-table__head,
   .admin-table__row   { min-width: 500px; }
+  /* Chart: horizontal scroll on mobile */
+  .admin-chart        { overflow-x: auto; }
+  .admin-chart__bars  { min-width: 420px; }
 }
 
 @media (max-width: 480px) {
@@ -1673,6 +1700,7 @@
   }
   .admin-tabs::-webkit-scrollbar { display: none; }
   .admin-tab        { white-space: nowrap; flex-shrink: 0; }
+  .admin-back-btn   { font-size: 0.68rem; padding: 0.5rem 0.9rem; }
 }
 
 @media (max-width: 360px) {

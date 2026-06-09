@@ -3,6 +3,7 @@ const {
   registerUserService,
   loginUserService,
   changePasswordService,
+  updateProfileService,
 } = require("../services/userService");
 
 // @desc Register a user
@@ -66,4 +67,17 @@ const changePassword = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Password updated successfully" });
 });
 
-module.exports = { registerUser, loginUser, getCurrentUser, getUsers, changePassword };
+// @desc Update current user's name/email
+// @route PUT /api/users/profile
+// @access private
+const updateProfile = asyncHandler(async (req, res) => {
+  const { name, email } = req.body;
+  if (!name && !email) {
+    res.status(400);
+    throw new Error("Nothing to update");
+  }
+  const updated = await updateProfileService({ userId: req.user.id, name, email });
+  res.status(200).json(updated);
+});
+
+module.exports = { registerUser, loginUser, getCurrentUser, getUsers, changePassword, updateProfile };

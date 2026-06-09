@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import PageNav from "../components/PageNav";
 import { useFavorites } from "../context/FavoriteContext";
+import { useCart } from "../context/CartContext";
 import { getMyOrders } from "../services/orderService";
-import { changePassword } from "../services/authService";
+import { changePassword, updateProfile } from "../services/authService";
 import useFetch from "../hooks/useFetch.jsx";
+import FavoriteItem from "../components/favorites/FavoriteItem";
 import "./Pages.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -107,6 +109,10 @@ function OrderHistory({ orders, loading }) {
 }
 
 function Favorites({ favorites }) {
+  const [, addToCart] = useCart();
+  const [, , , clearFavorites] = useFavorites();
+  const [bulkSize, setBulkSize] = useState(null);
+
   if (!favorites || favorites.length === 0)
     return (
       <div className="mp-empty">
@@ -114,34 +120,113 @@ function Favorites({ favorites }) {
         <Link to="/products" className="auth-btn-primary" style={{ marginTop: "1rem", display: "inline-flex" }}>BROWSE GEAR ›</Link>
       </div>
     );
+
+  const handleAddAll = () => {
+    if (!bulkSize) return;
+    favorites.forEach((product) => addToCart(product, bulkSize));
+  };
+
   return (
     <div>
-      <p className="mp-section-title">Your Favorites</p>
-      <div className="mp-fav-grid">
+      <div className="mp-section-header">
+        <p className="mp-section-title">Your Favorites</p>
+        <button className="clear-btn" onClick={clearFavorites}>Clear all</button>
+      </div>
+
+      <div className="favorites-bulk">
+        <span className="favorites-bulk__label">Add all in size</span>
+        <div className="favorites-bulk__sizes">
+          {["S", "M", "L"].map((size) => (
+            <button
+              key={size}
+              className={`size-btn${bulkSize === size ? " size-btn--active" : ""}`}
+              onClick={() => setBulkSize(size)}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+        <div className="favorites-bulk__actions">
+          <button
+            className="favorites-bulk__btn"
+            onClick={handleAddAll}
+            disabled={!bulkSize}
+          >
+            ADD ALL TO CART
+          </button>
+          <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART ›</Link>
+          <Link to="/checkout" className="favorites-bulk__nav-btn favorites-bulk__nav-btn--checkout">CHECKOUT ›</Link>
+        </div>
+      </div>
+
+      <div className="favorites-grid">
         {favorites.map((product) => (
-          <Link key={product._id} to={`/products/${product._id}`} className="mp-fav-card">
-            <img src={`/images/products/${product.image}`} alt={product.title} className="mp-fav-card__img" />
-            <div className="mp-fav-card__info">
-              <span className="mp-fav-card__name">{product.title}</span>
-              <span className="mp-fav-card__price">{product.price} EUR</span>
-            </div>
-          </Link>
+          <FavoriteItem key={product._id} product={product} />
         ))}
       </div>
     </div>
   );
 }
 
+const ADDRESSES_KEY = "saved_addresses";
+const EMPTY_ADDR = { name: "", street: "", city: "", zip: "", country: "" };
+const ADDR_ZIP_RE = /^[\d\s\-]{3,10}$/;
+
 function SavedAddresses() {
-  const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || []; }
+    catch { return []; }
+  });
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", street: "", city: "", zip: "", country: "" });
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState(EMPTY_ADDR);
+  const [errors, setErrors] = useState({});
+
+  const persist = (next) => {
+    setAddresses(next);
+    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(next));
+  };
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim())   e.name    = "Label is required.";
+    if (!form.street.trim()) e.street  = "Street address is required.";
+    if (!form.zip.trim())    e.zip     = "Postal code is required.";
+    else if (!ADDR_ZIP_RE.test(form.zip.trim())) e.zip = "Postal code may only contain digits.";
+    if (!form.city.trim())   e.city    = "City is required.";
+    if (!form.country.trim()) e.country = "Country is required.";
+    return e;
+  };
+
+  const openEdit = (a) => {
+    setEditingId(a.id);
+    setForm({ name: a.name, street: a.street, city: a.city, zip: a.zip, country: a.country });
+    setErrors({});
+    setShowForm(true);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(EMPTY_ADDR);
+    setErrors({});
+  };
+
+  const handleChange = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    if (errors[field]) setErrors((prev) => { const n = { ...prev }; delete n[field]; return n; });
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
-    setAddresses((prev) => [...prev, { ...form, id: Date.now() }]);
-    setForm({ name: "", street: "", city: "", zip: "", country: "" });
-    setShowForm(false);
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (editingId) {
+      persist(addresses.map((a) => a.id === editingId ? { ...form, id: editingId } : a));
+    } else {
+      persist([...addresses, { ...form, id: Date.now() }]);
+    }
+    handleCancel();
   };
 
   return (
@@ -156,62 +241,190 @@ function SavedAddresses() {
             <p className="mp-address-card__name">{a.name}</p>
             <p className="mp-address-card__line">{a.street}</p>
             <p className="mp-address-card__line">{a.zip} {a.city}, {a.country}</p>
-            <button className="mp-address-card__remove" onClick={() => setAddresses((prev) => prev.filter((x) => x.id !== a.id))}>Remove</button>
+            <div className="mp-address-card__actions">
+              <button className="mp-address-card__edit" onClick={() => openEdit(a)}>Edit</button>
+              <button className="mp-address-card__remove" onClick={() => persist(addresses.filter((x) => x.id !== a.id))}>Remove</button>
+            </div>
           </div>
         ))}
       </div>
       {showForm ? (
         <form className="mp-form" onSubmit={handleSave}>
-          <input className="mp-input" placeholder="Label (e.g. Home)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <input className="mp-input" placeholder="Street address" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} required />
+          <input
+            className={`mp-input${errors.name ? " mp-input--error" : ""}`}
+            placeholder="Label (e.g. Home)" value={form.name} onChange={handleChange("name")}
+          />
+          {errors.name && <p className="mp-field-error">{errors.name}</p>}
+          <input
+            className={`mp-input${errors.street ? " mp-input--error" : ""}`}
+            placeholder="Street address" value={form.street} onChange={handleChange("street")}
+          />
+          {errors.street && <p className="mp-field-error">{errors.street}</p>}
           <div className="mp-form__row">
-            <input className="mp-input" placeholder="ZIP" value={form.zip} onChange={(e) => setForm({ ...form, zip: e.target.value })} required />
-            <input className="mp-input" placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
+            <div>
+              <input
+                className={`mp-input${errors.zip ? " mp-input--error" : ""}`}
+                placeholder="ZIP" value={form.zip} onChange={handleChange("zip")}
+                inputMode="numeric"
+              />
+              {errors.zip && <p className="mp-field-error">{errors.zip}</p>}
+            </div>
+            <div>
+              <input
+                className={`mp-input${errors.city ? " mp-input--error" : ""}`}
+                placeholder="City" value={form.city} onChange={handleChange("city")}
+              />
+              {errors.city && <p className="mp-field-error">{errors.city}</p>}
+            </div>
           </div>
-          <input className="mp-input" placeholder="Country" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} required />
+          <input
+            className={`mp-input${errors.country ? " mp-input--error" : ""}`}
+            placeholder="Country" value={form.country} onChange={handleChange("country")}
+          />
+          {errors.country && <p className="mp-field-error">{errors.country}</p>}
           <div className="mp-form__actions">
-            <button type="submit" className="mp-btn-primary">Save Address</button>
-            <button type="button" className="mp-btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+            <button type="submit" className="mp-btn-primary">{editingId ? "Update Address" : "Save Address"}</button>
+            <button type="button" className="mp-btn-secondary" onClick={handleCancel}>Cancel</button>
           </div>
         </form>
       ) : (
-        <button className="mp-btn-primary" style={{ marginTop: "1rem" }} onClick={() => setShowForm(true)}>+ Add Address</button>
+        <button className="mp-btn-primary" style={{ marginTop: "1rem" }} onClick={() => { setEditingId(null); setForm(EMPTY_ADDR); setShowForm(true); }}>+ Add Address</button>
       )}
     </div>
   );
 }
 
 function ProfileSettings({ user }) {
-  const [saved, setSaved] = useState(false);
-  const [name, setName] = useState(user?.name ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
-  const [emailError, setEmailError] = useState("");
+  const [, token, login] = useAuth();
 
-  const handleSave = (e) => {
+  const [nameNew, setNameNew]       = useState("");
+  const [nameRepeat, setNameRepeat] = useState("");
+  const [nameError, setNameError]   = useState("");
+  const [nameSaved, setNameSaved]   = useState(false);
+  const [nameLoading, setNameLoading] = useState(false);
+
+  const [emailNew, setEmailNew]       = useState("");
+  const [emailError, setEmailError]   = useState("");
+  const [emailPending, setEmailPending] = useState(null);
+  const [emailSaved, setEmailSaved]   = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+
+  const handleNameSave = async (e) => {
     e.preventDefault();
-    if (!EMAIL_RE.test(email.trim())) {
+    setNameError("");
+    const trimmed = nameNew.trim();
+    if (!trimmed) { setNameError("Please enter a new username."); return; }
+    if (trimmed === user?.name) { setNameError("New username must differ from your current one."); return; }
+    if (trimmed !== nameRepeat.trim()) { setNameError("Usernames do not match."); return; }
+    setNameLoading(true);
+    try {
+      const updated = await updateProfile({ name: trimmed });
+      login({ ...user, ...updated }, token);
+      setNameNew(""); setNameRepeat("");
+      setNameSaved(true);
+      setTimeout(() => setNameSaved(false), 3000);
+    } catch (err) {
+      setNameError(err.response?.data?.message || "Failed to update username.");
+    } finally {
+      setNameLoading(false);
+    }
+  };
+
+  const handleEmailRequest = (e) => {
+    e.preventDefault();
+    setEmailError("");
+    const trimmed = emailNew.trim();
+    if (!EMAIL_RE.test(trimmed)) {
       setEmailError("Please enter a valid email address (e.g. name@domain.com).");
       return;
     }
-    setEmailError("");
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    if (trimmed === user?.email) {
+      setEmailError("New email must differ from your current one.");
+      return;
+    }
+    setEmailPending(trimmed);
+    setEmailNew("");
+  };
+
+  const handleEmailConfirm = async () => {
+    setEmailLoading(true);
+    try {
+      const updated = await updateProfile({ email: emailPending });
+      login({ ...user, ...updated }, token);
+      setEmailPending(null);
+      setEmailSaved(true);
+      setTimeout(() => setEmailSaved(false), 3000);
+    } catch (err) {
+      setEmailError(err.response?.data?.message || "Failed to update email.");
+      setEmailPending(null);
+    } finally {
+      setEmailLoading(false);
+    }
   };
 
   return (
     <div>
       <p className="mp-section-title">Profile Settings</p>
-      <form className="mp-form" onSubmit={handleSave}>
-        <label className="mp-label">Username</label>
-        <input className="mp-input" value={name} onChange={(e) => setName(e.target.value)} required />
-        <label className="mp-label">Email</label>
-        <input className="mp-input" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(""); }} required />
-        {emailError && <p className="product-detail__size-error">{emailError}</p>}
+
+      <p className="mp-subsection-title">Change Username</p>
+      <p className="mp-current-value">Current: <strong>{user?.name}</strong></p>
+      <form className="mp-form" onSubmit={handleNameSave}>
+        <label className="mp-label">New Username</label>
+        <input
+          className={`mp-input${nameError ? " mp-input--error" : ""}`}
+          value={nameNew}
+          onChange={(e) => { setNameNew(e.target.value); setNameError(""); }}
+          autoComplete="off"
+          required
+        />
+        <label className="mp-label">Repeat New Username</label>
+        <input
+          className={`mp-input${nameError ? " mp-input--error" : ""}`}
+          value={nameRepeat}
+          onChange={(e) => { setNameRepeat(e.target.value); setNameError(""); }}
+          autoComplete="off"
+          required
+        />
+        {nameError && <p className="mp-field-error">{nameError}</p>}
         <div className="mp-form__actions">
-          <button type="submit" className="mp-btn-primary">Save Changes</button>
+          <button type="submit" className="mp-btn-primary" disabled={nameLoading}>
+            {nameLoading ? "Saving…" : "Update Username"}
+          </button>
         </div>
-        {saved && <p className="mp-success">Changes saved.</p>}
+        {nameSaved && <p className="mp-success">Username updated successfully.</p>}
       </form>
+
+      <hr className="mp-divider" />
+
+      <p className="mp-subsection-title">Change Email</p>
+      <p className="mp-current-value">Current: <strong>{user?.email}</strong></p>
+      {emailPending ? (
+        <div className="mp-email-pending">
+          <p>A confirmation link has been sent to your current address. Confirm below to complete the change to <strong>{emailPending}</strong>.</p>
+          <div className="mp-form__actions" style={{ marginTop: "1rem" }}>
+            <button className="mp-btn-primary" onClick={handleEmailConfirm} disabled={emailLoading}>
+              {emailLoading ? "Confirming…" : "Confirm Email Change"}
+            </button>
+            <button className="mp-btn-secondary" onClick={() => { setEmailPending(null); setEmailError(""); }}>Cancel</button>
+          </div>
+        </div>
+      ) : (
+        <form className="mp-form" onSubmit={handleEmailRequest}>
+          <label className="mp-label">New Email Address</label>
+          <input
+            className={`mp-input${emailError ? " mp-input--error" : ""}`}
+            type="email"
+            value={emailNew}
+            onChange={(e) => { setEmailNew(e.target.value); setEmailError(""); }}
+            required
+          />
+          {emailError && <p className="mp-field-error">{emailError}</p>}
+          <div className="mp-form__actions">
+            <button type="submit" className="mp-btn-primary">Send Confirmation</button>
+          </div>
+          {emailSaved && <p className="mp-success">Email updated successfully.</p>}
+        </form>
+      )}
     </div>
   );
 }
@@ -291,7 +504,6 @@ function MyPagesPage() {
             </button>
           ))}
         </nav>
-        <Link to="/products" className="mp-sidebar__back">← All Products</Link>
       </aside>
 
       <main className="mp-content">

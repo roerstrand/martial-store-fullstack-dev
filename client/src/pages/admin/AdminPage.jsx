@@ -156,7 +156,7 @@ function AdminPage() {
           <p className="admin-header__eyebrow">Admin Panel</p>
           <h1 className="admin-header__title">Dashboard</h1>
         </div>
-        <Link to="/" className="auth-btn-secondary">‹ Back to site</Link>
+        <Link to="/" className="admin-back-btn">‹ Back to site</Link>
       </div>
 
       <nav className="admin-tabs">

@@ -7,6 +7,8 @@ const PAYMENT_METHODS = [
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^\+?[\d\s\-().]{7,20}$/;
+const ZIP_RE   = /^[\d\s\-]{3,10}$/;
 
 function validate(form) {
   const errors = [];
@@ -18,17 +20,28 @@ function validate(form) {
     errors.push({ field: "email", msg: "Email must be formatted as: name@domain.com" });
   if (!form.phone.trim())
     errors.push({ field: "phone", msg: "Phone number is required." });
+  else if (!PHONE_RE.test(form.phone.trim()))
+    errors.push({ field: "phone", msg: "Phone number may only contain digits, +, spaces, and dashes." });
   if (!form.address.trim())
     errors.push({ field: "address", msg: "Street address is required." });
   if (!form.zip.trim())
     errors.push({ field: "zip", msg: "Postal code is required." });
+  else if (!ZIP_RE.test(form.zip.trim()))
+    errors.push({ field: "zip", msg: "Postal code may only contain digits." });
   if (!form.city.trim())
     errors.push({ field: "city", msg: "City is required." });
   return errors;
 }
 
-function PaymentForm({ onSubmit }) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", zip: "", city: "" });
+function PaymentForm({ onSubmit, initialValues = {} }) {
+  const [form, setForm] = useState({
+    name:    initialValues.name    ?? "",
+    email:   initialValues.email   ?? "",
+    phone:   initialValues.phone   ?? "",
+    address: initialValues.address ?? "",
+    zip:     initialValues.zip     ?? "",
+    city:    initialValues.city    ?? "",
+  });
   const [shipping, setShipping] = useState("standard");
   const [payment, setPayment] = useState("card");
   const [errors, setErrors] = useState([]);
