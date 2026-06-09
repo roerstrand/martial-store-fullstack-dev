@@ -9,8 +9,9 @@ import {
 const FavoriteContext = createContext(null);
 
 export function FavoriteProvider({ children }) {
-  const [user] = useAuth();
+  const [user, token] = useAuth();
   const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(!!localStorage.getItem("token"));
   const [toast, setToast] = useState(null);
 
   const showToast = useCallback(() => {
@@ -20,15 +21,19 @@ export function FavoriteProvider({ children }) {
 
   useEffect(() => {
     if (user) {
+      setLoading(true);
       localStorage.removeItem("favorites");
       getMyFavorites()
         .then((data) => setFavorites(data.products ?? []))
-        .catch(() => setFavorites([]));
-    } else {
+        .catch(() => {/* keep current favorites on error */})
+        .finally(() => setLoading(false));
+    } else if (!token) {
+      setLoading(false);
       const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
       setFavorites(stored);
     }
-  }, [user]);
+    // token exists but user not yet loaded → stay loading
+  }, [user, token]);
 
   async function clearFavorites() {
     if (user) {
@@ -70,7 +75,7 @@ export function FavoriteProvider({ children }) {
   }
 
   return (
-    <FavoriteContext.Provider value={[toggleFavorites, favorites, toast, clearFavorites]}>
+    <FavoriteContext.Provider value={[toggleFavorites, favorites, toast, clearFavorites, loading]}>
       {children}
     </FavoriteContext.Provider>
   );

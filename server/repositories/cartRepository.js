@@ -24,7 +24,18 @@ const addProductToCart = async (cartId, product) => {
   const cart = await Cart.findById(cartId);
   if (!cart) return null;
 
-  cart.products.push(product);
+  const existing = cart.products.find(
+    (item) =>
+      item.product_id.toString() === product.product_id.toString() &&
+      item.size === product.size
+  );
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.products.push(product);
+  }
+
   await cart.save();
   return await Cart.findById(cart._id).populate("products.product_id");
 };

@@ -5,7 +5,8 @@ const findUserByEmail = async (email) => {
 };
 
 const findUserByName = async (name) => {
-  return await User.findOne({ name });
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return await User.findOne({ name: new RegExp(`^${escaped}$`, "i") });
 };
 
 const createUser = async (userData) => {

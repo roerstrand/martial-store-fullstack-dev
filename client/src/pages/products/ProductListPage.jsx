@@ -155,7 +155,6 @@ function ProductListPage() {
         {search && (
           <button className="products-search__clear" onClick={() => setSearch("")}>✕</button>
         )}
-        <button className="products-search__btn" onClick={() => {}}>SEARCH</button>
       </div>
 
       <div className="products-categories">

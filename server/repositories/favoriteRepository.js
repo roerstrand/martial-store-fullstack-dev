@@ -12,7 +12,7 @@ const addProductToFavorites = async (userId, productId) => {
   return await FavoriteList.findOneAndUpdate(
     { user_id: userId },
     { $addToSet: { products: productId } },
-    { new: true }
+    { new: true, upsert: true }
   ).populate("products");
 };
 

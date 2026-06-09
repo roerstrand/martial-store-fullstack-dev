@@ -99,6 +99,10 @@
   }
 }
 
+.apex-header-wrap {
+  /* no styles needed on desktop — hero and navbar sit in normal flow */
+}
+
 /* === HERO === */
 .apex-hero {
   position: relative;
@@ -840,6 +844,12 @@
 .ml-auth-link:hover { opacity: 1; }
 .ml-auth-link:hover::after { transform: scaleX(1); }
 
+.ml-auth-link--admin {
+  color: var(--color-accent);
+  opacity: 1;
+  font-weight: 700;
+}
+
 .ml-auth-btn {
   font-family: var(--font-ui);
   font-size: 0.78rem;
@@ -1573,6 +1583,12 @@
 
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
+  .apex-header-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
   /* Compact app-style header bar */
   .apex-hero {
     height: 60px;

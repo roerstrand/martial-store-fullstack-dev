@@ -22,6 +22,7 @@ export function CartProvider({ children }) {
   const [, token] = useAuth();
   const [cart, setCart] = useState([]);
   const [cartId, setCartId] = useState(null);
+  const [cartLoading, setCartLoading] = useState(true);
   const [toast, setToast] = useState(null); // { title }
 
   const showToast = useCallback((title) => {
@@ -31,6 +32,7 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     if (token) {
+      setCartLoading(true);
       getCart()
         .then((data) => {
           setCart(normalize(data.products));
@@ -42,10 +44,12 @@ export function CartProvider({ children }) {
             setCart([]);
             setCartId(newCart._id);
           } catch {}
-        });
+        })
+        .finally(() => setCartLoading(false));
     } else {
       const local = JSON.parse(localStorage.getItem("cart") || "[]");
       setCart(local);
+      setCartLoading(false);
     }
   }, [token]);
 
@@ -110,6 +114,13 @@ export function CartProvider({ children }) {
 
   const decreaseItem = async (productId) => {
     if (token) {
+      const item = cart.find((i) => i.product._id === productId);
+      if (!item) return;
+      if (item.quantity <= 1) {
+        const data = await removeCartItem(cartId, productId);
+        setCart(normalize(data.products));
+        return;
+      }
       const data = await decreaseQuantity(cartId, productId);
       setCart(normalize(data.products));
     } else {
@@ -155,7 +166,7 @@ export function CartProvider({ children }) {
   };
 
   return (
-    <CartContext.Provider value={[cart, addToCart, removeFromCart, clearCart, cartId, increaseItem, decreaseItem, toast, updateSize]}>
+    <CartContext.Provider value={[cart, addToCart, removeFromCart, clearCart, cartId, increaseItem, decreaseItem, toast, updateSize, cartLoading]}>
       {children}
     </CartContext.Provider>
   );

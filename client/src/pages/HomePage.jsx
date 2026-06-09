@@ -338,6 +338,10 @@ function HomePage() {
       {/* SEARCH + CART BAR */}
       <div className="home-topbar">
         <form className="home-search" onSubmit={handleSearch}>
+          <svg className="home-search__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
           <input
             className="home-search__input"
             type="text"
@@ -346,13 +350,15 @@ function HomePage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             autoComplete="off"
           />
-          <button type="submit" className="home-search__btn">Search ›</button>
+          <button type="submit" className="home-search__btn">SEARCH</button>
         </form>
         {cartCount > 0 && (
           <div className="home-topbar__cart">
-            <span className="ml-cart-bar__text">{cartCount} {cartCount === 1 ? "item" : "items"} in cart</span>
-            <Link to="/cart" className="ml-cart-bar__btn">View Cart ›</Link>
-            <Link to="/checkout" className="ml-cart-bar__btn">Checkout ›</Link>
+            <Link to="/favorites" className="ml-cart-bar__btn ml-cart-bar__btn--fav">
+              Favorites{favorites.length > 0 ? ` (${favorites.length})` : ""}
+            </Link>
+            <Link to="/cart" className="ml-cart-bar__btn">View Cart{cartCount > 0 ? ` (${cartCount})` : ""} ›</Link>
+            <Link to="/checkout" className="ml-cart-bar__btn ml-cart-bar__btn--checkout">Checkout ›</Link>
           </div>
         )}
       </div>

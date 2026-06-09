@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import PageNav from "../components/PageNav";
 import { useFavorites } from "../context/FavoriteContext";
@@ -80,7 +80,7 @@ function OrderHistory({ orders, loading }) {
               </span>
             </div>
             <div className="mp-order-card__items">
-              {order.products.map((item, i) => {
+              {(order.products ?? []).map((item, i) => {
                 const p = item.product_id;
                 return (
                   <div key={i} className="mp-order-card__item">
@@ -109,9 +109,10 @@ function OrderHistory({ orders, loading }) {
 }
 
 function Favorites({ favorites }) {
-  const [, addToCart] = useCart();
+  const [cart, addToCart] = useCart();
   const [, , , clearFavorites] = useFavorites();
   const [bulkSize, setBulkSize] = useState(null);
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   if (!favorites || favorites.length === 0)
     return (
@@ -154,7 +155,7 @@ function Favorites({ favorites }) {
           >
             ADD ALL TO CART
           </button>
-          <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART ›</Link>
+          <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART{cartCount > 0 ? ` (${cartCount})` : ""} ›</Link>
           <Link to="/checkout" className="favorites-bulk__nav-btn favorites-bulk__nav-btn--checkout">CHECKOUT ›</Link>
         </div>
       </div>
@@ -243,7 +244,7 @@ function SavedAddresses() {
             <p className="mp-address-card__line">{a.zip} {a.city}, {a.country}</p>
             <div className="mp-address-card__actions">
               <button className="mp-address-card__edit" onClick={() => openEdit(a)}>Edit</button>
-              <button className="mp-address-card__remove" onClick={() => persist(addresses.filter((x) => x.id !== a.id))}>Remove</button>
+              <button className="mp-address-card__remove" onClick={() => { if (confirm("Remove this address?")) persist(addresses.filter((x) => x.id !== a.id)); }}>Remove</button>
             </div>
           </div>
         ))}
@@ -258,6 +259,7 @@ function SavedAddresses() {
           <input
             className={`mp-input${errors.street ? " mp-input--error" : ""}`}
             placeholder="Street address" value={form.street} onChange={handleChange("street")}
+            autoComplete="street-address"
           />
           {errors.street && <p className="mp-field-error">{errors.street}</p>}
           <div className="mp-form__row">
@@ -265,7 +267,7 @@ function SavedAddresses() {
               <input
                 className={`mp-input${errors.zip ? " mp-input--error" : ""}`}
                 placeholder="ZIP" value={form.zip} onChange={handleChange("zip")}
-                inputMode="numeric"
+                inputMode="numeric" autoComplete="postal-code"
               />
               {errors.zip && <p className="mp-field-error">{errors.zip}</p>}
             </div>
@@ -273,6 +275,7 @@ function SavedAddresses() {
               <input
                 className={`mp-input${errors.city ? " mp-input--error" : ""}`}
                 placeholder="City" value={form.city} onChange={handleChange("city")}
+                autoComplete="address-level2"
               />
               {errors.city && <p className="mp-field-error">{errors.city}</p>}
             </div>
@@ -280,6 +283,7 @@ function SavedAddresses() {
           <input
             className={`mp-input${errors.country ? " mp-input--error" : ""}`}
             placeholder="Country" value={form.country} onChange={handleChange("country")}
+            autoComplete="country-name"
           />
           {errors.country && <p className="mp-field-error">{errors.country}</p>}
           <div className="mp-form__actions">
@@ -400,7 +404,7 @@ function ProfileSettings({ user }) {
       <p className="mp-current-value">Current: <strong>{user?.email}</strong></p>
       {emailPending ? (
         <div className="mp-email-pending">
-          <p>A confirmation link has been sent to your current address. Confirm below to complete the change to <strong>{emailPending}</strong>.</p>
+          <p>Confirm that you want to change your email to <strong>{emailPending}</strong>.</p>
           <div className="mp-form__actions" style={{ marginTop: "1rem" }}>
             <button className="mp-btn-primary" onClick={handleEmailConfirm} disabled={emailLoading}>
               {emailLoading ? "Confirming…" : "Confirm Email Change"}
@@ -416,6 +420,7 @@ function ProfileSettings({ user }) {
             type="email"
             value={emailNew}
             onChange={(e) => { setEmailNew(e.target.value); setEmailError(""); }}
+            autoComplete="email"
             required
           />
           {emailError && <p className="mp-field-error">{emailError}</p>}
@@ -455,11 +460,11 @@ function ChangePassword() {
       <p className="mp-section-title">Change Password</p>
       <form className="mp-form" onSubmit={handleSave}>
         <label className="mp-label">Current Password</label>
-        <input className="mp-input" type="password" value={form.current} onChange={(e) => setForm({ ...form, current: e.target.value })} required />
+        <input className="mp-input" type="password" value={form.current} onChange={(e) => setForm({ ...form, current: e.target.value })} autoComplete="current-password" required />
         <label className="mp-label">New Password</label>
-        <input className="mp-input" type="password" value={form.next} onChange={(e) => setForm({ ...form, next: e.target.value })} required />
+        <input className="mp-input" type="password" value={form.next} onChange={(e) => setForm({ ...form, next: e.target.value })} autoComplete="new-password" required />
         <label className="mp-label">Confirm New Password</label>
-        <input className="mp-input" type="password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} required />
+        <input className="mp-input" type="password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} autoComplete="new-password" required />
         {error && <p className="mp-error">{error}</p>}
         {saved && <p className="mp-success">Password updated.</p>}
         <div className="mp-form__actions">
@@ -471,16 +476,12 @@ function ChangePassword() {
 }
 
 function MyPagesPage() {
-  const [user] = useAuth();
+  const [user, , , , initializing] = useAuth();
   const [, favorites] = useFavorites();
   const { data: orders, loading: ordersLoading } = useFetch(getMyOrders);
   const [activeTab, setActiveTab] = useState("dashboard");
-  const navigate = useNavigate();
 
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
+  if (initializing || !user) return <div className="mp-page"><p className="loading">Loading…</p></div>;
 
   return (
     <div className="mp-page">

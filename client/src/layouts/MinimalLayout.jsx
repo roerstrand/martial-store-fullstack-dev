@@ -37,6 +37,10 @@ function MinimalLayout() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
@@ -52,7 +56,7 @@ function MinimalLayout() {
             <Link to="/products" className="ml-nav-link">All Products</Link>
             <button
               className={`ml-nav-link ml-nav-link--sale${saleActive ? " ml-nav-link--active" : ""}`}
-              onClick={() => navigate(saleActive ? "/" : "/?sale=true")}
+              onClick={() => navigate(saleActive ? "/products" : "/products?sale=true")}
             >
               Sale
             </button>
@@ -95,6 +99,9 @@ function MinimalLayout() {
             </Link>
             {user ? (
               <>
+                {user.role === "admin" && (
+                  <Link to="/admin" className="ml-auth-link ml-auth-link--admin">Admin</Link>
+                )}
                 <Link to="/my-pages" className="ml-auth-link">Profile</Link>
                 <button onClick={handleLogout} className="ml-auth-btn">Log out</button>
               </>
@@ -113,7 +120,7 @@ function MinimalLayout() {
         {menuOpen && (
           <nav className="ml-mobile-nav">
             <Link to="/products" className="ml-mobile-link" onClick={() => setMenuOpen(false)}>All Products</Link>
-            <button className="ml-mobile-link ml-nav-link--sale" onClick={() => { navigate("/?sale=true"); setMenuOpen(false); }}>Sale</button>
+            <button className="ml-mobile-link ml-nav-link--sale" onClick={() => { navigate("/products?sale=true"); setMenuOpen(false); }}>Sale</button>
             {CATEGORIES.map((c) => (
               <button key={c.value} className="ml-mobile-link" onClick={() => { navigate(`/products?category=${c.value}`); setMenuOpen(false); }}>{c.label}</button>
             ))}
@@ -139,9 +146,11 @@ function MinimalLayout() {
 
       {showCartBar && (
         <div className="ml-cart-bar">
-          <span className="ml-cart-bar__text">{cartCount} {cartCount === 1 ? "item" : "items"} in cart</span>
-          <Link to="/cart" className="ml-cart-bar__btn">View Cart ›</Link>
-          <Link to="/checkout" className="ml-cart-bar__btn">Checkout ›</Link>
+          <Link to="/favorites" className="ml-cart-bar__btn ml-cart-bar__btn--fav">
+            Favorites{favCount > 0 ? ` (${favCount})` : ""}
+          </Link>
+          <Link to="/cart" className="ml-cart-bar__btn">View Cart{cartCount > 0 ? ` (${cartCount})` : ""} ›</Link>
+          <Link to="/checkout" className="ml-cart-bar__btn ml-cart-bar__btn--checkout">Checkout ›</Link>
         </div>
       )}
 

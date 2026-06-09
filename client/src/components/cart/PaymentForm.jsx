@@ -101,10 +101,11 @@ function PaymentForm({ onSubmit, initialValues = {} }) {
         className={`apex-input${fieldHasError("name") ? " apex-input--error" : ""}`}
         type="text" name="name" placeholder="Full name"
         value={form.name} onChange={handleChange}
+        autoComplete="name"
       />
       <input
         className={`apex-input${fieldHasError("email") ? " apex-input--error" : ""}`}
-        type="text" name="email" placeholder="Email address (e.g. name@domain.com)"
+        type="email" name="email" placeholder="Email address (e.g. name@domain.com)"
         value={form.email} onChange={handleChange}
         inputMode="email" autoComplete="email"
       />
@@ -112,6 +113,7 @@ function PaymentForm({ onSubmit, initialValues = {} }) {
         className={`apex-input${fieldHasError("phone") ? " apex-input--error" : ""}`}
         type="tel" name="phone" placeholder="Phone number"
         value={form.phone} onChange={handleChange}
+        autoComplete="tel"
       />
 
       <p className="checkout-section-title">Shipping address</p>
@@ -119,17 +121,20 @@ function PaymentForm({ onSubmit, initialValues = {} }) {
         className={`apex-input${fieldHasError("address") ? " apex-input--error" : ""}`}
         type="text" name="address" placeholder="Street address"
         value={form.address} onChange={handleChange}
+        autoComplete="street-address"
       />
       <div style={{ display: "flex", gap: "0.5rem" }}>
         <input
           className={`apex-input${fieldHasError("zip") ? " apex-input--error" : ""}`}
           type="text" name="zip" placeholder="Postal code"
           value={form.zip} onChange={handleChange}
+          autoComplete="postal-code"
         />
         <input
           className={`apex-input${fieldHasError("city") ? " apex-input--error" : ""}`}
           type="text" name="city" placeholder="City"
           value={form.city} onChange={handleChange}
+          autoComplete="address-level2"
         />
       </div>
 

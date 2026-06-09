@@ -10,8 +10,10 @@ function MainLayout() {
 
   return (
     <div className="app">
-      <Hero onToggleMenu={() => setMenuOpen((prev) => !prev)} />
-      <Navbar isOpen={menuOpen} onToggleMenu={() => setMenuOpen((prev) => !prev)} />
+      <div className="apex-header-wrap">
+        <Hero onToggleMenu={() => setMenuOpen((prev) => !prev)} />
+        <Navbar isOpen={menuOpen} onToggleMenu={() => setMenuOpen((prev) => !prev)} />
+      </div>
       <main className="content">
         <Outlet />
       </main>

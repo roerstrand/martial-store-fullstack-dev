@@ -12,8 +12,7 @@ const {
 const getMyFavoriteList = asyncHandler(async (req, res) => {
   const favoriteList = await getMyFavoriteListService(req.user.id);
   if (!favoriteList) {
-    res.status(404);
-    throw new Error("No favorite list found for current user");
+    return res.status(200).json({ products: [] });
   }
   res.status(200).json(favoriteList);
 });

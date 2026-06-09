@@ -22,7 +22,7 @@ const EMPTY_PRODUCT = {
 };
 
 function AdminPage() {
-  const [user] = useAuth();
+  const [user, , , , initializing] = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState("products");
 
@@ -39,10 +39,11 @@ function AdminPage() {
   const [toast, setToast]             = useState("");
 
   useEffect(() => {
+    if (initializing) return;
     if (!user || user.role !== "admin") {
       navigate("/");
     }
-  }, [user]);
+  }, [user, initializing]);
 
   useEffect(() => {
     loadTab(tab);

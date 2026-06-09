@@ -1,6 +1,5 @@
 const errorHandler = (err, req, res, next) => {
-  //Fånga alla statuskoder under 400 som felaktigt faller igenom till errorHandler.
-  const statusCode = res.statusCode >= 400 ? res.statusCode : 500;
+  const statusCode = err.statusCode || (res.statusCode >= 400 ? res.statusCode : 500);
 
   res.status(statusCode);
 

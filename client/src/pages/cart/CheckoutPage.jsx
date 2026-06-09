@@ -1,5 +1,5 @@
 ﻿import { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import PaymentForm from "../../components/cart/PaymentForm";
@@ -13,7 +13,7 @@ import PageNav from "../../components/PageNav";
 const SHIPPING_COSTS = { standard: 5, express: 19, pickup: 0 };
 
 function CheckoutPage() {
-  const [cart, , , clearCart] = useCart();
+  const [cart, , , clearCart, , , , , , cartLoading] = useCart();
   const [user] = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +61,10 @@ function CheckoutPage() {
       state: { order, shippingInfo, shipping, carrier, shippingCost, cartSnapshot },
     });
   };
+
+  if (!cartLoading && cart.length === 0 && !pendingData && !isLoading) {
+    return <Navigate to="/cart" replace />;
+  }
 
   return (
     <div className="checkout-page">

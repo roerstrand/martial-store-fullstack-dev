@@ -7,8 +7,9 @@ import FavoriteItem from "../components/favorites/FavoriteItem";
 import PageNav from "../components/PageNav";
 
 function FavoritesPage() {
-  const [, favorites, , clearFavorites] = useFavorites();
-  const [, addToCart] = useCart();
+  const [, favorites, , clearFavorites, loading] = useFavorites();
+  const [cart, addToCart] = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const [bulkSize, setBulkSize] = useState(null);
 
   const handleAddAll = () => {
@@ -29,7 +30,13 @@ function FavoritesPage() {
         )}
       </div>
 
-      {favorites.length === 0 ? (
+      {loading ? (
+        <div className="favorites-loading">
+          {[1, 2, 3, 4].map((n) => (
+            <div key={n} className="skeleton-grid-card" />
+          ))}
+        </div>
+      ) : favorites.length === 0 ? (
         <div className="favorites-empty">
           <span className="favorites-empty__icon">♡</span>
           <p>No favorites yet</p>
@@ -58,7 +65,7 @@ function FavoritesPage() {
               >
                 ADD ALL TO CART
               </button>
-              <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART ›</Link>
+              <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART{cartCount > 0 ? ` (${cartCount})` : ""} ›</Link>
               <Link to="/checkout" className="favorites-bulk__nav-btn favorites-bulk__nav-btn--checkout">CHECKOUT ›</Link>
             </div>
           </div>

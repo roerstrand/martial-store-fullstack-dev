@@ -10,6 +10,20 @@ const CARRIER_URLS = {
 function OrderConfirmationPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  if (!state) {
+    return (
+      <div className="confirmation-page">
+        <PageNav back="/" backLabel="Back to Home" />
+        <h1>Order placed</h1>
+        <p style={{ margin: "1.5rem 0" }}>
+          Your order is confirmed. View your order history in{" "}
+          <Link to="/my-pages" className="confirmation-track-link">My Pages</Link>.
+        </p>
+      </div>
+    );
+  }
+
   const { order, shippingInfo, shipping, carrier, shippingCost, cartSnapshot } = state;
 
   const subtotal = cartSnapshot.reduce(

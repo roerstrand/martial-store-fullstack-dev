@@ -1,21 +1,30 @@
-﻿import { Link, useNavigate } from "react-router-dom";
+﻿import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import CartItem from "../../components/cart/CartItem";
 import "../Pages.css";
 import PageNav from "../../components/PageNav";
 
 function CartPage() {
-  const [cart, , , clearCart] = useCart();
+  const [cart, , , clearCart, , , , , updateSize] = useCart();
   const navigate = useNavigate();
+  const [bulkSize, setBulkSize] = useState(null);
 
   const missingSize = cart.some((item) => !item.size);
+
+  const handleApplyBulkSize = async () => {
+    if (!bulkSize) return;
+    for (const item of cart.filter((i) => !i.size)) {
+      await updateSize(item.product, null, bulkSize);
+    }
+    setBulkSize(null);
+  };
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const shipping = 19;
-  const total = subtotal + shipping;
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="cart-page">
@@ -31,8 +40,8 @@ function CartPage() {
         <div className="cart-header__title-row">
           <h1>
             Your Cart
-            {cart.length > 0 && (
-              <span className="cart-count">{cart.length}</span>
+            {totalQuantity > 0 && (
+              <span className="cart-count">{totalQuantity}</span>
             )}
           </h1>
           {cart.length > 0 && (
@@ -49,6 +58,29 @@ function CartPage() {
       ) : (
         <div className="cart-layout">
           <div className="cart-items-col">
+            {missingSize && (
+              <div className="cart-bulk-size">
+                <span className="cart-bulk-size__label">Set size for all unsized items</span>
+                <div className="cart-bulk-size__btns">
+                  {["S", "M", "L"].map((s) => (
+                    <button
+                      key={s}
+                      className={`size-btn${bulkSize === s ? " size-btn--active" : ""}`}
+                      onClick={() => setBulkSize(s)}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="cart-bulk-size__apply"
+                  onClick={handleApplyBulkSize}
+                  disabled={!bulkSize}
+                >
+                  Apply to all products with no size selected
+                </button>
+              </div>
+            )}
             <div className="cart-items">
               {cart.map((item, index) => (
                 <CartItem
@@ -73,11 +105,11 @@ function CartPage() {
                 </div>
                 <div className="cart-summary__row">
                   <span className="cart-summary__label">Shipping</span>
-                  <span>{shipping} EUR</span>
+                  <span className="cart-summary__shipping-note">Calculated at checkout</span>
                 </div>
                 <div className="cart-summary__row cart-summary__row--total">
                   <span className="cart-summary__label">Total</span>
-                  <span>{total} EUR</span>
+                  <span>From {subtotal + 5} EUR</span>
                 </div>
               </div>
               {missingSize && (

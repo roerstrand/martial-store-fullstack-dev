@@ -10,6 +10,13 @@ const {
 } = require("../repositories/userRepository");
 
 const registerUserService = async ({ name, email, password }) => {
+  const existingName = await findUserByName(name);
+  if (existingName) {
+    const error = new Error("Username already taken");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const existingUser = await findUserByEmail(email);
   if (existingUser) {
     const error = new Error("Email already exists");

@@ -46,7 +46,7 @@ function Navbar({ isOpen, onToggleMenu }) {
           <Link to="/products" className="apex-nav-link">All Products</Link>
           <button
             className={`apex-nav-link apex-nav-link--sale${saleActive ? " apex-nav-link--active" : ""}`}
-            onClick={() => navigate(saleActive ? "/" : "/?sale=true")}
+            onClick={() => navigate(saleActive ? "/products" : "/products?sale=true")}
           >
             Sale
           </button>
@@ -96,7 +96,7 @@ function Navbar({ isOpen, onToggleMenu }) {
         <Link to="/products" className="apex-nav-link" onClick={onToggleMenu}>All Products</Link>
         <button
           className={`apex-nav-link apex-nav-link--sale${saleActive ? " apex-nav-link--active" : ""}`}
-          onClick={() => { navigate(saleActive ? "/" : "/?sale=true"); onToggleMenu?.(); }}
+          onClick={() => { navigate(saleActive ? "/products" : "/products?sale=true"); onToggleMenu?.(); }}
         >Sale</button>
         {CATEGORIES.map((c) => (
           <button key={c.value} className="apex-nav-link" onClick={() => handleCategory(c.value)}>{c.label}</button>

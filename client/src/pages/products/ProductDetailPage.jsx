@@ -4,6 +4,7 @@ import "../Pages.css";
 import useFetch from "../../hooks/useFetch.jsx";
 import { getProduct, getProducts } from "../../services/productService";
 import { useCart } from "../../context/CartContext";
+import { useFavorites } from "../../context/FavoriteContext";
 import { REVIEWS } from "../../data/testimonials";
 import PageNav from "../../components/PageNav";
 import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
@@ -24,6 +25,7 @@ function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState(null);
   const [sizeError, setSizeError] = useState(false);
   const [, addToCart] = useCart();
+  const [toggleFavorites, favorites] = useFavorites();
   const navigate = useNavigate();
   const { items: recentItems, addProduct } = useRecentlyViewed();
 
@@ -42,6 +44,24 @@ function ProductDetailPage() {
     if (product?._id) addProduct(product);
   }, [product?._id]);
 
+  if (error || (!loading && (!product || !product._id))) {
+    const is404 = !product || !product._id || error?.response?.status === 404;
+    return (
+      <div className="product-detail-page">
+        <PageNav back="/products" backLabel="All Products" />
+        <div className="product-not-found">
+          <p className="product-not-found__msg">
+            {is404 ? "Product not found." : "Something went wrong loading this product."}
+          </p>
+          <div className="product-not-found__actions">
+            <Link to="/products" className="auth-btn-secondary">BROWSE ALL PRODUCTS ›</Link>
+            <Link to="/" className="auth-btn-secondary">BACK TO HOME ›</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) return (
     <div className="skeleton-detail">
       <div className="skeleton-detail__img" />
@@ -55,8 +75,6 @@ function ProductDetailPage() {
       </div>
     </div>
   );
-  if (error)   return <p className="loading">Something went wrong.</p>;
-  if (!product || !product._id) return <p className="loading">Product not found.</p>;
 
   const reviews = REVIEWS[product.category] ?? [];
   const related = (relatedData || []).filter(p => p._id !== productId).slice(0, 4);
@@ -75,6 +93,8 @@ function ProductDetailPage() {
     await addToCart(product, selectedSize);
     navigate("/cart");
   };
+
+  const isFavorite = favorites?.some((f) => f._id === product?._id);
 
   return (
     <div className="product-detail-page">
@@ -158,6 +178,13 @@ function ProductDetailPage() {
             </button>
             <button className="product-detail__buy" onClick={handleBuyNow}>
               BUY NOW
+            </button>
+            <button
+              className={`product-detail__fav-btn${isFavorite ? " product-detail__fav-btn--active" : ""}`}
+              onClick={() => toggleFavorites(product)}
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              {isFavorite ? "♥" : "♡"}
             </button>
           </div>
 
