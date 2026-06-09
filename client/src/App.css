@@ -1303,6 +1303,21 @@
 }
 .admin-btn-delete:hover { background: rgba(214,40,57,0.2); }
 
+.admin-btn-cancel {
+  background: rgba(214, 140, 0, 0.12);
+  color: #d4920a;
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(214, 140, 0, 0.3);
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.admin-btn-cancel:hover { background: rgba(214, 140, 0, 0.22); }
+
 /* Admin form */
 .admin-form {
   background: rgba(255,255,255,0.04);
@@ -1375,7 +1390,7 @@
 }
 
 .admin-table__head--products  { grid-template-columns: 2fr 1fr 0.6fr 0.6fr 0.5fr 0.5fr auto; }
-.admin-table__head--orders    { grid-template-columns: 1fr 1fr 0.8fr 1fr auto; }
+.admin-table__head--orders    { grid-template-columns: 1fr 1fr 0.7fr 1fr auto; }
 .admin-table__head--customers { grid-template-columns: 1fr 1.5fr 0.7fr 0.8fr; }
 
 .admin-table__row {
@@ -1396,7 +1411,7 @@
 }
 
 .admin-table__row--products  { grid-template-columns: 2fr 1fr 0.6fr 0.6fr 0.5fr 0.5fr auto; }
-.admin-table__row--orders    { grid-template-columns: 1fr 1fr 0.8fr 1fr auto; }
+.admin-table__row--orders    { grid-template-columns: 1fr 1fr 0.7fr 1fr auto; }
 .admin-table__row--customers { grid-template-columns: 1fr 1.5fr 0.7fr 0.8fr; }
 
 .admin-table__name { font-weight: 600; color: var(--color-light); }
@@ -1681,7 +1696,9 @@
   /* Tables: horizontal scroll instead of column collapse */
   .admin-table        { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .admin-table__head,
-  .admin-table__row   { min-width: 500px; }
+  .admin-table__row   { min-width: 560px; }
+  .admin-table__head--orders,
+  .admin-table__row--orders { min-width: 640px; }
   /* Chart: horizontal scroll on mobile */
   .admin-chart        { overflow-x: auto; }
   .admin-chart__bars  { min-width: 420px; }

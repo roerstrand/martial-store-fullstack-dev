@@ -108,7 +108,7 @@ function OrderConfirmationPage() {
         </Link>
         <button
           className="confirmation-btn confirmation-btn--secondary"
-          onClick={() => navigate(`/orders/${order._id}`)}
+          onClick={() => navigate(`/orders/${order._id}`, { state: { fromConfirmation: true, confirmationState: state } })}
         >
           Track order
         </button>

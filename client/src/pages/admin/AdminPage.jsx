@@ -134,8 +134,19 @@ function AdminPage() {
     }
   };
 
+  const handleCancelOrder = async (id) => {
+    if (!confirm("Cancel this order? The record will be kept.")) return;
+    try {
+      const updated = await adminUpdateOrderStatus(id, "cancelled");
+      setOrders(prev => prev.map(o => o._id === updated._id ? updated : o));
+      showToast("Order cancelled.");
+    } catch {
+      setError("Cancel failed.");
+    }
+  };
+
   const handleDeleteOrder = async (id) => {
-    if (!confirm("Delete this order?")) return;
+    if (!confirm("Permanently delete this order? This cannot be undone.")) return;
     try {
       await adminDeleteOrder(id);
       setOrders(prev => prev.filter(o => o._id !== id));
@@ -331,7 +342,13 @@ function AdminPage() {
                       ))}
                     </select>
                     <div className="admin-table__actions">
-                      <button className="admin-btn-delete" onClick={() => handleDeleteOrder(o._id)}>Delete</button>
+                      <Link to={`/orders/${o._id}`} className="admin-btn-edit">View</Link>
+                      {o.status !== "cancelled" && (
+                        <button className="admin-btn-cancel" onClick={() => handleCancelOrder(o._id)}>Cancel</button>
+                      )}
+                      {o.status === "cancelled" && (
+                        <button className="admin-btn-delete" onClick={() => handleDeleteOrder(o._id)}>Delete</button>
+                      )}
                     </div>
                   </div>
                 ))}

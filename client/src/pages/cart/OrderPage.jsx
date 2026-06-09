@@ -1,4 +1,4 @@
-﻿import { useParams, Link } from "react-router-dom";
+﻿import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch.jsx";
 import { getOrder } from "../../services/orderService";
 import "../Pages.css";
@@ -19,6 +19,8 @@ const STATUS_LABELS = {
 
 function OrderPage() {
   const { orderId } = useParams();
+  const { state: locationState } = useLocation();
+  const navigate = useNavigate();
   const { data: order, loading, error } = useFetch(() => getOrder(orderId));
 
   if (loading) return <p className="loading">Loading order...</p>;
@@ -90,6 +92,14 @@ function OrderPage() {
 
       <div className="confirmation-footer" style={{ marginTop: "2rem" }}>
         <Link to="/products" className="confirmation-btn">Continue shopping</Link>
+        {locationState?.fromConfirmation && (
+          <button
+            className="confirmation-btn confirmation-btn--secondary"
+            onClick={() => navigate("/confirmation", { state: locationState.confirmationState })}
+          >
+            ← Back to confirmation
+          </button>
+        )}
         <Link to="/" className="confirmation-btn confirmation-btn--secondary">Back to home ›</Link>
       </div>
     </div>

@@ -99,7 +99,7 @@ function OrderHistory({ orders, loading }) {
             </div>
             <div className="mp-order-card__footer">
               <span className="mp-order-card__total">Total: <strong>{order.totalPrice} EUR</strong></span>
-              <Link to={`/orders/${order._id}`} className="mp-table__link">Track order ›</Link>
+              <Link to={`/orders/${order._id}`} className="mp-table__link">View Order ›</Link>
             </div>
           </div>
         ))}

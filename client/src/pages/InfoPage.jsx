@@ -16,7 +16,7 @@ const INFO_CONTENT = {
       },
       {
         heading: "Quality above all",
-        body: "We carefully select which brands and products we carry. Nothing is sold without passing our quality control. If you're not satisfied — neither are we.",
+        body: "We carefully select every product we carry. Nothing is sold without passing our quality control. If you're not satisfied — neither are we.",
       },
     ],
   },

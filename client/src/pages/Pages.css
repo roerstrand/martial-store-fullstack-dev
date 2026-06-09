@@ -2046,6 +2046,17 @@ img[src*="ancle_guards"] {
   color: var(--color-light);
 }
 
+.products-toolbar .auth-btn-secondary {
+  color: var(--color-light);
+  border-color: rgba(247, 243, 227, 0.3);
+}
+
+.products-toolbar .auth-btn-secondary:hover {
+  color: var(--color-light);
+  border-color: rgba(247, 243, 227, 0.6);
+  background: rgba(247, 243, 227, 0.07);
+}
+
 .products-toolbar__left {
   position: relative;
 }
@@ -2159,8 +2170,10 @@ img[src*="ancle_guards"] {
 }
 
 .products-search__icon {
-  color: rgba(247, 243, 227, 0.45);
+  color: var(--color-light);
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .products-search__input {
@@ -2178,8 +2191,27 @@ img[src*="ancle_guards"] {
 }
 
 .products-search__input::placeholder {
-  color: rgba(247, 243, 227, 0.35);
-  font-style: italic;
+  color: var(--color-light);
+  font-style: normal;
+}
+
+.products-search__btn {
+  background: var(--color-accent);
+  border: none;
+  border-radius: 0.3rem;
+  color: var(--color-light);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.products-search__btn:hover {
+  background: #b51f2e;
 }
 
 .products-search__input:focus {
@@ -7653,6 +7685,7 @@ img[src*="ancle_guards"] {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
+    text-align: center;
   }
 
   /* Back button and filter group share the second row */
