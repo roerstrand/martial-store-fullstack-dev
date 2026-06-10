@@ -204,7 +204,7 @@ function AdminPage() {
                   </div>
                   <div className="admin-form__field">
                     <label>Price (EUR)</label>
-                    <input className="admin-input" type="number" min="0" value={productForm.price} onChange={e => pf("price", e.target.value)} required />
+                    <input className="admin-input" type="number" min="1" value={productForm.price} onChange={e => pf("price", e.target.value)} required />
                   </div>
                   <div className="admin-form__field admin-form__field--wide">
                     <label>Description</label>

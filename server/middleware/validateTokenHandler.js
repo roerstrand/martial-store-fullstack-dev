@@ -13,7 +13,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
     //OM token finns
     if (!token) {
       res.status(401);
-      throw new Eror("No token");
+      throw new Error("No token");
     }
     // OM token giltig
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {

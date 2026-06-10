@@ -15,8 +15,10 @@ export const addCartItem = async (cartId, productId, size) => {
   return response.data;
 };
 
-export const removeCartItem = async (cartId, productId) => {
-  const response = await api.delete(`/carts/${cartId}/products/${productId}`);
+export const removeCartItem = async (cartId, productId, size) => {
+  const response = await api.delete(`/carts/${cartId}/products/${productId}`, {
+    params: size ? { size } : undefined,
+  });
   return response.data;
 };
 

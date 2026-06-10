@@ -15,11 +15,15 @@ function OrderConfirmationPage() {
     return (
       <div className="confirmation-page">
         <PageNav back="/" backLabel="Back to Home" />
-        <h1>Order placed</h1>
+        <h1>✓ Order confirmed</h1>
         <p style={{ margin: "1.5rem 0" }}>
           Your order is confirmed. View your order history in{" "}
           <Link to="/my-pages" className="confirmation-track-link">My Pages</Link>.
         </p>
+        <div className="confirmation-footer">
+          <Link to="/products" className="confirmation-btn">Continue shopping</Link>
+          <Link to="/" className="confirmation-btn confirmation-btn--secondary">Back to home ›</Link>
+        </div>
       </div>
     );
   }

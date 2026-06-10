@@ -91,7 +91,8 @@ const addProductToCart = asyncHandler(async (req, res) => {
 const removeProductFromCart = asyncHandler(async (req, res) => {
   const cart = await removeProductFromCartService(
     req.params.id,
-    req.params.productId
+    req.params.productId,
+    req.query.size
   );
   if (!cart) {
     res.status(404);

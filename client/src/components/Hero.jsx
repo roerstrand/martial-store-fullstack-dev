@@ -15,9 +15,9 @@ function Hero({ onToggleMenu }) {
         alt=""
         className="apex-hero__img"
       />
-      <Link to="/" className="apex-hero__brand">
+      <Link to="/" className="apex-hero__brand" onClick={() => onToggleMenu?.()}>
         <img
-          src="images/logo.png"
+          src="/images/logo.png"
           alt="Apex Core"
           className="apex-hero__logo"
         />

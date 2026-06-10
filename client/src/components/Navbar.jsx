@@ -101,6 +101,7 @@ function Navbar({ isOpen, onToggleMenu }) {
         {CATEGORIES.map((c) => (
           <button key={c.value} className="apex-nav-link" onClick={() => handleCategory(c.value)}>{c.label}</button>
         ))}
+        <Link to="/articles" className="apex-nav-link" onClick={onToggleMenu}>Stories</Link>
         <div className="apex-cat-divider" style={{ margin: "0.25rem 0" }} />
         <Link to="/favorites" className="apex-nav-link" onClick={onToggleMenu}>Favorites</Link>
         <Link to="/cart" className="apex-nav-link" onClick={onToggleMenu}>Cart</Link>

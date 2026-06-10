@@ -7,7 +7,10 @@ function CardModal({ total, onConfirm, onClose }) {
     setStep("processing");
     setTimeout(async () => {
       try {
-        await onConfirm();
+        const timeout = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("timeout")), 10000)
+        );
+        await Promise.race([onConfirm(), timeout]);
       } catch {
         setStep("error");
       }

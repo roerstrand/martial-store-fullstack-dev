@@ -46,6 +46,7 @@ function CheckoutPage() {
 
   const handleConfirmPayment = async () => {
     if (!pendingData) return;
+    setIsLoading(true);
     const { shipping, carrier, shippingCost, shippingInfo, totalPrice } = pendingData;
     const products = cart.map((item) => ({
       product_id: item.product._id,
@@ -53,7 +54,14 @@ function CheckoutPage() {
       size: item.size,
       quantity: item.quantity,
     }));
-    const order = await createOrder(products, totalPrice, shipping, carrier);
+    let order;
+    try {
+      order = await createOrder(products, totalPrice, shipping, carrier);
+    } catch {
+      setIsLoading(false);
+      alert("Something went wrong placing your order. Please try again.");
+      return;
+    }
     const cartSnapshot = [...cart];
     await clearCart();
     setPendingData(null);

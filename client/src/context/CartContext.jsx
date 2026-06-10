@@ -23,10 +23,10 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [cartId, setCartId] = useState(null);
   const [cartLoading, setCartLoading] = useState(true);
-  const [toast, setToast] = useState(null); // { title }
+  const [toast, setToast] = useState(null); // { title, error? }
 
-  const showToast = useCallback((title) => {
-    setToast({ title });
+  const showToast = useCallback((title, error = false) => {
+    setToast({ title, error });
     setTimeout(() => setToast(null), 3000);
   }, []);
 
@@ -60,6 +60,7 @@ export function CartProvider({ children }) {
         const data = await addCartItem(cartId, product._id, size);
         setCart(normalize(data.products));
       } catch {
+        showToast("Failed to add item to cart", true);
         return;
       }
     } else {
@@ -84,13 +85,15 @@ export function CartProvider({ children }) {
     if (!silent) showToast(product.title);
   };
 
-  const removeFromCart = async (productId) => {
+  const removeFromCart = async (productId, size) => {
     if (token) {
-      const data = await removeCartItem(cartId, productId);
+      const data = await removeCartItem(cartId, productId, size);
       setCart(normalize(data.products));
     } else {
       setCart((prev) => {
-        const updated = prev.filter((i) => i.product._id !== productId);
+        const updated = prev.filter(
+          (i) => !(i.product._id === productId && i.size === size)
+        );
         localStorage.setItem("cart", JSON.stringify(updated));
         return updated;
       });
@@ -138,10 +141,11 @@ export function CartProvider({ children }) {
     if (token) {
       if (!cartId) return;
       try {
-        await removeCartItem(cartId, product._id);
+        await removeCartItem(cartId, product._id, oldSize);
         const data = await addCartItem(cartId, product._id, newSize);
         setCart(normalize(data.products));
       } catch {
+        showToast("Failed to update size", true);
         return;
       }
     } else {

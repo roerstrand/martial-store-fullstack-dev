@@ -35,8 +35,8 @@ const addProductToCartService = async (cartId, product) => {
   return await addProductToCart(cartId, product);
 };
 
-const removeProductFromCartService = async (cartId, productId) => {
-  return await removeProductFromCart(cartId, productId);
+const removeProductFromCartService = async (cartId, productId, size) => {
+  return await removeProductFromCart(cartId, productId, size);
 };
 
 const increaseQuantityService = async (cartId, productId) => {

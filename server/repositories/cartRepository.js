@@ -40,12 +40,14 @@ const addProductToCart = async (cartId, product) => {
   return await Cart.findById(cart._id).populate("products.product_id");
 };
 
-const removeProductFromCart = async (cartId, productId) => {
+const removeProductFromCart = async (cartId, productId, size) => {
   const cart = await Cart.findById(cartId);
   if (!cart) return null;
 
   const cartItem = cart.products.find(
-    (item) => item.product_id.toString() === productId
+    (item) =>
+      item.product_id.toString() === productId &&
+      (size === undefined || item.size === size)
   );
   if (!cartItem) return null;
 

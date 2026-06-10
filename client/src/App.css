@@ -1142,6 +1142,11 @@
   background: rgba(214,40,57,0.1);
 }
 
+.cart-toast--error {
+  background: #d62839;
+  justify-content: center;
+}
+
 .apex-nav-btn--admin {
   background: rgba(214, 40, 57, 0.15);
   opacity: 1;

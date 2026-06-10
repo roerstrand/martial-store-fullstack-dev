@@ -3262,6 +3262,13 @@ img[src*="ancle_guards"] {
 .cart-bulk-size__apply:hover { background: #b51f2e; }
 .cart-bulk-size__apply:disabled { opacity: 0.4; cursor: default; }
 
+.cart-bulk-size__applied {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  color: var(--color-green);
+  margin-top: 0.4rem;
+}
+
 .cart-size-warning {
   background: rgba(214, 40, 57, 0.1);
   border: 1px solid rgba(214, 40, 57, 0.3);

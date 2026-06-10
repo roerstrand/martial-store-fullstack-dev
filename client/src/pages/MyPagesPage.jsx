@@ -60,6 +60,7 @@ function printReturnLabel(order) {
     .map((item) => `${item.product_id?.title ?? "Product"} ×${item.quantity}`)
     .join("\n");
   const win = window.open("", "_blank", "width=600,height=500");
+  if (!win) { alert("Enable popups to print the return label."); return; }
   win.document.write(`<!DOCTYPE html><html><head><title>Return Label – #${order._id.slice(-8).toUpperCase()}</title>
 <style>
   body{font-family:monospace;padding:2rem;background:#fff}

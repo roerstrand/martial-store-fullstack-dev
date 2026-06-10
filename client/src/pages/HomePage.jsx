@@ -559,6 +559,7 @@ function HomePage() {
               return;
             }
             setNewsletterError("");
+            setEmail("");
             setSubscribed(true);
           }}>
             <input className="home-newsletter__input" type="email" placeholder="Your email address" value={email} onChange={(e) => { setEmail(e.target.value); setNewsletterError(""); }} required />

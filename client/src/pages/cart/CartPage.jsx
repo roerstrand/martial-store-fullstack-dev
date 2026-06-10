@@ -9,6 +9,7 @@ function CartPage() {
   const [cart, , , clearCart, , , , , updateSize] = useCart();
   const navigate = useNavigate();
   const [bulkSize, setBulkSize] = useState(null);
+  const [applied, setApplied] = useState(false);
 
   const missingSize = cart.some((item) => !item.size);
 
@@ -18,6 +19,8 @@ function CartPage() {
       await updateSize(item.product, null, bulkSize);
     }
     setBulkSize(null);
+    setApplied(true);
+    setTimeout(() => setApplied(false), 2000);
   };
 
   const subtotal = cart.reduce(
@@ -79,6 +82,7 @@ function CartPage() {
                 >
                   Apply to all products with no size selected
                 </button>
+                {applied && <p className="cart-bulk-size__applied">Size applied to all items.</p>}
               </div>
             )}
             <div className="cart-items">

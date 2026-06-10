@@ -7,6 +7,14 @@ function CartToast() {
   if (!toast) return null;
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  if (toast.error) {
+    return (
+      <div className="cart-toast cart-toast--error">
+        <span className="cart-toast__text">{toast.title}</span>
+      </div>
+    );
+  }
+
   return (
     <div className="cart-toast">
       <span className="cart-toast__text">Added to cart</span>
