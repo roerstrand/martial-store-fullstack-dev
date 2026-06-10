@@ -3129,18 +3129,6 @@ img[src*="ancle_guards"] {
   color: rgba(247, 243, 227, 0.5);
 }
 
-.cart-item__badge {
-  background: rgba(247, 243, 227, 0.1);
-  color: var(--color-light);
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: 0.25rem;
-  border: 1px solid rgba(247, 243, 227, 0.12);
-  min-width: 1.8rem;
-  text-align: center;
-}
 
 .cart-item__price {
   font-family: var(--font-heading);
@@ -3203,26 +3191,6 @@ img[src*="ancle_guards"] {
 
 .cart-item__remove:hover { background: rgba(214, 40, 57, 0.28); }
 
-/* Size selector inside cart item (when size is missing) */
-.cart-item--no-size {
-  border-color: rgba(214, 40, 57, 0.35);
-}
-
-.cart-item__size-pick {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.cart-item__size-prompt {
-  color: var(--color-accent);
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
 
 .cart-item__size-btns {
   display: flex;
@@ -3243,9 +3211,11 @@ img[src*="ancle_guards"] {
   transition: background 0.15s, border-color 0.15s;
 }
 
+.cart-item__size-btn--active,
 .cart-item__size-btn:hover {
-  background: rgba(214, 40, 57, 0.3);
-  border-color: var(--color-accent);
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--color-dark);
 }
 
 /* Checkout blocked warning */

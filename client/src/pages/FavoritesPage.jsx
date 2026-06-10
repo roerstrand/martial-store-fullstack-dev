@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFavorites } from "../context/FavoriteContext";
 import { useCart } from "../context/CartContext";
 import "./Pages.css";
@@ -11,6 +11,15 @@ function FavoritesPage() {
   const [cart, addToCart] = useCart();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const [bulkSize, setBulkSize] = useState(null);
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    if (cart.length === 0 || cart.some((item) => !item.size)) {
+      navigate("/cart");
+    } else {
+      navigate("/checkout");
+    }
+  };
 
   const handleAddAll = () => {
     if (!bulkSize) return;
@@ -66,7 +75,7 @@ function FavoritesPage() {
                 ADD ALL TO CART
               </button>
               <Link to="/cart" className="favorites-bulk__nav-btn">VIEW CART{cartCount > 0 ? ` (${cartCount})` : ""} ›</Link>
-              <Link to="/checkout" className="favorites-bulk__nav-btn favorites-bulk__nav-btn--checkout">CHECKOUT ›</Link>
+              <button className="favorites-bulk__nav-btn favorites-bulk__nav-btn--checkout" onClick={handleCheckout}>CHECKOUT ›</button>
             </div>
           </div>
 

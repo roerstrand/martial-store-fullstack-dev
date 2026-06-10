@@ -62,7 +62,7 @@ function CheckoutPage() {
     });
   };
 
-  if (!cartLoading && cart.length === 0 && !pendingData && !isLoading) {
+  if (!cartLoading && (cart.length === 0 || cart.some((item) => !item.size)) && !pendingData && !isLoading) {
     return <Navigate to="/cart" replace />;
   }
 
