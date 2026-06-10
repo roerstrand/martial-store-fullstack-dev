@@ -47,10 +47,10 @@ function App() {
           <Route path="/articles/:id" element={<ErrorBoundary><ArticlePage /></ErrorBoundary>} />
           <Route path="/favorites" element={<ErrorBoundary><FavoritesPage /></ErrorBoundary>} />
           <Route path="/info/:slug" element={<ErrorBoundary><InfoPage /></ErrorBoundary>} />
+          <Route path="/checkout" element={<ErrorBoundary><CheckoutPage /></ErrorBoundary>} />
+          <Route path="/confirmation" element={<ErrorBoundary><OrderConfirmationPage /></ErrorBoundary>} />
 
           <Route element={<PrivateRoute />}>
-            <Route path="/checkout" element={<ErrorBoundary><CheckoutPage /></ErrorBoundary>} />
-            <Route path="/confirmation" element={<ErrorBoundary><OrderConfirmationPage /></ErrorBoundary>} />
             <Route path="/orders/:orderId" element={<ErrorBoundary><OrderPage /></ErrorBoundary>} />
             <Route path="/my-pages" element={<ErrorBoundary><MyPagesPage /></ErrorBoundary>} />
             <Route path="/admin" element={<ErrorBoundary><AdminPage /></ErrorBoundary>} />

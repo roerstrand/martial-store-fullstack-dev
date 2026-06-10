@@ -27,7 +27,7 @@ export function CartProvider({ children }) {
 
   const showToast = useCallback((title) => {
     setToast({ title });
-    setTimeout(() => setToast(null), 5000);
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export function CartProvider({ children }) {
     }
   }, [token]);
 
-  const addToCart = async (product, size) => {
+  const addToCart = async (product, size, silent = false) => {
     if (token) {
       if (!cartId) return;
       try {
@@ -81,7 +81,7 @@ export function CartProvider({ children }) {
         return updated;
       });
     }
-    showToast(product.title);
+    if (!silent) showToast(product.title);
   };
 
   const removeFromCart = async (productId) => {

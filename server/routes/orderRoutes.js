@@ -1,5 +1,6 @@
 const express = require("express");
 const tokenValidator = require("../middleware/validateTokenHandler");
+const { optionalValidateToken } = require("../middleware/validateTokenHandler");
 const adminValidator = require("../middleware/adminValidator");
 const {
   getAllOrders,
@@ -15,7 +16,7 @@ const router = express.Router();
 router
   .route("/")
   .get(tokenValidator, adminValidator, getAllOrders)
-  .post(tokenValidator, createOrder);
+  .post(optionalValidateToken, createOrder);
 
 router.get("/me", tokenValidator, getMyOrders);
 

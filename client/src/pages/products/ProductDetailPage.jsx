@@ -90,7 +90,7 @@ function ProductDetailPage() {
 
   const handleBuyNow = async () => {
     if (!selectedSize) { setSizeError(true); return; }
-    await addToCart(product, selectedSize);
+    await addToCart(product, selectedSize, true);
     navigate("/cart");
   };
 

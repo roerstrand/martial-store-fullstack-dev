@@ -31,4 +31,20 @@ const validateToken = asyncHandler(async (req, res, next) => {
   }
 });
 
+const optionalValidateToken = asyncHandler(async (req, res, next) => {
+  const authHeader = req.headers.authorization || req.headers.Authorization;
+  if (authHeader && authHeader.startsWith("Bearer")) {
+    const token = authHeader.split(" ")[1];
+    if (token) {
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (!err) req.user = decoded.user;
+        next();
+      });
+      return;
+    }
+  }
+  next();
+});
+
 module.exports = validateToken;
+module.exports.optionalValidateToken = optionalValidateToken;

@@ -75,7 +75,7 @@ const INFO_CONTENT = {
       },
       {
         heading: "What payment methods do you accept?",
-        body: "We accept Visa, Mastercard, Klarna (invoice, instalment), Swish, and Apple Pay.",
+        body: "We accept Visa, Mastercard, Klarna (invoice, instalment), and Swish.",
       },
       {
         heading: "Do you sell to clubs and gyms?",
@@ -83,7 +83,7 @@ const INFO_CONTENT = {
       },
       {
         heading: "How long does the gear last?",
-        body: "It depends on use and maintenance. Gloves used daily should be replaced every 1–2 years. We have gear care guides under Stories.",
+        body: "It depends on use and maintenance. Gloves used daily should be replaced every 1–2 years.",
       },
     ],
   },

@@ -2051,12 +2051,12 @@ img[src*="ancle_guards"] {
   color: var(--color-light);
 }
 
-.products-toolbar .auth-btn-secondary {
+.products-page .products-toolbar .auth-btn-secondary {
   color: var(--color-light);
   border-color: rgba(247, 243, 227, 0.3);
 }
 
-.products-toolbar .auth-btn-secondary:hover {
+.products-page .products-toolbar .auth-btn-secondary:hover {
   color: var(--color-light);
   border-color: rgba(247, 243, 227, 0.6);
   background: rgba(247, 243, 227, 0.07);
@@ -4198,6 +4198,18 @@ img[src*="ancle_guards"] {
 }
 
 @media (max-width: 768px) {
+  .favorites-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .favorites-header__meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .favorites-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
@@ -4591,6 +4603,79 @@ img[src*="ancle_guards"] {
 .mp-order-card__total {
   font-size: 0.85rem;
   color: var(--color-dark);
+}
+
+.mp-order-card__footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mp-return-btn {
+  background: transparent;
+  border: 1px solid rgba(214, 40, 57, 0.5);
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.mp-return-btn:hover {
+  background: rgba(214, 40, 57, 0.08);
+  border-color: var(--color-accent);
+}
+
+.mp-return-panel {
+  border-top: 1px solid #e0ddd6;
+  background: #faf9f6;
+  padding: 1rem;
+}
+
+.mp-return-panel__title {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-dark);
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.mp-return-panel__info {
+  font-size: 0.78rem;
+  color: var(--color-secondary);
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.mp-return-panel__items {
+  border: 1px solid #e0ddd6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 0.85rem;
+}
+
+.mp-return-panel__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.78rem;
+  color: var(--color-dark);
+  border-bottom: 1px solid #ede9e2;
+}
+
+.mp-return-panel__item:last-child {
+  border-bottom: none;
+}
+
+.mp-return-panel__actions {
+  display: flex;
+  gap: 0.75rem;
 }
 
 /* Favorites grid */
@@ -6245,6 +6330,11 @@ img[src*="ancle_guards"] {
   }
 
   .products-toolbar-btn {
+    font-size: 0.62rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .products-page .products-toolbar .auth-btn-secondary {
     font-size: 0.62rem;
     padding: 0.35rem 0.65rem;
   }

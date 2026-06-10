@@ -55,7 +55,36 @@ function Dashboard({ user, orders, favorites }) {
   );
 }
 
+function printReturnLabel(order) {
+  const items = (order.products ?? [])
+    .map((item) => `${item.product_id?.title ?? "Product"} ×${item.quantity}`)
+    .join("\n");
+  const win = window.open("", "_blank", "width=600,height=500");
+  win.document.write(`<!DOCTYPE html><html><head><title>Return Label – #${order._id.slice(-8).toUpperCase()}</title>
+<style>
+  body{font-family:monospace;padding:2rem;background:#fff}
+  .label{border:2px dashed #333;padding:1.5rem;max-width:420px;margin:0 auto}
+  h2{margin:0 0 1.25rem;font-size:1.1rem;text-transform:uppercase;letter-spacing:.08em}
+  .field{margin:.6rem 0;font-size:.9rem;line-height:1.5}
+  .items{margin-top:1rem;padding-top:1rem;border-top:1px solid #aaa}
+  .footer{margin-top:1.5rem;font-size:.75rem;color:#666;border-top:1px solid #ccc;padding-top:1rem}
+</style></head><body>
+<div class="label">
+  <h2>Return Label</h2>
+  <div class="field"><strong>Return to:</strong><br>Apex Core Returns<br>1 Fight Street<br>London EC1A 1BB</div>
+  <div class="field"><strong>Order:</strong> #${order._id.slice(-8).toUpperCase()}</div>
+  <div class="field"><strong>Return date:</strong> ${new Date().toLocaleDateString("sv-SE")}</div>
+  <div class="items"><strong>Items:</strong><br>${items.replace(/\n/g, "<br>")}</div>
+  <div class="footer">Drop off at your nearest carrier location.<br>Refund processed within 5–10 business days to your original payment method.</div>
+</div>
+<script>window.onload=()=>{window.print();window.close();}<\/script>
+</body></html>`);
+  win.document.close();
+}
+
 function OrderHistory({ orders, loading }) {
+  const [returnOrderId, setReturnOrderId] = useState(null);
+
   if (loading) return <p className="loading">Loading orders...</p>;
   if (!orders || orders.length === 0)
     return (
@@ -99,8 +128,41 @@ function OrderHistory({ orders, loading }) {
             </div>
             <div className="mp-order-card__footer">
               <span className="mp-order-card__total">Total: <strong>{order.totalPrice} EUR</strong></span>
-              <Link to={`/orders/${order._id}`} className="mp-table__link">View Order ›</Link>
+              <div className="mp-order-card__footer-actions">
+                {["delivered", "shipped"].includes(order.status) && (
+                  <button
+                    className="mp-return-btn"
+                    onClick={() => setReturnOrderId(returnOrderId === order._id ? null : order._id)}
+                  >
+                    {returnOrderId === order._id ? "Cancel Return" : "Return ›"}
+                  </button>
+                )}
+                <Link to={`/orders/${order._id}`} className="mp-table__link">View Order ›</Link>
+              </div>
             </div>
+            {returnOrderId === order._id && (
+              <div className="mp-return-panel">
+                <p className="mp-return-panel__title">Return Request – #{order._id.slice(-8).toUpperCase()}</p>
+                <p className="mp-return-panel__info">
+                  Items must be unused, in original packaging, and returned within 30 days of delivery.
+                  Refunds are processed within 5–10 business days.
+                </p>
+                <div className="mp-return-panel__items">
+                  {(order.products ?? []).map((item, i) => (
+                    <div key={i} className="mp-return-panel__item">
+                      <span>{item.product_id?.title ?? "Product"}</span>
+                      <span>×{item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mp-return-panel__actions">
+                  <button className="mp-btn-primary" onClick={() => printReturnLabel(order)}>
+                    Print Return Label ›
+                  </button>
+                  <button className="mp-btn-secondary" onClick={() => setReturnOrderId(null)}>Cancel</button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

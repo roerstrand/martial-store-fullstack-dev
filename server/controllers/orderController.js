@@ -46,7 +46,7 @@ const createOrder = asyncHandler(async (req, res) => {
     throw new Error("products and totalPrice are required");
   }
   const order = await createOrderService({
-    user_id: req.user.id,
+    user_id: req.user?.id || null,
     products,
     totalPrice,
     shippingMethod,
