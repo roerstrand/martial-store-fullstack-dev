@@ -61,8 +61,8 @@ martial-store-fullstack/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/roerstrand/martial-store-fullstack.git
-cd martial-store-fullstack
+git clone https://github.com/roerstrand/martial-store-fullstack-dev.git
+cd martial-store-fullstack-dev
 ```
 
 ### 2. Environment variables
@@ -166,6 +166,12 @@ The server is built with Node.js and Express, using MongoDB as the database via 
 
 **Authentication:** JWT (Bearer token). Private routes require a valid token in the `Authorization` header. Token expires after 24 hours.
 
+### Testing
+
+Automated tests are intentionally not included in this project. The main focus was to demonstrate the complete full-stack architecture and implementation of a functional e-commerce application, including authentication, authorization, product management, cart functionality and order workflows.
+
+Testing remains an identified area for future development.
+
 **Validation:** All endpoints validate required fields and return correct HTTP status codes — `200`, `201`, `400`, `404`, `500` — via a global `errorMiddleware`.
 
 ---
@@ -188,8 +194,19 @@ An error boundary was also implemented to catch rendering errors on the client s
 
 ### Challenges and Lessons Learned
 
-The Node/Express ecosystem takes a more "production ready first" approach compared to .NET, which focuses more on scalability from the start. This was both a lesson and a challenge throughout the project — starting by creating endpoints in controllers and testing them, then gradually moving logic into services and repositories. This felt more flexible compared to .NET where logic can be tested at an earlier stage, but it could also feel like extra work when moving logic that could have been placed in services/repos from the beginning.
+The Node/Express ecosystem takes a more "production ready first" approach compared to .NET, which focuses more on scalability from the start. This was both a lesson and a challenge throughout the project — starting by creating endpoints in controllers and gradually moving business logic into services and database operations into repositories. Automated tests were intentionally left outside the scope of this project and remain a possible area for future development. This felt more flexible compared to .NET where logic can be tested at an earlier stage, but it could also feel like extra work when moving logic that could have been placed in services/repos from the beginning.
 
 Another lesson learned is that a React project can grow very large very quickly and requires clear structure and organization to work efficiently against the backend and its respective endpoints. Naming conventions became very important as the project grew — a clear "Page" postfix for actual pages and categorization of JSX files (cart, products, auth, etc.).
 
 Custom hooks and custom contexts (which also use each other) saved a lot of time, effort, and logic in components.
+
+## Future Improvements
+
+Possible future improvements include:
+
+- Adding automated backend and API tests
+- Introducing continuous integration with GitHub Actions
+- Moving JWT handling from localStorage to HttpOnly cookies
+- Adding a production-ready payment integration
+- Expanding inventory and order management
+- Improving filtering, sorting and product search
