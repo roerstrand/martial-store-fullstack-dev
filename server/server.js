@@ -1,42 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv").config();
-const productRoutes = require("./routes/productRoutes");
-const userRoutes = require("./routes/userRoutes");
-const articleRoutes = require("./routes/articleRoutes");
-const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const favoriteRoutes = require("./routes/favoriteRoutes");
-
+require("dotenv").config();
+const app = require("./app");
 const connectDB = require("./config/dbConnection");
-const { errorHandler } = require("./middleware/errorMiddleware");
 
 connectDB();
 
-const app = express();
-
-app.use(cors({ origin: process.env.CLIENT_URL }));
-app.use(express.json()); // middleware så express kan läsa json
-
-app.use("/api/products", productRoutes);
-
-// api/users definiera routes anropa här
-app.use("/api/users", userRoutes);
-app.use("/api/articles", articleRoutes);
-app.use("/api/carts", cartRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/favorites", favoriteRoutes);
-
-app.use(errorHandler);
-
-//Test route
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Martial store api running" });
-});
-
 const PORT = process.env.PORT || 3000;
 
-//Starta serverm
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
 });

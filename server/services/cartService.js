@@ -1,6 +1,7 @@
 const {
   getAllCarts,
   getCart,
+  getCartOwner,
   getCurrentUserCart,
   createCart,
   updateCart,
@@ -17,6 +18,10 @@ const getAllCartsService = async () => {
 
 const getCartService = async (id) => {
   return await getCart(id);
+};
+
+const getCartOwnerService = async (id) => {
+  return await getCartOwner(id);
 };
 
 const getCurrentUserCartService = async (userId) => {
@@ -54,6 +59,7 @@ const resetCartService = async (id) => {
 module.exports = {
   getAllCartsService,
   getCartService,
+  getCartOwnerService,
   getCurrentUserCartService,
   createCartService,
   updateCartService,

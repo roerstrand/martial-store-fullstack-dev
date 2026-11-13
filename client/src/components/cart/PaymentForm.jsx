@@ -6,6 +6,12 @@ const PAYMENT_METHODS = [
   { value: "klarna", label: "Klarna",               icon: "/icons/Klarna.png" },
 ];
 
+const SHIPPING_OPTIONS = [
+  { value: "standard", label: "Standard", meta: "3–5 days", price: "5 EUR",  carrier: "PostNord" },
+  { value: "express",  label: "Express",  meta: "1–2 days", price: "19 EUR", carrier: "DHL" },
+  { value: "pickup",   label: "Pickup",   meta: "In store", price: "Free",   carrier: null },
+];
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^\+?[\d\s\-().]{7,20}$/;
 const ZIP_RE   = /^[\d\s\-]{3,10}$/;
@@ -33,7 +39,23 @@ function validate(form) {
   return errors;
 }
 
-function PaymentForm({ onSubmit, initialValues = {} }) {
+function Field({ name, label, error, ...inputProps }) {
+  return (
+    <label className={`ac-field${error ? " ac-field--error" : ""}`} htmlFor={`co-${name}`}>
+      <span className="ac-field__label">{label}</span>
+      <input
+        id={`co-${name}`}
+        name={name}
+        aria-invalid={!!error}
+        aria-describedby={error ? `co-${name}-err` : undefined}
+        {...inputProps}
+      />
+      {error && <span className="ac-field__err" id={`co-${name}-err`}>{error}</span>}
+    </label>
+  );
+}
+
+function PaymentForm({ onSubmit, initialValues = {}, onShippingChange }) {
   const [form, setForm] = useState({
     name:    initialValues.name    ?? "",
     email:   initialValues.email   ?? "",
@@ -46,16 +68,15 @@ function PaymentForm({ onSubmit, initialValues = {} }) {
   const [payment, setPayment] = useState("card");
   const [errors, setErrors] = useState([]);
 
-  const shippingOptions = [
-    { value: "standard", label: "Standard", meta: "3–5 days · 5 EUR",  carrier: "PostNord" },
-    { value: "express",  label: "Express",  meta: "1–2 days · 19 EUR", carrier: "DHL" },
-    { value: "pickup",   label: "Pickup",   meta: "In store · Free",   carrier: null },
-  ];
-
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (errors.length)
       setErrors((prev) => prev.filter((err) => err.field !== e.target.name));
+  };
+
+  const chooseShipping = (value) => {
+    setShipping(value);
+    onShippingChange?.(value);
   };
 
   const handleSubmit = (e) => {
@@ -67,14 +88,14 @@ function PaymentForm({ onSubmit, initialValues = {} }) {
       return;
     }
     setErrors([]);
-    const selectedOption = shippingOptions.find((o) => o.value === shipping);
+    const selectedOption = SHIPPING_OPTIONS.find((o) => o.value === shipping);
     onSubmit({ ...form, shipping, payment, carrier: selectedOption?.carrier ?? null });
   };
 
-  const fieldHasError = (field) => errors.some((e) => e.field === field);
+  const errorFor = (field) => errors.find((e) => e.field === field)?.msg;
 
   return (
-    <form id="checkout-form" className="checkout-form" onSubmit={handleSubmit} noValidate>
+    <form id="checkout-form" className="checkout-form ac-checkout__form ac-glass-frost" onSubmit={handleSubmit} noValidate>
 
       {errors.length > 0 && (
         <div id="checkout-error-popup" className="checkout-error-popup" role="alert">
@@ -96,80 +117,74 @@ function PaymentForm({ onSubmit, initialValues = {} }) {
         </div>
       )}
 
-      <p className="checkout-section-title">Contact information</p>
-      <input
-        className={`apex-input${fieldHasError("name") ? " apex-input--error" : ""}`}
-        type="text" name="name" placeholder="Full name"
-        value={form.name} onChange={handleChange}
-        autoComplete="name"
-      />
-      <input
-        className={`apex-input${fieldHasError("email") ? " apex-input--error" : ""}`}
-        type="email" name="email" placeholder="Email address (e.g. name@domain.com)"
-        value={form.email} onChange={handleChange}
-        inputMode="email" autoComplete="email"
-      />
-      <input
-        className={`apex-input${fieldHasError("phone") ? " apex-input--error" : ""}`}
-        type="tel" name="phone" placeholder="Phone number"
-        value={form.phone} onChange={handleChange}
-        autoComplete="tel"
-      />
+      <fieldset className="ac-fieldset">
+        <legend><span>1</span>Contact information</legend>
+        <Field name="name" label="Full name" type="text" placeholder="Jane Fighter"
+          value={form.name} onChange={handleChange} autoComplete="name" error={errorFor("name")} />
+        <div className="ac-field-row ac-field-row--2">
+          <Field name="email" label="Email address" type="email" placeholder="name@domain.com"
+            value={form.email} onChange={handleChange} inputMode="email" autoComplete="email" error={errorFor("email")} />
+          <Field name="phone" label="Phone number" type="tel" placeholder="+46 70 123 45 67"
+            value={form.phone} onChange={handleChange} autoComplete="tel" error={errorFor("phone")} />
+        </div>
+      </fieldset>
 
-      <p className="checkout-section-title">Shipping address</p>
-      <input
-        className={`apex-input${fieldHasError("address") ? " apex-input--error" : ""}`}
-        type="text" name="address" placeholder="Street address"
-        value={form.address} onChange={handleChange}
-        autoComplete="street-address"
-      />
-      <div style={{ display: "flex", gap: "0.5rem" }}>
-        <input
-          className={`apex-input${fieldHasError("zip") ? " apex-input--error" : ""}`}
-          type="text" name="zip" placeholder="Postal code"
-          value={form.zip} onChange={handleChange}
-          autoComplete="postal-code"
-        />
-        <input
-          className={`apex-input${fieldHasError("city") ? " apex-input--error" : ""}`}
-          type="text" name="city" placeholder="City"
-          value={form.city} onChange={handleChange}
-          autoComplete="address-level2"
-        />
-      </div>
+      <fieldset className="ac-fieldset">
+        <legend><span>2</span>Shipping address</legend>
+        <Field name="address" label="Street address" type="text" placeholder="Street and number"
+          value={form.address} onChange={handleChange} autoComplete="street-address" error={errorFor("address")} />
+        <div className="ac-field-row">
+          <Field name="zip" label="Postal code" type="text" placeholder="123 45"
+            value={form.zip} onChange={handleChange} autoComplete="postal-code" error={errorFor("zip")} />
+          <Field name="city" label="City" type="text" placeholder="Stockholm"
+            value={form.city} onChange={handleChange} autoComplete="address-level2" error={errorFor("city")} />
+        </div>
+      </fieldset>
 
-      <p className="checkout-section-title">Shipping method</p>
-      <div className="shipping-options">
-        {shippingOptions.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            className={`shipping-option${shipping === opt.value ? " shipping-option--active" : ""}`}
-            onClick={() => setShipping(opt.value)}
-          >
-            <span className="shipping-option__radio" />
-            <span className="shipping-option__body">
-              <span className="shipping-option__label">{opt.label}{opt.carrier ? ` · ${opt.carrier}` : ""}</span>
-              <span className="shipping-option__meta">{opt.meta}</span>
-            </span>
-          </button>
-        ))}
-      </div>
+      <fieldset className="ac-fieldset">
+        <legend><span>3</span>Shipping method</legend>
+        <div className="ac-options" role="radiogroup" aria-label="Shipping method">
+          {SHIPPING_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              role="radio"
+              aria-checked={shipping === opt.value}
+              className={`ac-option${shipping === opt.value ? " is-active" : ""}`}
+              onClick={() => chooseShipping(opt.value)}
+            >
+              <span className="ac-option__radio" />
+              <span className="ac-option__body">
+                <span className="ac-option__label">{opt.label}</span>
+                <span className="ac-option__meta">{opt.meta}{opt.carrier ? ` · ${opt.carrier}` : ""}</span>
+                <span className="ac-option__price">{opt.price}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
 
-      <p className="checkout-section-title">Payment method</p>
-      <div className="payment-methods">
-        {PAYMENT_METHODS.map((m) => (
-          <button
-            key={m.value}
-            type="button"
-            className={`payment-method${payment === m.value ? " payment-method--active" : ""}`}
-            onClick={() => setPayment(m.value)}
-          >
-            <img src={m.icon} alt={m.label} className="payment-method__icon" />
-            <span className="payment-method__label">{m.label}</span>
-          </button>
-        ))}
-      </div>
+      <fieldset className="ac-fieldset">
+        <legend><span>4</span>Payment method</legend>
+        <div className="ac-options ac-options--pay" role="radiogroup" aria-label="Payment method">
+          {PAYMENT_METHODS.map((m) => (
+            <button
+              key={m.value}
+              type="button"
+              role="radio"
+              aria-checked={payment === m.value}
+              className={`ac-option${payment === m.value ? " is-active" : ""}`}
+              onClick={() => setPayment(m.value)}
+            >
+              <span className="ac-option__radio" />
+              <span className="ac-option__body">
+                <span className="ac-option__label">{m.label}</span>
+              </span>
+              <img src={m.icon} alt="" />
+            </button>
+          ))}
+        </div>
+      </fieldset>
 
     </form>
   );

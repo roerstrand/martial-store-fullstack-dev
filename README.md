@@ -204,9 +204,6 @@ Custom hooks and custom contexts (which also use each other) saved a lot of time
 
 Possible future improvements include:
 
-- Adding automated backend and API tests
-- Introducing continuous integration with GitHub Actions
-- Moving JWT handling from localStorage to HttpOnly cookies
 - Adding a production-ready payment integration
 - Expanding inventory and order management
 - Improving filtering, sorting and product search

@@ -362,7 +362,7 @@ function SavedAddresses() {
 }
 
 function ProfileSettings({ user }) {
-  const [, token, login] = useAuth();
+  const [, , login] = useAuth();
 
   const [nameNew, setNameNew]       = useState("");
   const [nameRepeat, setNameRepeat] = useState("");
@@ -386,7 +386,7 @@ function ProfileSettings({ user }) {
     setNameLoading(true);
     try {
       const updated = await updateProfile({ name: trimmed });
-      login({ ...user, ...updated }, token);
+      login({ ...user, ...updated });
       setNameNew(""); setNameRepeat("");
       setNameSaved(true);
       setTimeout(() => setNameSaved(false), 3000);
@@ -417,7 +417,7 @@ function ProfileSettings({ user }) {
     setEmailLoading(true);
     try {
       const updated = await updateProfile({ email: emailPending });
-      login({ ...user, ...updated }, token);
+      login({ ...user, ...updated });
       setEmailPending(null);
       setEmailSaved(true);
       setTimeout(() => setEmailSaved(false), 3000);

@@ -4,6 +4,7 @@ const adminValidator = require("../middleware/adminValidator");
 const router = express.Router();
 
 const {
+  authorizeCart,
   getAllCarts,
   getCart,
   getCurrentUserCart,
@@ -20,22 +21,24 @@ router.route("/").get(tokenValidator, adminValidator, getAllCarts).post(tokenVal
 
 router.get("/me", tokenValidator, getCurrentUserCart);
 
+const ownCart = [tokenValidator, authorizeCart];
+
 router
   .route("/:id")
-  .get(tokenValidator, getCart)
-  .put(tokenValidator, updateCart);
+  .get(ownCart, getCart)
+  .put(ownCart, updateCart);
 
 router
   .route("/:id/products")
-  .post(tokenValidator, addProductToCart);
+  .post(ownCart, addProductToCart);
 
 router
   .route("/:id/products/:productId")
-  .delete(tokenValidator, removeProductFromCart);
+  .delete(ownCart, removeProductFromCart);
 
-router.patch("/:id/products/:productId/increase", tokenValidator, increaseQuantity);
-router.patch("/:id/products/:productId/decrease", tokenValidator, decreaseQuantity);
+router.patch("/:id/products/:productId/increase", ownCart, increaseQuantity);
+router.patch("/:id/products/:productId/decrease", ownCart, decreaseQuantity);
 
-router.delete("/:id/reset", tokenValidator, resetCart);
+router.delete("/:id/reset", ownCart, resetCart);
 
 module.exports = router;

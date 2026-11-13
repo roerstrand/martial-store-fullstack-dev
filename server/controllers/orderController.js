@@ -21,7 +21,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
 // @access  private
 const getOrder = asyncHandler(async (req, res) => {
   const order = await getOrderService(req.params.id);
-  if (!order) {
+  const isOwner = order && order.user_id && String(order.user_id) === req.user.id;
+  if (!order || !(isOwner || req.user.role === "admin")) {
     res.status(404);
     throw new Error("Order not found");
   }

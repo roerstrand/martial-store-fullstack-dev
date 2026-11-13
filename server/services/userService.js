@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const {
   findUserByEmail,
   findUserByName,
+  findUserById,
   createUser,
   updateUserPassword,
   updateUserProfile,
@@ -100,4 +101,10 @@ const updateProfileService = async ({ userId, name, email }) => {
   return { name: updated.name, email: updated.email };
 };
 
-module.exports = { registerUserService, loginUserService, changePasswordService, updateProfileService };
+const getCurrentUserService = async (userId) => {
+  const user = await findUserById(userId);
+  if (!user) return null;
+  return { id: user.id, name: user.name, email: user.email, role: user.role };
+};
+
+module.exports = { registerUserService, loginUserService, getCurrentUserService, changePasswordService, updateProfileService };

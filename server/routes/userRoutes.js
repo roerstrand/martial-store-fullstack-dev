@@ -4,6 +4,7 @@ const adminValidator = require("../middleware/adminValidator");
 const {
   registerUser,
   loginUser,
+  logoutUser,
   getCurrentUser,
   getUsers,
   changePassword,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/logout", logoutUser);
 router.get("/current", tokenHandler, getCurrentUser);
 router.get("/", tokenHandler, adminValidator, getUsers);
 router.put("/password", tokenHandler, changePassword);

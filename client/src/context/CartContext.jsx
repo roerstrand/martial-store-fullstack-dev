@@ -19,7 +19,7 @@ const normalize = (items) =>
   }));
 
 export function CartProvider({ children }) {
-  const [, token] = useAuth();
+  const [, isAuthenticated, , , initializing] = useAuth();
   const [cart, setCart] = useState([]);
   const [cartId, setCartId] = useState(null);
   const [cartLoading, setCartLoading] = useState(true);
@@ -31,7 +31,8 @@ export function CartProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (token) {
+    if (initializing) return;
+    if (isAuthenticated) {
       setCartLoading(true);
       getCart()
         .then((data) => {
@@ -51,10 +52,10 @@ export function CartProvider({ children }) {
       setCart(local);
       setCartLoading(false);
     }
-  }, [token]);
+  }, [isAuthenticated, initializing]);
 
   const addToCart = async (product, size, silent = false) => {
-    if (token) {
+    if (isAuthenticated) {
       if (!cartId) return;
       try {
         const data = await addCartItem(cartId, product._id, size);
@@ -86,7 +87,7 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = async (productId, size) => {
-    if (token) {
+    if (isAuthenticated) {
       const data = await removeCartItem(cartId, productId, size);
       setCart(normalize(data.products));
     } else {
@@ -101,7 +102,7 @@ export function CartProvider({ children }) {
   };
 
   const increaseItem = async (productId) => {
-    if (token) {
+    if (isAuthenticated) {
       const data = await increaseQuantity(cartId, productId);
       setCart(normalize(data.products));
     } else {
@@ -116,7 +117,7 @@ export function CartProvider({ children }) {
   };
 
   const decreaseItem = async (productId) => {
-    if (token) {
+    if (isAuthenticated) {
       const item = cart.find((i) => i.product._id === productId);
       if (!item) return;
       if (item.quantity <= 1) {
@@ -138,7 +139,7 @@ export function CartProvider({ children }) {
   };
 
   const updateSize = async (product, oldSize, newSize) => {
-    if (token) {
+    if (isAuthenticated) {
       if (!cartId) return;
       try {
         await removeCartItem(cartId, product._id, oldSize);
@@ -162,7 +163,7 @@ export function CartProvider({ children }) {
   };
 
   const clearCart = async () => {
-    if (token && cartId) {
+    if (isAuthenticated && cartId) {
       await resetCart(cartId);
     }
     setCart([]);
