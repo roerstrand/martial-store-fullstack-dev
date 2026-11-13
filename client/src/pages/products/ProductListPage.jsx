@@ -5,6 +5,9 @@ import { getProducts } from "../../services/productService";
 import Filter, { DEFAULT_FILTERS } from "../../components/products/Filter";
 import { useFavorites } from "../../context/FavoriteContext";
 import { useCart } from "../../context/CartContext";
+import ProductCard from "../../components/products/ProductCard";
+import { categoryLabel } from "../../utils/productFormat";
+import { ArrowLeftIcon, SearchIcon, FilterIcon, CloseIcon } from "../../components/ui/Icons";
 import "../Pages.css";
 
 const CATEGORIES = ["all", "bjj", "boxing", "muaythai", "karate"];
@@ -49,24 +52,6 @@ function applyFilters(products, category, filters, search) {
   if (filters.sort === "rating-desc") result.sort((a, b) => b.rating - a.rating);
 
   return result;
-}
-
-function StarRating({ rating, count }) {
-  return (
-    <span className="product-card__stars">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={`star${s <= Math.round(rating || 0) ? " star--filled" : ""}`}>★</span>
-      ))}
-      {count > 0 && <span className="product-card__review-count">({count})</span>}
-    </span>
-  );
-}
-
-function StockBadge({ stock }) {
-  const s = stock ?? 99;
-  if (s === 0) return <span className="product-card__stock product-card__stock--out">✕ Out of stock</span>;
-  if (s < 10)  return <span className="product-card__stock product-card__stock--low">⚡ {s} left</span>;
-  return <span className="product-card__stock product-card__stock--in">✓ In stock</span>;
 }
 
 function ProductListPage() {
@@ -121,157 +106,117 @@ function ProductListPage() {
     setFilters(DEFAULT_FILTERS);
   };
 
+  const activeFilterCount =
+    (filters.sort !== "default" ? 1 : 0) +
+    (filters.minPrice !== "" ? 1 : 0) +
+    (filters.maxPrice !== "" ? 1 : 0) +
+    (filters.onSale ? 1 : 0) +
+    (filters.minRating > 0 ? 1 : 0);
+
+  const heading = limitedSaleParam ? "Limited Sale"
+    : newArrivalParam ? "New Arrivals"
+    : saleParam ? "Sale"
+    : "Our Fight Gear";
+
   return (
-    <div className="products-page">
+    <div className="products-page ac-page ac-page-backdrop">
+      <div className="ac-container">
+        <Link to="/" className="ac-backlink"><ArrowLeftIcon /> Home</Link>
 
-      <div className="products-toolbar">
-        <Link to="/" className="auth-btn-secondary">‹ Back to Home</Link>
-        <h1>Our Fight Gear</h1>
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-          {isFiltered && (
-            <button className="filter-reset-btn" onClick={clearFilters}>CLEAR ✕</button>
-          )}
-          <button
-            className="products-toolbar-btn"
-            onClick={() => setShowFilter((prev) => !prev)}
-          >
-            {showFilter ? "CLOSE ✕" : "FILTER ›"}
-          </button>
-        </div>
-      </div>
-
-      <div className="products-search">
-        <svg className="products-search__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input
-          className="products-search__input"
-          type="text"
-          placeholder="Search gear, categories, keywords…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        {search && (
-          <button className="products-search__clear" onClick={() => setSearch("")}>✕</button>
-        )}
-      </div>
-
-      <div className="products-categories">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            className={`category-pill${category === cat ? " category-pill--active" : ""}`}
-            onClick={() => setCategory(cat)}
-          >
-            {cat === "all" ? "All" : cat === "muaythai" ? "Muay Thai" : cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {showFilter && (
-        <Filter
-          filters={filters}
-          onChange={setFilters}
-          onClose={() => setShowFilter(false)}
-        />
-      )}
-
-      <p className="products-count">
-        {search ? `${displayed.length} results for "${search}"` : `${displayed.length} products`}
-      </p>
-
-      {displayed.length === 0 && (
-        <div className="products-empty">
-          <p>No products match <strong>"{search}"</strong>.</p>
-          <button className="products-toolbar-btn" onClick={() => setSearch("")}>Clear search</button>
-        </div>
-      )}
-
-      <div className="products-grid">
-        {loading && Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="skeleton-grid-card">
-            <div className="skeleton-grid-card__img skeleton" />
-            <div className="skeleton-grid-card__body">
-              <div className="skeleton-grid-card__name skeleton" />
-              <div className="skeleton-grid-card__price skeleton" />
-              <div className="skeleton-grid-card__stars skeleton" />
+        <div className="ac-toolbar ac-glass-frost">
+          <div className="ac-toolbar__top">
+            <div className="ac-toolbar__title">
+              <h1 className="ac-h2">{heading}</h1>
+              <span className="ac-toolbar__count" aria-live="polite">
+                {loading ? "Loading…" : search ? `${displayed.length} results for “${search}”` : `${displayed.length} products`}
+              </span>
             </div>
           </div>
-        ))}
-        {displayed.map((product) => {
-          const isFav = favorites.some((f) => f._id === product._id);
-          const discountedPrice = product.sale > 0
-            ? Math.round(product.price * (1 - product.sale / 100))
-            : null;
 
-          return (
-            <Link to={`/products/${product._id}`} key={product._id} className="product-card">
-              <div className="product-card__img-wrap">
-                <img src={`/images/products/${product.image}`} alt={product.title} loading="lazy" />
+          <div className="ac-toolbar__row">
+            <div className="ac-search">
+              <SearchIcon />
+              <label htmlFor="products-search" className="ac-visually-hidden">Search products</label>
+              <input
+                id="products-search"
+                type="search"
+                placeholder="Search gear, categories, keywords…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {search && (
+                <button type="button" className="ac-search__clear" onClick={() => setSearch("")} aria-label="Clear search">✕</button>
+              )}
+            </div>
+            <div className="ac-toolbar__actions">
+              {isFiltered && (
+                <button type="button" className="ac-btn ac-btn--outline" onClick={clearFilters}>Clear ✕</button>
+              )}
+              <button
+                type="button"
+                className={`ac-btn ${showFilter ? "ac-btn--ink" : "ac-btn--outline"}`}
+                onClick={() => setShowFilter((prev) => !prev)}
+                aria-expanded={showFilter}
+              >
+                {showFilter ? <CloseIcon /> : <FilterIcon />}
+                {showFilter ? "Close" : "Filter & sort"}
+                {!showFilter && activeFilterCount > 0 && <span className="ac-filter-dot">{activeFilterCount}</span>}
+              </button>
+            </div>
+          </div>
 
-                {product.sale > 0 && (
-                  <span className="product-card__sale-badge">−{product.sale}%</span>
-                )}
-                {product.isBestseller && (
-                  <span className="product-card__best-badge">Bestseller</span>
-                )}
+          <div className="ac-toolbar__cats" role="group" aria-label="Categories">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={`ac-chip${category === cat ? " is-active" : ""}`}
+                onClick={() => setCategory(cat)}
+                aria-pressed={category === cat}
+              >
+                {cat === "all" ? "All" : categoryLabel(cat)}
+              </button>
+            ))}
+          </div>
 
-                <div className="product-card__overlay">
-                  <span className="product-card__category-tag">
-                    {product.category === "muaythai" ? "Muay Thai" : product.category.toUpperCase()}
-                  </span>
-                </div>
+          {showFilter && (
+            <Filter
+              filters={filters}
+              onChange={setFilters}
+              onClose={() => setShowFilter(false)}
+            />
+          )}
+        </div>
 
+        {!loading && displayed.length === 0 && (
+          <div className="ac-empty ac-glass-frost">
+            <p>{search ? <>No products match <strong>“{search}”</strong>.</> : "No products match these filters."}</p>
+            <button type="button" className="ac-btn ac-btn--ink" onClick={() => { setSearch(""); clearFilters(); }}>Show all products</button>
+          </div>
+        )}
+
+        <div className="ac-product-grid">
+          {loading && Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="ac-card">
+              <div className="ac-card__media skeleton" />
+              <div className="ac-card__body">
+                <div className="skeleton" style={{ height: "0.9rem", width: "80%", borderRadius: 4 }} />
+                <div className="skeleton" style={{ height: "1.1rem", width: "40%", borderRadius: 4 }} />
               </div>
-
-              <div className="product-card__footer">
-                <div className="product-card__info">
-                  <span className="product-card__name">{product.title}</span>
-                  <div className="product-card__price-row">
-                    {discountedPrice ? (
-                      <>
-                        <span className="product-card__price product-card__price--original">
-                          {product.price} <small>EUR</small>
-                        </span>
-                        <span className="product-card__price product-card__price--sale">
-                          {discountedPrice} <small>EUR</small>
-                        </span>
-                      </>
-                    ) : (
-                      <span className="product-card__price">
-                        {product.price} <small>EUR</small>
-                      </span>
-                    )}
-                  </div>
-                  <StarRating rating={product.rating} count={product.numReviews} />
-                  <StockBadge stock={product.stock} />
-                </div>
-
-                <div className="product-card__actions">
-                  <button
-                    className="product-card__cart-btn"
-                    onClick={(e) => { e.preventDefault(); addToCart(product, null); }}
-                    title="Add to cart"
-                  >
-                    <img src="/icons/Cart add.svg" alt="Add to cart" />
-                  </button>
-                  <button
-                    className={`home-product-card__fav-btn${isFav ? " active" : ""}`}
-                    onClick={(e) => { e.preventDefault(); toggleFavorites(product); }}
-                  >
-                    <img
-                      src={isFav ? "/icons/FavoritesFilled.png" : "/icons/Favorites.png"}
-                      alt="Favorite"
-                    />
-                  </button>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+            </div>
+          ))}
+          {displayed.map((product) => (
+            <ProductCard
+              key={product._id}
+              product={product}
+              isFavorite={favorites.some((f) => f._id === product._id)}
+              onToggleFavorite={toggleFavorites}
+              onAddToCart={(p) => addToCart(p, null)}
+              showCategory
+            />
+          ))}
+        </div>
       </div>
-
     </div>
   );
 }

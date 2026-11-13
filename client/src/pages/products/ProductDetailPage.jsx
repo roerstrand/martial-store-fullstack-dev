@@ -6,19 +6,11 @@ import { getProduct, getProducts } from "../../services/productService";
 import { useCart } from "../../context/CartContext";
 import { useFavorites } from "../../context/FavoriteContext";
 import { REVIEWS } from "../../data/testimonials";
-import PageNav from "../../components/PageNav";
 import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
 import RecentlyViewed from "../../components/products/RecentlyViewed";
-
-function Stars({ rating }) {
-  return (
-    <span className="detail-stars">
-      {[1,2,3,4,5].map(s => (
-        <span key={s} className={s <= rating ? "star star--filled" : "star"}>{'★'}</span>
-      ))}
-    </span>
-  );
-}
+import ProductCard, { Stars, Stock } from "../../components/products/ProductCard";
+import { categoryLabel } from "../../utils/productFormat";
+import { ArrowLeftIcon, ArrowRightIcon, CartPlusIcon, HeartIcon, TruckIcon, ReturnIcon, LockIcon } from "../../components/ui/Icons";
 
 function ProductDetailPage() {
   const { productId } = useParams();
@@ -48,7 +40,7 @@ function ProductDetailPage() {
     const is404 = !product || !product._id || error?.response?.status === 404;
     return (
       <div className="product-detail-page">
-        <PageNav back="/products" backLabel="All Products" />
+        <div className="ac-container"><Link to="/products" className="ac-backlink"><ArrowLeftIcon /> All Products</Link></div>
         <div className="product-not-found">
           <p className="product-not-found__msg">
             {is404 ? "Product not found." : "Something went wrong loading this product."}
@@ -95,161 +87,153 @@ function ProductDetailPage() {
   };
 
   const isFavorite = favorites?.some((f) => f._id === product?._id);
+  const stock = product.stock ?? 99;
 
   return (
-    <div className="product-detail-page">
-      <PageNav back="/products" backLabel="All Products" />
-      <div className="product-detail__layout">
+    <div className="product-detail-page ac-page ac-page-backdrop">
+      <div className="ac-container">
+        <Link to="/products" className="ac-backlink"><ArrowLeftIcon /> All Products</Link>
 
-        {/* Image column */}
-        <div className="product-detail__image">
-          <div className="product-detail__image-main">
-            <img
-              src={`/images/products/${product.image}`}
-              alt={product.title}
-              loading="lazy"
-            />
-          </div>
-        </div>
-
-        {/* Info column */}
-        <div className="product-detail__info">
-
-          {(product.isNewArrival || product.isLimitedSale || product.sale > 0) && (
-            <div className="product-detail__badge-row">
-              {product.isNewArrival && <span className="product-badge product-badge--new">NEW</span>}
-              {product.isLimitedSale && <span className="product-badge product-badge--limited">LIMITED</span>}
-              {product.sale > 0 && <span className="product-badge product-badge--sale">-{product.sale}%</span>}
-            </div>
-          )}
-
-          <p className="product-detail__name">{product.title}</p>
-
-          <div className="product-detail__social-row">
-            <Stars rating={product.rating} />
-            <span className="product-detail__rating-num">{product.rating}.0</span>
-            {product.sold > 0 && (
-              <span className="product-detail__sold">{product.sold} sold</span>
-            )}
-          </div>
-
-          <div className="product-detail__price-row">
-            {discountedPrice ? (
-              <>
-                <span className="product-detail__price">{discountedPrice} EUR</span>
-                <span className="product-detail__price-original">{product.price} EUR</span>
-              </>
-            ) : (
-              <span className="product-detail__price">{product.price} EUR</span>
-            )}
-          </div>
-
-          <p className="product-detail__delivery">
-            <span className="product-detail__delivery-icon">🚚</span>
-            Free shipping on orders over 500 EUR
-          </p>
-
-          <p className="product-detail__availability">
-            <span className="product-detail__stock-dot"></span>
-            IN STOCK
-          </p>
-
-          <p className="product-detail__desc">{product.description}</p>
-
-          <p className="product-detail__size-label">SIZE</p>
-          <div className="product-detail__sizes">
-            {["S", "M", "L"].map((size) => (
-              <button
-                key={size}
-                className={`size-btn ${selectedSize === size ? "size-btn--active" : ""}`}
-                onClick={() => { setSelectedSize(size); setSizeError(false); }}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-          {sizeError && (
-            <p className="product-detail__size-error">Please select a size before continuing.</p>
-          )}
-
-          <div className="product-detail__cta-row">
-            <button className="product-detail__add-cart" onClick={handleAddToCart}>
-              ADD TO CART
-            </button>
-            <button className="product-detail__buy" onClick={handleBuyNow}>
-              BUY NOW
-            </button>
-            <button
-              className={`product-detail__fav-btn${isFavorite ? " product-detail__fav-btn--active" : ""}`}
-              onClick={() => toggleFavorites(product)}
-              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            >
-              {isFavorite ? "♥" : "♡"}
-            </button>
-          </div>
-
-          <div className="product-detail__trust-row">
-            <div className="trust-item">
-              <span className="trust-item__icon">🚚</span>
-              <span>Free shipping</span>
-            </div>
-            <div className="trust-item">
-              <span className="trust-item__icon">↩</span>
-              <span>Easy returns</span>
-            </div>
-            <div className="trust-item">
-              <span className="trust-item__icon">🔒</span>
-              <span>Secure payment</span>
+        <div className="ac-pdp">
+          <div className="ac-pdp__media">
+            <img src={`/images/products/${product.image}`} alt={product.title} />
+            <div className="ac-pdp__media-badges">
+              {product.sale > 0 && <span className="ac-badge ac-badge--sale">−{product.sale}%</span>}
+              {product.isNewArrival && <span className="ac-badge ac-badge--glass">New</span>}
+              {product.isLimitedSale && <span className="ac-badge ac-badge--glass">Limited</span>}
             </div>
           </div>
 
-          {product.details && (
-            <>
-              <p className="product-detail__materials-title">MATERIALS / DETAILS</p>
-              <p className="product-detail__materials-text">{product.details}</p>
-            </>
-          )}
-        </div>
-      </div>
+          <div className="ac-pdp__panel ac-glass-frost">
+            <div>
+              <span className="ac-pdp__cat">{categoryLabel(product.category)}</span>
+              <h1 className="ac-pdp__title">{product.title}</h1>
+            </div>
 
-      {reviews.length > 0 && (
-        <div className="product-reviews">
-          <p className="product-reviews__title">Customer Reviews</p>
-          <div className="product-reviews__list">
-            {reviews.map((r, i) => (
-              <div key={i} className="product-review">
-                <div className="product-review__top">
-                  <span className="product-review__author">{r.author}</span>
-                  <Stars rating={r.rating} />
-                  <span className="product-review__date">{r.date}</span>
-                </div>
-                <p className="product-review__text">"{r.text}"</p>
+            <div className="ac-pdp__social">
+              <Stars rating={product.rating} count={product.numReviews} />
+              {product.sold > 0 && <span>{product.sold} sold</span>}
+            </div>
+
+            <div className="ac-pdp__pricebox">
+              {discountedPrice ? (
+                <p className="ac-price ac-price--sale">
+                  <span className="ac-price__now">{discountedPrice}<small>EUR</small></span>
+                  <s className="ac-price__was">{product.price}<small>EUR</small></s>
+                </p>
+              ) : (
+                <p className="ac-price"><span className="ac-price__now">{product.price}<small>EUR</small></span></p>
+              )}
+              <Stock stock={stock} />
+            </div>
+
+            <p className="ac-pdp__desc">{product.description}</p>
+
+            <div>
+              <p className="ac-pdp__label" id="size-label">
+                <span>Size</span>
+                <b>{selectedSize ? `Selected: ${selectedSize}` : "Choose a size"}</b>
+              </p>
+              <div className={`ac-sizes${sizeError ? " ac-sizes--error" : ""}`} role="radiogroup" aria-labelledby="size-label">
+                {["S", "M", "L"].map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    role="radio"
+                    aria-checked={selectedSize === size}
+                    className={`ac-size${selectedSize === size ? " is-active" : ""}`}
+                    onClick={() => { setSelectedSize(size); setSizeError(false); }}
+                  >
+                    {size}
+                  </button>
+                ))}
               </div>
-            ))}
+              {sizeError && (
+                <p className="ac-pdp__error" role="alert">Please select a size before continuing.</p>
+              )}
+            </div>
+
+            <div className="ac-pdp__ctas">
+              <button type="button" className="ac-btn ac-btn--primary" onClick={handleAddToCart}>
+                <CartPlusIcon /> Add to cart
+              </button>
+              <button type="button" className="ac-btn ac-btn--ink" onClick={handleBuyNow}>
+                Buy now
+              </button>
+              <button
+                type="button"
+                className={`ac-iconbtn${isFavorite ? " is-active" : ""}`}
+                onClick={() => toggleFavorites(product)}
+                aria-pressed={isFavorite}
+                aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              >
+                <HeartIcon filled={isFavorite} />
+              </button>
+            </div>
+
+            <p className="ac-pdp__delivery"><TruckIcon width="18" height="18" /> Free shipping on orders over 500 EUR</p>
+
+            <div className="ac-pdp__trust">
+              <div><TruckIcon /><span>Free shipping</span></div>
+              <div><ReturnIcon /><span>Easy returns</span></div>
+              <div><LockIcon /><span>Secure payment</span></div>
+            </div>
+
+            {product.details && (
+              <div className="ac-pdp__details">
+                <p className="ac-pdp__label"><span>Materials / details</span></p>
+                <p>{product.details}</p>
+              </div>
+            )}
           </div>
         </div>
-      )}
 
-      {related.length > 0 && (
-        <div className="product-detail__related">
-          <p className="product-detail__related-title">YOU MAY ALSO LIKE</p>
-          <div className="product-detail__related-grid">
-            {related.map(p => (
-              <Link key={p._id} to={`/products/${p._id}`} className="product-detail__related-card">
-                <div className="product-detail__related-img">
-                  <img src={`/images/products/${p.image}`} alt={p.title} loading="lazy" />
+        {reviews.length > 0 && (
+          <section className="ac-section ac-section--flush">
+            <div className="ac-section-head">
+              <div>
+                <p className="ac-eyebrow">What fighters say</p>
+                <h2 className="ac-h2">Customer Reviews</h2>
+              </div>
+            </div>
+            <div className="ac-reviews">
+              {reviews.map((r, i) => (
+                <div key={i} className="ac-review ac-glass-frost">
+                  <div className="ac-review__top">
+                    <b>{r.author}</b>
+                    <span className="ac-review__date">{r.date}</span>
+                  </div>
+                  <Stars rating={r.rating} />
+                  <p>“{r.text}”</p>
                 </div>
-                <p className="product-detail__related-name">{p.title}</p>
-                <p className="product-detail__related-price">{p.price} EUR</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+              ))}
+            </div>
+          </section>
+        )}
 
-      <Link to="/" className="auth-btn-secondary" style={{ margin: "0 1.5rem 2rem" }}>
-        BACK TO HOME ›
-      </Link>
+        {related.length > 0 && (
+          <section className="ac-section ac-section--flush">
+            <div className="ac-section-head">
+              <div>
+                <p className="ac-eyebrow">Same discipline</p>
+                <h2 className="ac-h2">You May Also Like</h2>
+              </div>
+              <Link to={`/products?category=${product.category}`} className="ac-link-arrow">View all <ArrowRightIcon /></Link>
+            </div>
+            <div className="ac-product-grid ac-product-grid--flush">
+              {related.map((p) => (
+                <ProductCard
+                  key={p._id}
+                  product={p}
+                  isFavorite={favorites.some((f) => f._id === p._id)}
+                  onToggleFavorite={toggleFavorites}
+                  onAddToCart={(item) => addToCart(item, null)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
 
       <RecentlyViewed items={recentItems} currentId={productId} />
     </div>
