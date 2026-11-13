@@ -56,7 +56,7 @@ function Navbar({ variant = "dark" }) {
     }
   };
 
-  const handleLogout = () => { logout(); navigate("/login"); };
+  const handleLogout = async () => { await logout(); navigate("/login"); };
   const goCategory = (value) => navigate(`/products?category=${value}`);
   const toggleSale = () => navigate(saleActive ? "/products" : "/products?sale=true");
 
