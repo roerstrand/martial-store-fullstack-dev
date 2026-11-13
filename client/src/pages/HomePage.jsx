@@ -42,10 +42,10 @@ const TESTIMONIALS = [
 ];
 
 const CATEGORY_TILES = [
-  { value: "bjj",      label: "Brazilian Jiu-Jitsu", img: "/images/misc/bjj_triangle.jpg" },
-  { value: "boxing",   label: "Boxing",              img: "/images/misc/muaythai_fight.jpg" },
-  { value: "muaythai", label: "Muay Thai",           img: "/images/misc/muaythai_sparr.jpg" },
-  { value: "karate",   label: "Karate",              img: "/images/misc/karate_sunset.jpg" },
+  { value: "bjj",      label: "Brazilian Jiu-Jitsu", img: "/images/misc/bjj_triangle.jpg",   focus: "50% 30%", place: "bl", tone: "deep" },
+  { value: "boxing",   label: "Boxing",              img: "/images/misc/muaythai_fight.jpg", focus: "50% 38%", place: "bl", tone: "light" },
+  { value: "muaythai", label: "Muay Thai",           img: "/images/misc/muaythai_sparr.jpg", focus: "35% 35%", place: "br", tone: "deep" },
+  { value: "karate",   label: "Karate",              img: "/images/misc/karate_sunset.jpg",  focus: "30% 65%", place: "br", tone: "light" },
 ];
 
 const USPS = [
@@ -90,7 +90,9 @@ function FeatureShelf({ eyebrow, title, subtitle, image, products, loading, link
   return (
     <div className={`ac-feature${reverse ? " ac-feature--reverse" : ""}`}>
       <Link to={linkTo} className="ac-feature__visual">
-        <img src={image} alt="" loading="lazy" />
+        <span className="ac-feature__media">
+          <img src={image} alt="" loading="lazy" />
+        </span>
         <div className="ac-feature__panel ac-glass-smoke">
           <span className={`ac-badge ${sale ? "ac-badge--sale" : "ac-badge--glass"}`} style={{ alignSelf: "flex-start" }}>{eyebrow}</span>
           <h2 className="ac-h2">{title}</h2>
@@ -202,6 +204,19 @@ function HomePage() {
   const goPrev = () => { setDisplayIndex((p) => (p - 1 + products.length) % products.length); handleInteraction(); };
   const goNext = () => { setDisplayIndex((p) => (p + 1) % products.length); handleInteraction(); };
 
+  const progressSegments = (() => {
+    const total = products.length;
+    if (!total) return [];
+    const span = Math.min(visible, total);
+    const start = displayIndex;
+    const end = start + span;
+    if (end <= total) return [{ left: (start / total) * 100, width: (span / total) * 100 }];
+    return [
+      { left: (start / total) * 100, width: ((total - start) / total) * 100 },
+      { left: 0, width: ((end - total) / total) * 100 },
+    ];
+  })();
+
   const visibleProducts = products.length > 0
     ? Array.from({ length: Math.min(visible, products.length) }, (_, i) =>
         products[(displayIndex + i) % products.length])
@@ -248,12 +263,14 @@ function HomePage() {
           <div className="ac-carousel__head-right">
             <Link to="/products" className="ac-link-arrow">All products <ArrowRightIcon width="14" height="14" /></Link>
             {canSlide && (
-              <div className="ac-carousel__controls ac-glass-frost" role="group" aria-label="Carousel controls">
+              <div className="ac-carousel__controls ac-glass-thin" role="group" aria-label="Carousel controls">
                 <button type="button" className="ac-iconbtn" onClick={goPrev} aria-label="Previous products"><ArrowLeftIcon /></button>
                 <div className="ac-carousel__pos">
                   <span><b>{String(displayIndex + 1).padStart(2, "0")}</b> / {String(products.length).padStart(2, "0")}</span>
                   <span className="ac-carousel__track-bar" aria-hidden="true">
-                    <span style={{ width: `${((displayIndex + 1) / products.length) * 100}%` }} />
+                    {progressSegments.map((seg, i) => (
+                      <span key={i} style={{ left: `${seg.left}%`, width: `${seg.width}%` }} />
+                    ))}
                   </span>
                 </div>
                 <button type="button" className="ac-iconbtn" onClick={togglePause} aria-label={isPaused ? "Play slideshow" : "Pause slideshow"}>
@@ -326,9 +343,9 @@ function HomePage() {
         </div>
         <div className="ac-disciplines">
           {CATEGORY_TILES.map((cat) => (
-            <Link key={cat.value} to={`/?category=${cat.value}`} className="ac-discipline">
-              <img src={cat.img} alt="" loading="lazy" />
-              <span className="ac-discipline__label ac-glass-smoke">
+            <Link key={cat.value} to={`/?category=${cat.value}`} className={`ac-discipline ac-discipline--${cat.place}`}>
+              <img src={cat.img} alt="" loading="lazy" style={{ objectPosition: cat.focus }} />
+              <span className={`ac-discipline__label ${cat.tone === "light" ? "ac-glass-thin" : "ac-glass-smoke"}`}>
                 <b>{cat.label}</b>
                 <i aria-hidden="true"><ArrowRightIcon /></i>
               </span>
@@ -341,23 +358,23 @@ function HomePage() {
         <img src="/images/misc/karate_group.jpg" alt="" className="ac-proof__bg" loading="lazy" />
         <p className="ac-eyebrow ac-eyebrow--light">Social proof</p>
         <h2 className="ac-h2 ac-h2--light" id="proof-title">Trusted by Fighters</h2>
-        <div className="ac-proof__stats">
-          <div className="ac-proof__stat ac-glass-smoke">
+        <div className="ac-proof__stats ac-glass-smoke">
+          <div className="ac-proof__stat">
             <span className="ac-proof__num">10,000<em>+</em></span>
             <span className="ac-proof__label">Fighters worldwide</span>
           </div>
-          <div className="ac-proof__stat ac-glass-smoke">
+          <div className="ac-proof__stat">
             <span className="ac-proof__num">4.8<small>/5</small></span>
             <span className="ac-proof__label">Average rating</span>
           </div>
-          <div className="ac-proof__stat ac-glass-smoke">
+          <div className="ac-proof__stat">
             <span className="ac-proof__num">Pro</span>
             <span className="ac-proof__label">Used by professional athletes</span>
           </div>
         </div>
         <div className="ac-proof__quotes">
           {TESTIMONIALS.map((t) => (
-            <figure key={t.id} className="ac-quote ac-glass-smoke">
+            <figure key={t.id} className="ac-quote ac-glass-dense">
               <span className="ac-quote__stars" aria-label={`${t.rating} of 5 stars`}>{"★".repeat(t.rating)}</span>
               <blockquote className="ac-quote__text">“{t.quote}”</blockquote>
               <figcaption className="ac-quote__who">
