@@ -1,54 +1,62 @@
-import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { useFavorites } from "../context/FavoriteContext";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { SearchIcon, ArrowRightIcon } from "./ui/Icons";
 
-function Hero({ onToggleMenu }) {
-  const [cart] = useCart();
-  const [, favorites] = useFavorites();
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const favCount = favorites.length;
+function Hero({ children }) {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    navigate(q ? `/products?q=${encodeURIComponent(q)}` : "/products");
+  };
 
   return (
-    <div className="apex-hero">
-      <img
-        src="/images/misc/woman_headkick.jpg"
-        alt=""
-        className="apex-hero__img"
-      />
-      <Link to="/" className="apex-hero__brand" onClick={() => onToggleMenu?.()}>
-        <img
-          src="/images/logo.png"
-          alt="Apex Core"
-          className="apex-hero__logo"
-        />
-        <span className="apex-hero__brand-name">APEX CORE</span>
-      </Link>
-
-      <p className="apex-hero__tagline">
-        <span className="apex-hero__tagline-main">Fight Gear</span>
-        <span className="apex-hero__tagline-sub">For Winners</span>
-      </p>
-      <p className="apex-hero__subtitle">Premium Equipment · Martial Arts</p>
-
-      <div className="apex-hero__icons">
-        <Link to="/favorites" className="apex-hero__icon">
-          <img src="/icons/Favorites.png" alt="Favorites" />
-          {favCount > 0 && <span className="apex-hero__badge">{favCount}</span>}
-        </Link>
-        <Link to="/cart" className="apex-hero__icon">
-          <img src="/icons/Cart.svg" alt="Cart" />
-          {cartCount > 0 && <span className="apex-hero__badge">{cartCount}</span>}
-        </Link>
+    <section className="ac-hero">
+      <div className="ac-hero__media">
+        <img src="/images/misc/woman_headkick.jpg" alt="" className="ac-hero__img" fetchPriority="high" />
+        <div className="ac-hero__shade" />
       </div>
 
-      <button
-        className="apex-hero__burger"
-        onClick={onToggleMenu}
-        aria-label="Menu"
-      >
-        <img src="/icons/Burger.svg" alt="Menu" />
-      </button>
-    </div>
+      {children}
+
+      <div className="ac-hero__content">
+        <p className="ac-eyebrow ac-eyebrow--light">Premium equipment · Martial arts</p>
+        <h1 className="ac-hero__title">
+          <span>Fight</span>
+          <span>Gear</span>
+        </h1>
+        <p className="ac-hero__sub">
+          <strong>For winners</strong>
+        </p>
+        <div className="ac-hero__ctas">
+          <Link to="/products" className="ac-btn ac-btn--primary ac-btn--lg">
+            All Products <ArrowRightIcon width="16" height="16" />
+          </Link>
+          <Link to="/products?sale=true" className="ac-btn ac-btn--glass ac-btn--lg">Shop Sale</Link>
+        </div>
+      </div>
+
+      <form className="ac-hero__search ac-glass-frost" onSubmit={handleSearch} role="search">
+        <label htmlFor="hero-search" className="ac-hero__search-label">
+          <span>Find your gear</span>
+          <span>Gloves · Gis · Pads · Guards</span>
+        </label>
+        <div className="ac-hero__search-field">
+          <SearchIcon />
+          <input
+            id="hero-search"
+            type="search"
+            placeholder="Search gear, categories, keywords…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoComplete="off"
+          />
+        </div>
+        <button type="submit" className="ac-btn ac-btn--ink">Search</button>
+      </form>
+    </section>
   );
 }
 
