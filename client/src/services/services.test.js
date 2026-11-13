@@ -42,6 +42,22 @@ describe('productService', () => {
     await call()
     expect(api.get).toHaveBeenCalledWith(url)
   })
+
+  it('creates a product with its data', async () => {
+    expect(await products.createProduct({ title: 'Gi' })).toEqual({ ok: 'post' })
+    expect(api.post).toHaveBeenCalledWith('/products', { title: 'Gi' })
+  })
+
+  it('updates a product with its data', async () => {
+    expect(await products.updateProduct('p1', { price: 1 })).toEqual({ ok: 'put' })
+    expect(api.put).toHaveBeenCalledWith('/products/p1', { price: 1 })
+  })
+
+  it('deletes a product with DELETE', async () => {
+    expect(await products.deleteProduct('p1')).toEqual({ ok: 'delete' })
+    expect(api.delete).toHaveBeenCalledWith('/products/p1')
+    expect(api.get).not.toHaveBeenCalled()
+  })
 })
 
 describe('cartService', () => {
