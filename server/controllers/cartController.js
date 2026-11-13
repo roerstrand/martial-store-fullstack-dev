@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const {
   getAllCartsService,
   getCartService,
+  getCartOwnerService,
   getCurrentUserCartService,
   createCartService,
   updateCartService,
@@ -11,6 +12,16 @@ const {
   decreaseQuantityService,
   resetCartService,
 } = require("../services/cartService");
+
+const authorizeCart = asyncHandler(async (req, res, next) => {
+  const ownerId = await getCartOwnerService(req.params.id);
+  const isOwner = ownerId && String(ownerId) === req.user.id;
+  if (!isOwner && !(ownerId && req.user.role === "admin")) {
+    res.status(404);
+    throw new Error("Cart not found");
+  }
+  next();
+});
 
 // @desc    GET all carts
 // @route   GET /api/carts
@@ -56,7 +67,7 @@ const createCart = asyncHandler(async (req, res) => {
 // @route   PUT /api/carts/:id
 // @access  private
 const updateCart = asyncHandler(async (req, res) => {
-  const cart = await updateCartService(req.params.id, req.body);
+  const cart = await updateCartService(req.params.id, { products: req.body.products });
   if (!cart) {
     res.status(404);
     throw new Error("Cart not found");
@@ -144,6 +155,7 @@ const resetCart = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  authorizeCart,
   getAllCarts,
   getCart,
   getCurrentUserCart,

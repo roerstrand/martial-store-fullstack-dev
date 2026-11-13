@@ -8,6 +8,11 @@ const getCart = async (id) => {
   return await Cart.findById(id).populate("products.product_id");
 };
 
+const getCartOwner = async (id) => {
+  const cart = await Cart.findById(id).select("user_id");
+  return cart ? cart.user_id : null;
+};
+
 const getCurrentUserCart = async (userId) => {
   return await Cart.findOne({ user_id: userId }).populate("products.product_id");
 };
@@ -96,6 +101,7 @@ const resetCart = async (id) => {
 module.exports = {
   getAllCarts,
   getCart,
+  getCartOwner,
   getCurrentUserCart,
   createCart,
   updateCart,

@@ -44,8 +44,7 @@ const getProduct = asyncHandler(async (req, res) => {
 // @route GET /api/products
 // @access private
 const getCurrentUserProducts = asyncHandler(async (req, res) => {
-  //ÄNDRA SERVICE OCH REPO F HÄMTA PRODUCTER BASERAT PÅ USER ID
-  const products = await getProductsService(req.user.id);
+  const products = await getCurrentUserProductsService(req.user.id);
 
   if (!products) {
     res.status(404);

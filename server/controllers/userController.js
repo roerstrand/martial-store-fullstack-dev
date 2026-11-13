@@ -7,6 +7,7 @@ const {
 const {
   registerUserService,
   loginUserService,
+  getCurrentUserService,
   changePasswordService,
   updateProfileService,
 } = require("../services/userService");
@@ -54,7 +55,12 @@ const logoutUser = (req, res) => {
 // @route GET /api/users/current
 // @access private
 const getCurrentUser = asyncHandler(async (req, res) => {
-  return res.status(200).json(req.user);
+  const user = await getCurrentUserService(req.user.id);
+  if (!user) {
+    res.status(401);
+    throw new Error("Not authorized");
+  }
+  res.status(200).json(user);
 });
 
 // @desc Get all users

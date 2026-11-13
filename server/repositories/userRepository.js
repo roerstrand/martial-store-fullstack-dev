@@ -9,6 +9,10 @@ const findUserByName = async (name) => {
   return await User.findOne({ name: new RegExp(`^${escaped}$`, "i") });
 };
 
+const findUserById = async (id) => {
+  return await User.findById(id).select("-password");
+};
+
 const createUser = async (userData) => {
   return await User.create(userData);
 };
@@ -21,4 +25,4 @@ const updateUserProfile = async (userId, fields) => {
   return await User.findByIdAndUpdate(userId, fields, { new: true, runValidators: true });
 };
 
-module.exports = { findUserByEmail, findUserByName, createUser, updateUserPassword, updateUserProfile };
+module.exports = { findUserByEmail, findUserByName, findUserById, createUser, updateUserPassword, updateUserProfile };

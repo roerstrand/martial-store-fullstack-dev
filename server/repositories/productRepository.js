@@ -9,7 +9,7 @@ const getProduct = async (id) => {
 };
 
 const getCurrentUserProducts = async (userId) => {
-  return await Product.find({ user_id: userId }).populate("user_id");
+  return await Product.find({ user_id: userId }).populate("user_id", "name email");
 };
 
 const createProduct = async (productData) => {
