@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
@@ -7,8 +7,8 @@ import KlarnaModal from "../../components/cart/KlarnaModal";
 import SwishModal from "../../components/cart/SwishModal";
 import CardModal from "../../components/cart/CardModal";
 import { createOrder } from "../../services/orderService";
+import { ArrowLeftIcon, ArrowRightIcon } from "../../components/ui/Icons";
 import "../Pages.css";
-import PageNav from "../../components/PageNav";
 
 const SHIPPING_COSTS = { standard: 5, express: 19, pickup: 0 };
 
@@ -18,6 +18,7 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [pendingData, setPendingData] = useState(null);
+  const [shippingChoice, setShippingChoice] = useState("standard");
 
   const initialValues = useMemo(() => {
     const addresses = (() => {
@@ -74,69 +75,90 @@ function CheckoutPage() {
     return <Navigate to="/cart" replace />;
   }
 
+  const shippingCost = SHIPPING_COSTS[shippingChoice] ?? 5;
+  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
-    <div className="checkout-page">
-      <PageNav back="/cart" backLabel="Back to Cart" />
-      <div className="flow-breadcrumb">
-        <span>CART</span>
-        <span>=›</span>
-        <span className="flow-breadcrumb__step--active">CHECKOUT</span>
-        <span>=›</span>
-        <span>CONFIRMATION</span>
-      </div>
+    <div className="checkout-page ac-page ac-page-backdrop">
+      <div className="ac-container">
+        <Link to="/cart" className="ac-backlink"><ArrowLeftIcon /> Back to cart</Link>
 
-      {pendingData && pendingData.payment === "klarna" && (
-        <KlarnaModal total={pendingData.totalPrice} onConfirm={handleConfirmPayment} onClose={() => setPendingData(null)} />
-      )}
-      {pendingData && pendingData.payment === "swish" && (
-        <SwishModal total={pendingData.totalPrice} onConfirm={handleConfirmPayment} onClose={() => setPendingData(null)} />
-      )}
-      {pendingData && pendingData.payment === "card" && (
-        <CardModal total={pendingData.totalPrice} onConfirm={handleConfirmPayment} onClose={() => setPendingData(null)} />
-      )}
+        <ol className="ac-steps ac-glass-frost" aria-label="Checkout progress">
+          <li className="is-done"><span className="ac-steps__n">✓</span><Link to="/cart">Cart</Link></li>
+          <li className="ac-steps__sep" aria-hidden="true" />
+          <li className="is-current" aria-current="step"><span className="ac-steps__n">2</span>Checkout</li>
+          <li className="ac-steps__sep" aria-hidden="true" />
+          <li><span className="ac-steps__n">3</span>Confirmation</li>
+        </ol>
 
-      <div className="checkout-layout">
-        <PaymentForm onSubmit={handleFormSubmit} initialValues={initialValues} />
+        {pendingData && pendingData.payment === "klarna" && (
+          <KlarnaModal total={pendingData.totalPrice} onConfirm={handleConfirmPayment} onClose={() => setPendingData(null)} />
+        )}
+        {pendingData && pendingData.payment === "swish" && (
+          <SwishModal total={pendingData.totalPrice} onConfirm={handleConfirmPayment} onClose={() => setPendingData(null)} />
+        )}
+        {pendingData && pendingData.payment === "card" && (
+          <CardModal total={pendingData.totalPrice} onConfirm={handleConfirmPayment} onClose={() => setPendingData(null)} />
+        )}
 
-        <div className="checkout-summary">
-          <p className="checkout-section-title">Your order</p>
-          {cart.map((item, i) => (
-            <div
-              key={`${item.product._id}-${item.size}-${i}`}
-              className="checkout-summary__item"
-            >
-              <p className="checkout-summary__item-name">
-                {item.product.title}{item.size ? ` (${item.size})` : ""}
-              </p>
-              <div className="checkout-summary__item-row">
-                <span>Quantity: {item.quantity}</span>
-                <span>{item.product.price * item.quantity} EUR</span>
+        <div className="ac-checkout">
+          <PaymentForm onSubmit={handleFormSubmit} initialValues={initialValues} onShippingChange={setShippingChoice} />
+
+          <aside className="ac-checkout__aside" aria-labelledby="summary-title">
+            <img src="/images/misc/grappling_standing.jpg" alt="" />
+            <div className="ac-summary ac-glass-smoke">
+              <div className="ac-summary__head">
+                <h2 id="summary-title">Your order</h2>
+                <span>{itemCount} {itemCount === 1 ? "item" : "items"}</span>
               </div>
+
+              <div className="ac-summary__items">
+                {cart.map((item, i) => (
+                  <div key={`${item.product._id}-${item.size}-${i}`} className="ac-summary__item">
+                    <img src={`/images/products/${item.product.image}`} alt="" />
+                    <div>
+                      <p className="ac-summary__item-name">{item.product.title}</p>
+                      <p className="ac-summary__item-meta">
+                        {item.size ? `Size ${item.size} · ` : ""}Qty {item.quantity}
+                      </p>
+                    </div>
+                    <span className="ac-summary__item-price">{item.product.price * item.quantity} EUR</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ac-summary__rows">
+                <div className="ac-summary__row"><span>Subtotal</span><span>{subtotal} EUR</span></div>
+                <div className="ac-summary__row">
+                  <span>Shipping</span>
+                  <span>{shippingCost === 0 ? "Free" : `${shippingCost} EUR`}</span>
+                </div>
+              </div>
+
+              <div className="ac-summary__total">
+                <span>Total</span>
+                <b>{subtotal + shippingCost}<small>EUR</small></b>
+              </div>
+
+              <button
+                type="submit"
+                form="checkout-form"
+                className="ac-btn ac-btn--primary ac-btn--block"
+                disabled={isLoading}
+              >
+                {isLoading ? "Processing..." : <>Complete order <ArrowRightIcon /></>}
+              </button>
+
+              <div className="ac-summary__trust">
+                <span>✓ Secure payment</span>
+                <span>✓ Fast delivery</span>
+              </div>
+
+              <p className="ac-summary__note">
+                You will be redirected to your payment provider — Stripe, Klarna or Swish — to complete your purchase securely.
+              </p>
             </div>
-          ))}
-          <p className="checkout-summary__subtotal">{subtotal} EUR</p>
-
-          <div className="checkout-trust">
-            <span>Secure Payment ✓</span>
-            <span>Fast Delivery ✓</span>
-          </div>
-
-          <button
-            type="submit"
-            form="checkout-form"
-            className="checkout-cta-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? "Processing..." : "Complete Order →"}
-          </button>
-
-          <p className="checkout-redirect-note">
-            You will be redirected to your payment provider — Stripe, Klarna or Swish — to complete your purchase securely.
-          </p>
-
-          <Link to="/" className="checkout-home-btn">
-            ← BACK TO HOME
-          </Link>
+          </aside>
         </div>
       </div>
     </div>
