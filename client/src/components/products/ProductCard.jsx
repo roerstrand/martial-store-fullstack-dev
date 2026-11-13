@@ -55,7 +55,7 @@ function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, showC
         </div>
         <button
           type="button"
-          className={`ac-card__fav ac-glass-smoke${isFavorite ? " is-active" : ""}`}
+          className={`ac-card__fav ac-glass-thin${isFavorite ? " is-active" : ""}`}
           onClick={() => onToggleFavorite?.(product)}
           aria-pressed={isFavorite}
           aria-label={isFavorite ? `Remove ${product.title} from favorites` : `Add ${product.title} to favorites`}
@@ -63,7 +63,7 @@ function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, showC
           <HeartIcon filled={isFavorite} />
         </button>
         {showCategory && (
-          <span className="ac-card__cat ac-glass-smoke">{categoryLabel(product.category)}</span>
+          <span className="ac-card__cat ac-glass-thin">{categoryLabel(product.category)}</span>
         )}
       </div>
 
