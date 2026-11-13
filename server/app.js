@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const articleRoutes = require("./routes/articleRoutes");
@@ -7,11 +8,14 @@ const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
 const { errorHandler } = require("./middleware/errorMiddleware");
+const { requireCsrfHeader } = require("./middleware/csrfMiddleware");
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use("/api", requireCsrfHeader);
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);

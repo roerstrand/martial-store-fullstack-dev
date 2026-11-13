@@ -1,5 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const {
+  ACCESS_TOKEN_COOKIE,
+  accessTokenCookieOptions,
+  baseCookieOptions,
+} = require("../config/authCookie");
+const {
   registerUserService,
   loginUserService,
   changePasswordService,
@@ -32,9 +37,18 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Please fill in all the fields");
   }
 
-  const accessToken = await loginUserService({ username, password });
-  res.status(200).json(accessToken);
+  const { token, user } = await loginUserService({ username, password });
+  res.cookie(ACCESS_TOKEN_COOKIE, token, accessTokenCookieOptions());
+  res.status(200).json({ user });
 });
+
+// @desc Logout the current user
+// @route POST /api/users/logout
+// @access public
+const logoutUser = (req, res) => {
+  res.clearCookie(ACCESS_TOKEN_COOKIE, baseCookieOptions());
+  res.status(200).json({ message: "Logged out" });
+};
 
 // @desc Get current user
 // @route GET /api/users/current
@@ -80,4 +94,4 @@ const updateProfile = asyncHandler(async (req, res) => {
   res.status(200).json(updated);
 });
 
-module.exports = { registerUser, loginUser, getCurrentUser, getUsers, changePassword, updateProfile };
+module.exports = { registerUser, loginUser, logoutUser, getCurrentUser, getUsers, changePassword, updateProfile };
