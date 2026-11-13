@@ -82,4 +82,20 @@ describe('AuthProvider', () => {
 
     await waitFor(() => expect(screen.getByTestId('user')).toHaveTextContent('none'))
   })
+
+  it('keeps the user until the server has cleared the session cookie', async () => {
+    getCurrentUser.mockResolvedValue({ name: 'ninja' })
+    let finishLogout
+    logout.mockReturnValue(new Promise((resolve) => { finishLogout = resolve }))
+    renderAuth()
+    await waitFor(() => expect(screen.getByTestId('user')).toHaveTextContent('ninja'))
+
+    await userEvent.click(screen.getByText('do-logout'))
+
+    expect(screen.getByTestId('user')).toHaveTextContent('ninja')
+
+    finishLogout()
+
+    await waitFor(() => expect(screen.getByTestId('user')).toHaveTextContent('none'))
+  })
 })
