@@ -13,6 +13,16 @@ describe('useInput', () => {
     act(() => result.current.reset())
     expect(result.current.value).toBe('start')
   })
+
+  it('exposes inputProps with only DOM-safe props to spread onto an input', () => {
+    const { result } = renderHook(() => useInput('start'))
+
+    expect(Object.keys(result.current.inputProps).sort()).toEqual(['onChange', 'value'])
+    expect(result.current.inputProps.value).toBe('start')
+
+    act(() => result.current.inputProps.onChange({ target: { value: 'typed' } }))
+    expect(result.current.inputProps.value).toBe('typed')
+  })
 })
 
 describe('useFetch', () => {
