@@ -3,10 +3,13 @@ import React, { useState } from "react";
 function useInput(initialValue = "") {
   const [value, setValue] = useState(initialValue);
 
+  const onChange = (e) => setValue(e.target.value);
+
   return {
     value,
-    onChange: (e) => setValue(e.target.value),
+    onChange,
     reset: () => setValue(initialValue),
+    inputProps: { value, onChange },
   };
 
 //   Value (useState) lagrar värdet

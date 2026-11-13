@@ -52,7 +52,7 @@ function LoginPage() {
             type="text"
             placeholder="Username"
             autoComplete="username"
-            {...username}
+            {...username.inputProps}
             required
           />
           <input
@@ -60,7 +60,7 @@ function LoginPage() {
             type="password"
             placeholder="Password"
             autoComplete="current-password"
-            {...password}
+            {...password.inputProps}
             required
           />
           <button type="submit" className="auth-btn-primary" disabled={loading}>

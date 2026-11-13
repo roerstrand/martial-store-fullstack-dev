@@ -81,17 +81,17 @@ function ContactPage() {
               <div className="contact-form__row">
                 <div className="contact-field">
                   <label className="contact-label">Name</label>
-                  <input className="contact-input" type="text" placeholder="Your name" {...name} required />
+                  <input className="contact-input" type="text" placeholder="Your name" {...name.inputProps} required />
                 </div>
                 <div className="contact-field">
                   <label className="contact-label">Email</label>
-                  <input className="contact-input" type="email" placeholder="your@email.com" {...email} required />
+                  <input className="contact-input" type="email" placeholder="your@email.com" {...email.inputProps} required />
                   {emailError && <p className="contact-field-error">{emailError}</p>}
                 </div>
               </div>
               <div className="contact-field">
                 <label className="contact-label">Message</label>
-                <textarea className="contact-input contact-input--textarea" placeholder="How can we help you?" rows={6} {...message} required />
+                <textarea className="contact-input contact-input--textarea" placeholder="How can we help you?" rows={6} {...message.inputProps} required />
               </div>
               <button type="submit" className="contact-submit">Send message</button>
             </form>
