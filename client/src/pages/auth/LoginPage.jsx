@@ -25,7 +25,7 @@ function LoginPage() {
         username: username.value,
         password: password.value,
       });
-      login(data.user, data.token);
+      login(data.user);
       navigate(from, { replace: true });
     } catch (err) {
       if (!err.response) {

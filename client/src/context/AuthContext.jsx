@@ -5,36 +5,41 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [initializing, setInitializing] = useState(!!localStorage.getItem("token"));
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    if (!token) {
-      setInitializing(false);
-      return;
-    }
+    localStorage.removeItem("token");
+    let cancelled = false;
     getCurrentUser()
-      .then((userData) => setUser(userData))
-      .catch(() => {
-        localStorage.removeItem("token");
-        setToken(null);
+      .then((userData) => {
+        if (!cancelled) setUser(userData);
       })
-      .finally(() => setInitializing(false));
+      .catch(() => {
+        if (!cancelled) setUser(null);
+      })
+      .finally(() => {
+        if (!cancelled) setInitializing(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const login = (userData, newToken) => {
+  const login = (userData) => {
     setUser(userData);
-    setToken(newToken);
   };
 
-  const logout = () => {
-    logoutService();
+  const logout = async () => {
     setUser(null);
-    setToken(null);
+    try {
+      await logoutService();
+    } catch {
+      return;
+    }
   };
 
   return (
-    <AuthContext.Provider value={[user, token, login, logout, initializing]}>
+    <AuthContext.Provider value={[user, !!user, login, logout, initializing]}>
       {children}
     </AuthContext.Provider>
   );

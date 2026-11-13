@@ -8,13 +8,11 @@ export const register = async (userData) => {
 
 export const login = async (credentials) => {
   const response = await api.post("users/login", credentials);
-  localStorage.setItem("token", response.data.token);
   return response.data;
 };
 
-
-export const logout = () => {
-  localStorage.removeItem("token");
+export const logout = async () => {
+  await api.post("users/logout");
 };
 
 export const getCurrentUser = async () => {
