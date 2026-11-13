@@ -2839,3 +2839,25 @@ body {
 
 .ac-card__cat.ac-glass-thin { background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 60%), rgba(22, 14, 11, 0.46); border-color: rgba(255, 255, 255, 0.38); }
 .ac-card__fav.ac-glass-thin:not(.is-active) { background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.04) 60%), rgba(22, 14, 11, 0.26); }
+
+/* Safari/WebKit fixes */
+.ac-feature__visual { width: 100%; justify-self: stretch; }
+.ac-card__body::before {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+  background: linear-gradient(180deg, rgba(245, 240, 232, 0) 0%, rgba(245, 240, 232, 0.55) 1.1rem, rgba(245, 240, 232, 0.9) 2.2rem, var(--ac-bone) 3rem, var(--ac-bone) 100%);
+}
+
+@media (max-width: 1039px) {
+  .ac-feature__visual { aspect-ratio: auto; height: clamp(260px, 50vw, 460px); min-height: 0; align-self: start; }
+}
+@media (max-width: 599px) {
+  .ac-feature__visual { height: clamp(250px, 78vw, 330px); }
+}
+.ac-hero__title { line-height: 0.95; margin-top: 0.6rem; }
+
+@media (max-width: 599px) {
+  .ac-hero { height: 700px; }
+}
