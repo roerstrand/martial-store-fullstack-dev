@@ -52,10 +52,10 @@ function RegisterPage() {
         {error && <div className="auth-error">{error}</div>}
 
         <form className="auth-form" onSubmit={handleRegister}>
-          <input className="apex-input" type="text" placeholder="Username" {...username} required />
-          <input className="apex-input" type="email" placeholder="Email" {...email} required />
-          <input className="apex-input" type="password" placeholder="Password" {...password} required />
-          <input className="apex-input" type="password" placeholder="Repeat Password" {...repeatPassword} required />
+          <input className="apex-input" type="text" placeholder="Username" {...username.inputProps} required />
+          <input className="apex-input" type="email" placeholder="Email" {...email.inputProps} required />
+          <input className="apex-input" type="password" placeholder="Password" {...password.inputProps} required />
+          <input className="apex-input" type="password" placeholder="Repeat Password" {...repeatPassword.inputProps} required />
           <button type="submit" className="auth-btn-primary" disabled={loading}>
             {loading ? "CREATING..." : "REGISTER ›"}
           </button>
