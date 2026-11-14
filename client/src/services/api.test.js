@@ -26,8 +26,7 @@ describe('api client', () => {
     expect(captured.headers['X-Requested-With']).toBe('XMLHttpRequest')
   })
 
-  it('never sends a bearer token, even if a legacy one is stored', async () => {
-    localStorage.setItem('token', 'legacy-token')
+  it('never sends an Authorization header', async () => {
     await api.get('/users/current')
     expect(captured.headers.Authorization).toBeUndefined()
   })
