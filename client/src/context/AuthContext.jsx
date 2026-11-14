@@ -8,7 +8,6 @@ export function AuthProvider({ children }) {
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    localStorage.removeItem("token");
     let cancelled = false;
     getCurrentUser()
       .then((userData) => {

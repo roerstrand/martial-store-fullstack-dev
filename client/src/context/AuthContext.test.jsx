@@ -17,6 +17,10 @@ const renderAuth = () =>
   )
 
 describe('AuthProvider', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('restores the session from the cookie without anything in localStorage', async () => {
     getCurrentUser.mockResolvedValue({ name: 'ninja' })
 
@@ -38,14 +42,21 @@ describe('AuthProvider', () => {
     expect(screen.getByTestId('authenticated')).toHaveTextContent('false')
   })
 
-  it('removes a legacy token left in localStorage', async () => {
-    localStorage.setItem('token', 'legacy')
-    getCurrentUser.mockRejectedValue({ response: { status: 401 } })
+  it('never touches localStorage for the session', async () => {
+    const getItem = vi.spyOn(Storage.prototype, 'getItem')
+    const setItem = vi.spyOn(Storage.prototype, 'setItem')
+    const removeItem = vi.spyOn(Storage.prototype, 'removeItem')
+    getCurrentUser.mockResolvedValue({ name: 'ninja' })
+    logout.mockResolvedValue()
 
     renderAuth()
+    await waitFor(() => expect(screen.getByTestId('user')).toHaveTextContent('ninja'))
+    await userEvent.click(screen.getByText('do-logout'))
+    await userEvent.click(screen.getByText('do-login'))
 
-    await waitFor(() => expect(screen.getByTestId('initializing')).toHaveTextContent('false'))
-    expect(localStorage.getItem('token')).toBeNull()
+    expect(getItem).not.toHaveBeenCalled()
+    expect(setItem).not.toHaveBeenCalled()
+    expect(removeItem).not.toHaveBeenCalled()
   })
 
   it('logs in with only the user', async () => {

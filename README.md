@@ -164,13 +164,20 @@ The server is built with Node.js and Express, using MongoDB as the database via 
 | GET | `/api/articles` | Public | List articles |
 | GET | `/api/articles/:id` | Public | Get single article |
 
-**Authentication:** JWT (Bearer token). Private routes require a valid token in the `Authorization` header. Token expires after 24 hours.
+**Authentication:** JWT in an HttpOnly cookie (`accessToken`) set by `POST /api/users/login` and cleared by `POST /api/users/logout`. The token is never exposed to JavaScript or stored in localStorage. Cookies are `SameSite=Lax` in development and `Secure; SameSite=None` in production. Unsafe requests (`POST`, `PUT`, `PATCH`, `DELETE`) under `/api` must send the header `X-Requested-With: XMLHttpRequest` as CSRF protection. Token expires after 24 hours.
 
 ### Testing
 
-Automated tests are intentionally not included in this project. The main focus was to demonstrate the complete full-stack architecture and implementation of a functional e-commerce application, including authentication, authorization, product management, cart functionality and order workflows.
+```bash
+# Server (Jest + Supertest + in-memory MongoDB) and client (Vitest + Testing Library)
+npm test
 
-Testing remains an identified area for future development.
+# Only one side
+npm test --prefix server
+npm test --prefix client
+```
+
+The server tests run against `mongodb-memory-server`, so no database or `.env` is needed. The client tests run in jsdom with mocked services.
 
 **Validation:** All endpoints validate required fields and return correct HTTP status codes — `200`, `201`, `400`, `404`, `500` — via a global `errorMiddleware`.
 
@@ -188,13 +195,13 @@ Pre-work on UX and UI in Figma (linked below along with exported files) greatly 
 
 On the frontend, global state for the logged-in user is handled through a custom React context — `AuthContext` — which wraps the entire app. AuthContext with added values from the provider is imported via the custom hook `useAuth` wherever needed. The importing component/file thereby gains access to the global AuthContext (found in `main.jsx`). Two additional contexts exist for favorite products and the cart. The contexts handle both guest users via localStorage and logged-in users whose data is stored in the backend.
 
-JWT was chosen as the authentication method, and the token is stored in localStorage and managed by `validateTokenHandler` on the client side. There is also an adminValidator to access the admin dashboard and to create products, retrieve all carts, etc. Admin permissions are essential in a finished product sold to customers so they can manage their business (and can be expanded significantly further).
+JWT was chosen as the authentication method. The token is stored in an HttpOnly cookie that the browser sends automatically, so client-side scripts cannot read it, and it is verified by `validateTokenHandler` on the server. On startup `AuthContext` restores the session by calling `GET /api/users/current`. There is also an adminValidator to access the admin dashboard and to create products, retrieve all carts, etc. Admin permissions are essential in a finished product sold to customers so they can manage their business (and can be expanded significantly further).
 
 An error boundary was also implemented to catch rendering errors on the client side, in addition to the global error handler in the backend.
 
 ### Challenges and Lessons Learned
 
-The Node/Express ecosystem takes a more "production ready first" approach compared to .NET, which focuses more on scalability from the start. This was both a lesson and a challenge throughout the project — starting by creating endpoints in controllers and gradually moving business logic into services and database operations into repositories. Automated tests were intentionally left outside the scope of this project and remain a possible area for future development. This felt more flexible compared to .NET where logic can be tested at an earlier stage, but it could also feel like extra work when moving logic that could have been placed in services/repos from the beginning.
+The Node/Express ecosystem takes a more "production ready first" approach compared to .NET, which focuses more on scalability from the start. This was both a lesson and a challenge throughout the project — starting by creating endpoints in controllers and gradually moving business logic into services and database operations into repositories. This felt more flexible compared to .NET where logic can be tested at an earlier stage, but it could also feel like extra work when moving logic that could have been placed in services/repos from the beginning. Automated tests were added afterwards, which required extracting the Express app from `server.js` into `app.js` so it could be tested without a running server.
 
 Another lesson learned is that a React project can grow very large very quickly and requires clear structure and organization to work efficiently against the backend and its respective endpoints. Naming conventions became very important as the project grew — a clear "Page" postfix for actual pages and categorization of JSX files (cart, products, auth, etc.).
 
