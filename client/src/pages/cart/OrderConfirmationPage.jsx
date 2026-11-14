@@ -40,9 +40,9 @@ function OrderConfirmationPage() {
       <PageNav back="/" backLabel="Back to Home" />
       <div className="flow-breadcrumb">
         <span>CART</span>
-        <span>=›</span>
+        <span>›</span>
         <span>CHECKOUT</span>
-        <span>=›</span>
+        <span>›</span>
         <span className="flow-breadcrumb__step--active">CONFIRMATION</span>
       </div>
 

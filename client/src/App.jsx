@@ -4,6 +4,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import CartToast from "./components/CartToast";
 import FavoriteToast from "./components/favorites/FavoriteToast";
 import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 
 import MainLayout from "./layouts/MainLayout";
 import MinimalLayout from "./layouts/MinimalLayout";
@@ -27,6 +28,7 @@ import ArticleListPage from "./pages/ArticleListPage";
 import InfoPage from "./pages/InfoPage";
 import AdminPage from "./pages/admin/AdminPage";
 import "./styles/apex-glass.css";
+import "./styles/apex-glass-ui.css";
 
 function App() {
   return (
@@ -56,12 +58,13 @@ function App() {
             <Route path="/my-pages" element={<ErrorBoundary><MyPagesPage /></ErrorBoundary>} />
             <Route path="/admin" element={<ErrorBoundary><AdminPage /></ErrorBoundary>} />
           </Route>
-        </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
       </Routes>
       <CartToast />
       <FavoriteToast />
+      <BackToTop />
     </Router>
   );
 }

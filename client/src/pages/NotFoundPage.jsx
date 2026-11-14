@@ -1,29 +1,19 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import "./Pages.css";
-
-/**
- * NotFound.js - 404 sidan
- *
- * Denna komponent visas när användaren försöker gå till en URL
- * som inte finns i vår routing-konfiguration
- *
- * I App.js har vi lagt denna route SIST:
- * <Route path="*" element={<NotFound />} />
- *
- * Asterisken (*) matchar ALLA routes som inte matchade tidigare
- */
 
 function NotFoundPage() {
   return (
-    <div className="not-found container-text-center py-5">
-      <h1>404</h1>
-      <h2>Sidan hittades inte</h2>
-      <p>Vi kunde inte hitta sidan du letar efter.</p>
-      <Link to="/" className="btn">
-        Gå tillbaka till startsidan
-      </Link>
-    </div>
+    <section className="ac-notfound">
+      <div className="ac-notfound__panel ac-glass-frost">
+        <p className="ac-eyebrow">Error 404</p>
+        <h1 className="ac-notfound__code">404</h1>
+        <h2 className="ac-h2">Page not found</h2>
+        <p className="ac-lead">We could not find the page you are looking for.</p>
+        <div className="ac-notfound__ctas">
+          <Link to="/" className="ac-btn ac-btn--primary ac-btn--lg">Back to home</Link>
+          <Link to="/products" className="ac-btn ac-btn--outline ac-btn--lg">All products</Link>
+        </div>
+      </div>
+    </section>
   );
 }
 

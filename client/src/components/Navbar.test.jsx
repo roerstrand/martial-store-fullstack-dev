@@ -20,6 +20,32 @@ const renderNavbar = () =>
     </MemoryRouter>,
   )
 
+describe('Navbar logo', () => {
+  it('scrolls back to the top when clicked on the home page', () => {
+    window.scrollTo = vi.fn()
+    renderNavbar()
+
+    fireEvent.click(screen.getByRole('link', { name: 'Apex Core home' }))
+
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
+  })
+
+  it('leads home from any other page', () => {
+    render(
+      <MemoryRouter initialEntries={['/cart']}>
+        <Routes>
+          <Route path="/" element={<p>Home page</p>} />
+          <Route path="/cart" element={<Navbar variant="light" />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole('link', { name: 'Apex Core home' }))
+
+    expect(screen.getByText('Home page')).toBeInTheDocument()
+  })
+})
+
 describe('Navbar logout', () => {
   it('waits for the server logout to finish before leaving the page', async () => {
     let finishLogout

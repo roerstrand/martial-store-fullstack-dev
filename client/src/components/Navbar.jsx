@@ -57,13 +57,14 @@ function Navbar({ variant = "dark" }) {
   };
 
   const handleLogout = async () => { await logout(); navigate("/login"); };
+  const handleBrand = () => { if (location.pathname === "/") window.scrollTo({ top: 0, behavior: "smooth" }); };
   const goCategory = (value) => navigate(`/products?category=${value}`);
   const toggleSale = () => navigate(saleActive ? "/products" : "/products?sale=true");
 
   return (
     <header className={`ac-nav ac-nav--${variant}`}>
       <div className={`ac-nav__bar ${glass}`}>
-        <Link to="/" className="ac-nav__brand" aria-label="Apex Core home">
+        <Link to="/" className="ac-nav__brand" aria-label="Apex Core home" onClick={handleBrand}>
           <img src="/images/logo.png" alt="" />
           <span>Apex Core</span>
         </Link>
