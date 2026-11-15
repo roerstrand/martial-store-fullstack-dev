@@ -30,7 +30,7 @@ import InfoPage from "./pages/InfoPage";
 import AdminPage from "./pages/admin/AdminPage";
 import "./styles/apex-glass.css";
 import "./styles/apex-glass-ui.css";
-import "./styles/a11y.css";
+import "./styles/accessibility.css";
 
 function App() {
   return (
