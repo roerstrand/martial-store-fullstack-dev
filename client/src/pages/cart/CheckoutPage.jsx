@@ -82,13 +82,14 @@ function CheckoutPage() {
     <div className="checkout-page ac-page ac-page-backdrop">
       <div className="ac-container">
         <Link to="/cart" className="ac-backlink"><ArrowLeftIcon /> Back to cart</Link>
+        <h1 className="ac-visually-hidden">Checkout</h1>
 
         <ol className="ac-steps ac-glass-frost" aria-label="Checkout progress">
-          <li className="is-done"><span className="ac-steps__n">✓</span><Link to="/cart">Cart</Link></li>
+          <li className="is-done"><span className="ac-steps__n" aria-hidden="true">✓</span><Link to="/cart">Cart<span className="ac-visually-hidden"> (done)</span></Link></li>
           <li className="ac-steps__sep" aria-hidden="true" />
-          <li className="is-current" aria-current="step"><span className="ac-steps__n">2</span>Checkout</li>
+          <li className="is-current" aria-current="step"><span className="ac-steps__n" aria-hidden="true">2</span>Checkout</li>
           <li className="ac-steps__sep" aria-hidden="true" />
-          <li><span className="ac-steps__n">3</span>Confirmation</li>
+          <li><span className="ac-steps__n" aria-hidden="true">3</span>Confirmation</li>
         </ol>
 
         {pendingData && pendingData.payment === "klarna" && (

@@ -63,11 +63,13 @@ function CartPage() {
           <div className="cart-items-col">
             {missingSize && (
               <div className="cart-bulk-size">
-                <span className="cart-bulk-size__label">Set size for all unsized items</span>
-                <div className="cart-bulk-size__btns">
+                <span className="cart-bulk-size__label" id="bulk-size-label">Set size for all unsized items</span>
+                <div className="cart-bulk-size__btns" role="group" aria-labelledby="bulk-size-label">
                   {["S", "M", "L"].map((s) => (
                     <button
                       key={s}
+                      type="button"
+                      aria-pressed={bulkSize === s}
                       className={`size-btn${bulkSize === s ? " size-btn--active" : ""}`}
                       onClick={() => setBulkSize(s)}
                     >

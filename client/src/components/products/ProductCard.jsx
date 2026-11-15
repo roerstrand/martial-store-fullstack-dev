@@ -5,12 +5,12 @@ import { categoryLabel, salePriceOf } from "../../utils/productFormat";
 export function Stars({ rating, count }) {
   const full = Math.round(rating || 0);
   return (
-    <span className="ac-stars" aria-label={`Rated ${full} of 5`}>
-      <span className="ac-stars__icons" aria-hidden="true">
+    <span className="ac-stars">
+      <span className="ac-stars__icons" role="img" aria-label={`Rated ${full} of 5`}>
         {"★".repeat(full)}
-        <span className="ac-stars__off">{"★".repeat(5 - full)}</span>
+        <span className="ac-stars__off">{"☆".repeat(5 - full)}</span>
       </span>
-      {count > 0 && <span>({count})</span>}
+      {count > 0 && <span>({count}{" "}<span className="ac-visually-hidden">reviews</span>)</span>}
     </span>
   );
 }
@@ -39,8 +39,9 @@ export function Price({ product }) {
   );
 }
 
-function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, showCategory = false, dark = false }) {
+function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, showCategory = false, dark = false, headingLevel = 3 }) {
   const href = `/products/${product._id}`;
+  const Heading = `h${headingLevel}`;
 
   return (
     <article className={`ac-card${dark ? " ac-card--dark" : ""}`}>
@@ -68,9 +69,9 @@ function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, showC
       </div>
 
       <div className="ac-card__body">
-        <h3 className="ac-card__name">
+        <Heading className="ac-card__name">
           <Link to={href}>{product.title}</Link>
-        </h3>
+        </Heading>
         <div className="ac-card__meta">
           <Stars rating={product.rating} count={product.numReviews} />
           <Stock stock={product.stock} />
@@ -81,11 +82,10 @@ function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, showC
             type="button"
             className="ac-btn ac-btn--primary ac-card__add"
             onClick={() => onAddToCart?.(product)}
-            aria-label={`Add ${product.title} to cart`}
           >
             <CartPlusIcon />
-            <span>Add to cart</span>
-            <span className="ac-card__add-short">Add</span>
+            <span className="ac-card__add-label">Add{" "}<span className="ac-card__add-rest">to cart</span></span>{" "}
+            <span className="ac-visually-hidden">{product.title}</span>
           </button>
         </div>
       </div>

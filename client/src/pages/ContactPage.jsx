@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import useInput from "../hooks/useInput.jsx";
 import "./Pages.css";
 import PageNav from "../components/PageNav";
@@ -18,6 +18,11 @@ function ContactPage() {
   const message = useInput("");
   const [submitted, setSubmitted] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const successRef = useRef(null);
+
+  useEffect(() => {
+    if (submitted) successRef.current?.focus();
+  }, [submitted]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,27 +76,37 @@ function ContactPage() {
 
         <section className="contact-form-wrap">
           {submitted ? (
-            <div className="contact-success">
-              <span className="contact-success__icon">✓</span>
-              <h2 className="contact-success__heading">Message sent</h2>
+            <div className="contact-success" role="status">
+              <span className="contact-success__icon" aria-hidden="true">✓</span>
+              <h2 className="contact-success__heading" ref={successRef} tabIndex={-1}>Message sent</h2>
               <p className="contact-success__text">Thank you — we'll be in touch shortly.</p>
             </div>
           ) : (
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="contact-form__row">
                 <div className="contact-field">
-                  <label className="contact-label">Name</label>
-                  <input className="contact-input" type="text" placeholder="Your name" {...name.inputProps} required />
+                  <label className="contact-label" htmlFor="contact-name">Name</label>
+                  <input id="contact-name" className="contact-input" type="text" placeholder="Your name" autoComplete="name" {...name.inputProps} required />
                 </div>
                 <div className="contact-field">
-                  <label className="contact-label">Email</label>
-                  <input className="contact-input" type="email" placeholder="your@email.com" {...email.inputProps} required />
-                  {emailError && <p className="contact-field-error">{emailError}</p>}
+                  <label className="contact-label" htmlFor="contact-email">Email</label>
+                  <input
+                    id="contact-email"
+                    className="contact-input"
+                    type="email"
+                    placeholder="your@email.com"
+                    autoComplete="email"
+                    aria-invalid={!!emailError}
+                    aria-describedby={emailError ? "contact-email-error" : undefined}
+                    {...email.inputProps}
+                    required
+                  />
+                  {emailError && <p className="contact-field-error" id="contact-email-error" role="alert">{emailError}</p>}
                 </div>
               </div>
               <div className="contact-field">
-                <label className="contact-label">Message</label>
-                <textarea className="contact-input contact-input--textarea" placeholder="How can we help you?" rows={6} {...message.inputProps} required />
+                <label className="contact-label" htmlFor="contact-message">Message</label>
+                <textarea id="contact-message" className="contact-input contact-input--textarea" placeholder="How can we help you?" rows={6} {...message.inputProps} required />
               </div>
               <button type="submit" className="contact-submit">Send message</button>
             </form>

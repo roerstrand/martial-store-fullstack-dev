@@ -213,6 +213,7 @@ function ProductListPage() {
               onToggleFavorite={toggleFavorites}
               onAddToCart={(p) => addToCart(p, null)}
               showCategory
+              headingLevel={2}
             />
           ))}
         </div>

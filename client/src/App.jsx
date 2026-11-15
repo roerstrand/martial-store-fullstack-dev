@@ -5,6 +5,7 @@ import CartToast from "./components/CartToast";
 import FavoriteToast from "./components/favorites/FavoriteToast";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
+import DocumentTitle from "./components/DocumentTitle";
 
 import MainLayout from "./layouts/MainLayout";
 import MinimalLayout from "./layouts/MinimalLayout";
@@ -29,11 +30,13 @@ import InfoPage from "./pages/InfoPage";
 import AdminPage from "./pages/admin/AdminPage";
 import "./styles/apex-glass.css";
 import "./styles/apex-glass-ui.css";
+import "./styles/a11y.css";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
+      <DocumentTitle />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />

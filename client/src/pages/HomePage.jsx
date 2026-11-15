@@ -151,10 +151,13 @@ function HomePage() {
 
   const [displayIndex, setDisplayIndex] = useState(0);
   const [phase, setPhase] = useState("idle");
-  const [isPaused, setIsPaused] = useState(false);
+  const [prefersReducedMotion] = useState(() =>
+    typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
+  const [isPaused, setIsPaused] = useState(prefersReducedMotion);
   const intervalRef = useRef(null);
-  const pausedRef = useRef(false);
-  const manuallyPausedRef = useRef(false);
+  const pausedRef = useRef(prefersReducedMotion);
+  const manuallyPausedRef = useRef(prefersReducedMotion);
   const interactedRef = useRef(false);
   const carouselRef = useRef(null);
 
@@ -287,6 +290,8 @@ function HomePage() {
           style={{ "--ac-visible": visible }}
           onMouseEnter={canSlide ? pauseSlide : undefined}
           onMouseLeave={canSlide ? () => { if (!manuallyPausedRef.current) resumeSlide(); } : undefined}
+          onFocus={canSlide ? pauseSlide : undefined}
+          onBlur={canSlide ? (e) => { if (!e.currentTarget.contains(e.relatedTarget) && !manuallyPausedRef.current) resumeSlide(); } : undefined}
         >
           {loading && Array.from({ length: visible }).map((_, i) => <CardSkeleton key={i} />)}
           {visibleProducts.map((product, i) => (
@@ -458,10 +463,12 @@ function HomePage() {
                 placeholder="name@domain.com"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setNewsletterError(""); }}
+                autoComplete="email"
                 aria-invalid={!!newsletterError}
+                aria-describedby={newsletterError ? "newsletter-error" : undefined}
               />
               <button type="submit" className="ac-btn ac-btn--primary">Subscribe</button>
-              {newsletterError && <p className="ac-newsletter__error" role="alert">{newsletterError}</p>}
+              {newsletterError && <p className="ac-newsletter__error" id="newsletter-error" role="alert">{newsletterError}</p>}
             </form>
           )}
         </div>

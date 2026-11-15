@@ -32,7 +32,7 @@ const TABS = [
 function Dashboard({ user, orders, favorites }) {
   return (
     <div className="mp-dashboard">
-      <p className="mp-section-title">Welcome back, {user?.name}</p>
+      <h1 className="mp-section-title">Welcome back, {user?.name}</h1>
       <div className="mp-stats">
         <div className="mp-stat">
           <span className="mp-stat__value">{orders?.length ?? "—"}</span>
@@ -96,7 +96,7 @@ function OrderHistory({ orders, loading }) {
     );
   return (
     <div>
-      <p className="mp-section-title">Order History</p>
+      <h1 className="mp-section-title">Order History</h1>
       <div className="mp-orders">
         {orders.map((order) => (
           <div key={order._id} className="mp-order-card">
@@ -193,7 +193,7 @@ function Favorites({ favorites }) {
   return (
     <div>
       <div className="mp-section-header">
-        <p className="mp-section-title">Your Favorites</p>
+        <h1 className="mp-section-title">Your Favorites</h1>
         <button className="clear-btn" onClick={clearFavorites}>Clear all</button>
       </div>
 
@@ -295,7 +295,7 @@ function SavedAddresses() {
 
   return (
     <div>
-      <p className="mp-section-title">Saved Addresses</p>
+      <h1 className="mp-section-title">Saved Addresses</h1>
       {addresses.length === 0 && !showForm && (
         <p className="mp-empty-text">No addresses saved yet.</p>
       )}
@@ -306,8 +306,8 @@ function SavedAddresses() {
             <p className="mp-address-card__line">{a.street}</p>
             <p className="mp-address-card__line">{a.zip} {a.city}, {a.country}</p>
             <div className="mp-address-card__actions">
-              <button className="mp-address-card__edit" onClick={() => openEdit(a)}>Edit</button>
-              <button className="mp-address-card__remove" onClick={() => { if (confirm("Remove this address?")) persist(addresses.filter((x) => x.id !== a.id)); }}>Remove</button>
+              <button type="button" className="mp-address-card__edit" onClick={() => openEdit(a)}>Edit<span className="ac-visually-hidden"> {a.name}</span></button>
+              <button type="button" className="mp-address-card__remove" aria-label={`Remove ${a.name}`} onClick={() => { if (confirm("Remove this address?")) persist(addresses.filter((x) => x.id !== a.id)); }}>Remove</button>
             </div>
           </div>
         ))}
@@ -315,40 +315,60 @@ function SavedAddresses() {
       {showForm ? (
         <form className="mp-form" onSubmit={handleSave}>
           <input
+            id="address-name"
+            aria-label="Address label"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? "address-name-error" : undefined}
             className={`mp-input${errors.name ? " mp-input--error" : ""}`}
             placeholder="Label (e.g. Home)" value={form.name} onChange={handleChange("name")}
           />
-          {errors.name && <p className="mp-field-error">{errors.name}</p>}
+          {errors.name && <p className="mp-field-error" id="address-name-error" role="alert">{errors.name}</p>}
           <input
+            id="address-street"
+            aria-label="Street address"
+            aria-invalid={!!errors.street}
+            aria-describedby={errors.street ? "address-street-error" : undefined}
             className={`mp-input${errors.street ? " mp-input--error" : ""}`}
             placeholder="Street address" value={form.street} onChange={handleChange("street")}
             autoComplete="street-address"
           />
-          {errors.street && <p className="mp-field-error">{errors.street}</p>}
+          {errors.street && <p className="mp-field-error" id="address-street-error" role="alert">{errors.street}</p>}
           <div className="mp-form__row">
             <div>
               <input
+                id="address-zip"
+                aria-label="Postal code"
+                aria-invalid={!!errors.zip}
+                aria-describedby={errors.zip ? "address-zip-error" : undefined}
                 className={`mp-input${errors.zip ? " mp-input--error" : ""}`}
                 placeholder="ZIP" value={form.zip} onChange={handleChange("zip")}
                 inputMode="numeric" autoComplete="postal-code"
               />
-              {errors.zip && <p className="mp-field-error">{errors.zip}</p>}
+              {errors.zip && <p className="mp-field-error" id="address-zip-error" role="alert">{errors.zip}</p>}
             </div>
             <div>
               <input
+                id="address-city"
+                aria-label="City"
+                aria-invalid={!!errors.city}
+                aria-describedby={errors.city ? "address-city-error" : undefined}
                 className={`mp-input${errors.city ? " mp-input--error" : ""}`}
                 placeholder="City" value={form.city} onChange={handleChange("city")}
                 autoComplete="address-level2"
               />
-              {errors.city && <p className="mp-field-error">{errors.city}</p>}
+              {errors.city && <p className="mp-field-error" id="address-city-error" role="alert">{errors.city}</p>}
             </div>
           </div>
           <input
+            id="address-country"
+            aria-label="Country"
+            aria-invalid={!!errors.country}
+            aria-describedby={errors.country ? "address-country-error" : undefined}
             className={`mp-input${errors.country ? " mp-input--error" : ""}`}
             placeholder="Country" value={form.country} onChange={handleChange("country")}
             autoComplete="country-name"
           />
-          {errors.country && <p className="mp-field-error">{errors.country}</p>}
+          {errors.country && <p className="mp-field-error" id="address-country-error" role="alert">{errors.country}</p>}
           <div className="mp-form__actions">
             <button type="submit" className="mp-btn-primary">{editingId ? "Update Address" : "Save Address"}</button>
             <button type="button" className="mp-btn-secondary" onClick={handleCancel}>Cancel</button>
@@ -431,39 +451,45 @@ function ProfileSettings({ user }) {
 
   return (
     <div>
-      <p className="mp-section-title">Profile Settings</p>
+      <h1 className="mp-section-title">Profile Settings</h1>
 
-      <p className="mp-subsection-title">Change Username</p>
+      <h2 className="mp-subsection-title">Change Username</h2>
       <p className="mp-current-value">Current: <strong>{user?.name}</strong></p>
       <form className="mp-form" onSubmit={handleNameSave}>
-        <label className="mp-label">New Username</label>
+        <label className="mp-label" htmlFor="profile-name">New Username</label>
         <input
+          id="profile-name"
+          aria-invalid={!!nameError}
+          aria-describedby={nameError ? "profile-name-error" : undefined}
           className={`mp-input${nameError ? " mp-input--error" : ""}`}
           value={nameNew}
           onChange={(e) => { setNameNew(e.target.value); setNameError(""); }}
           autoComplete="off"
           required
         />
-        <label className="mp-label">Repeat New Username</label>
+        <label className="mp-label" htmlFor="profile-name-repeat">Repeat New Username</label>
         <input
+          id="profile-name-repeat"
+          aria-invalid={!!nameError}
+          aria-describedby={nameError ? "profile-name-error" : undefined}
           className={`mp-input${nameError ? " mp-input--error" : ""}`}
           value={nameRepeat}
           onChange={(e) => { setNameRepeat(e.target.value); setNameError(""); }}
           autoComplete="off"
           required
         />
-        {nameError && <p className="mp-field-error">{nameError}</p>}
+        {nameError && <p className="mp-field-error" id="profile-name-error" role="alert">{nameError}</p>}
         <div className="mp-form__actions">
           <button type="submit" className="mp-btn-primary" disabled={nameLoading}>
             {nameLoading ? "Saving…" : "Update Username"}
           </button>
         </div>
-        {nameSaved && <p className="mp-success">Username updated successfully.</p>}
+        <div role="status">{nameSaved && <p className="mp-success">Username updated successfully.</p>}</div>
       </form>
 
       <hr className="mp-divider" />
 
-      <p className="mp-subsection-title">Change Email</p>
+      <h2 className="mp-subsection-title">Change Email</h2>
       <p className="mp-current-value">Current: <strong>{user?.email}</strong></p>
       {emailPending ? (
         <div className="mp-email-pending">
@@ -477,8 +503,11 @@ function ProfileSettings({ user }) {
         </div>
       ) : (
         <form className="mp-form" onSubmit={handleEmailRequest}>
-          <label className="mp-label">New Email Address</label>
+          <label className="mp-label" htmlFor="profile-email">New Email Address</label>
           <input
+            id="profile-email"
+            aria-invalid={!!emailError}
+            aria-describedby={emailError ? "profile-email-error" : undefined}
             className={`mp-input${emailError ? " mp-input--error" : ""}`}
             type="email"
             value={emailNew}
@@ -486,11 +515,11 @@ function ProfileSettings({ user }) {
             autoComplete="email"
             required
           />
-          {emailError && <p className="mp-field-error">{emailError}</p>}
+          {emailError && <p className="mp-field-error" id="profile-email-error" role="alert">{emailError}</p>}
           <div className="mp-form__actions">
             <button type="submit" className="mp-btn-primary">Send Confirmation</button>
           </div>
-          {emailSaved && <p className="mp-success">Email updated successfully.</p>}
+          <div role="status">{emailSaved && <p className="mp-success">Email updated successfully.</p>}</div>
         </form>
       )}
     </div>
@@ -520,16 +549,16 @@ function ChangePassword() {
 
   return (
     <div>
-      <p className="mp-section-title">Change Password</p>
+      <h1 className="mp-section-title">Change Password</h1>
       <form className="mp-form" onSubmit={handleSave}>
-        <label className="mp-label">Current Password</label>
-        <input className="mp-input" type="password" value={form.current} onChange={(e) => setForm({ ...form, current: e.target.value })} autoComplete="current-password" required />
-        <label className="mp-label">New Password</label>
-        <input className="mp-input" type="password" value={form.next} onChange={(e) => setForm({ ...form, next: e.target.value })} autoComplete="new-password" required />
-        <label className="mp-label">Confirm New Password</label>
-        <input className="mp-input" type="password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} autoComplete="new-password" required />
-        {error && <p className="mp-error">{error}</p>}
-        {saved && <p className="mp-success">Password updated.</p>}
+        <label className="mp-label" htmlFor="password-current">Current Password</label>
+        <input id="password-current" className="mp-input" type="password" value={form.current} onChange={(e) => setForm({ ...form, current: e.target.value })} autoComplete="current-password" required />
+        <label className="mp-label" htmlFor="password-new">New Password</label>
+        <input id="password-new" className="mp-input" type="password" value={form.next} onChange={(e) => setForm({ ...form, next: e.target.value })} autoComplete="new-password" required />
+        <label className="mp-label" htmlFor="password-confirm">Confirm New Password</label>
+        <input id="password-confirm" className="mp-input" type="password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} autoComplete="new-password" required />
+        <div role="alert">{error && <p className="mp-error">{error}</p>}</div>
+        <div role="status">{saved && <p className="mp-success">Password updated.</p>}</div>
         <div className="mp-form__actions">
           <button type="submit" className="mp-btn-primary">Update Password</button>
         </div>
@@ -570,14 +599,14 @@ function MyPagesPage() {
         </nav>
       </aside>
 
-      <main className="mp-content">
+      <div className="mp-content">
         {activeTab === "dashboard" && <Dashboard user={user} orders={orders} favorites={favorites} />}
         {activeTab === "orders"    && <OrderHistory orders={orders} loading={ordersLoading} />}
         {activeTab === "favorites" && <Favorites favorites={favorites} />}
         {activeTab === "addresses" && <SavedAddresses />}
         {activeTab === "profile"   && <ProfileSettings user={user} />}
         {activeTab === "password"  && <ChangePassword />}
-      </main>
+      </div>
     </div>
   );
 }

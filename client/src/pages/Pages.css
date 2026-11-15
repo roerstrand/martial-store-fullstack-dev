@@ -817,7 +817,7 @@ img[src*="ancle_guards"] {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(247, 243, 227, 0.55);
+  color: rgba(247, 243, 227, 0.82);
   margin-bottom: 0.85rem;
   display: flex;
   align-items: center;
@@ -1084,7 +1084,7 @@ img[src*="ancle_guards"] {
 }
 
 .home-shelf__editorial-sub {
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.82);
   font-family: var(--font-heading);
   font-size: 0.65rem;
   text-transform: uppercase;
@@ -1366,9 +1366,9 @@ img[src*="ancle_guards"] {
   font-size: 0.68rem;
   color: var(--color-secondary);
 }
-.shelf-stars--dark .shelf-star { color: rgba(247,243,227,0.25); }
+.shelf-stars--dark .shelf-star { color: rgba(247,243,227,0.82); }
 .shelf-stars--dark .shelf-star--on { color: #f5a623; }
-.shelf-stars--dark .shelf-stars__count { color: rgba(247,243,227,0.45); }
+.shelf-stars--dark .shelf-stars__count { color: rgba(247,243,227,0.82); }
 
 .shelf-stock {
   font-family: var(--font-ui);
@@ -1444,7 +1444,7 @@ img[src*="ancle_guards"] {
 }
 
 .home-shelf-card--sale .home-shelf-card__price--original {
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
 }
 
 .home-shelf-card__price--sale {
@@ -1681,7 +1681,7 @@ img[src*="ancle_guards"] {
 .home-newsletter__sub {
   font-family: var(--font-ui);
   font-size: 0.85rem;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0 0 1.4rem;
 }
 
@@ -1706,7 +1706,7 @@ img[src*="ancle_guards"] {
 }
 
 .home-newsletter__input::placeholder {
-  color: rgba(247, 243, 227, 0.3);
+  color: rgba(247, 243, 227, 0.82);
 }
 
 .home-newsletter__input:focus {
@@ -1756,7 +1756,7 @@ img[src*="ancle_guards"] {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(247,243,227,0.45);
+  color: rgba(247,243,227,0.82);
   text-align: center;
   margin-bottom: 2rem;
   display: flex;
@@ -1818,7 +1818,7 @@ img[src*="ancle_guards"] {
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(247,243,227,0.55);
+  color: rgba(247,243,227,0.82);
   text-align: center;
 }
 
@@ -1846,7 +1846,7 @@ img[src*="ancle_guards"] {
 
 .home-testimonial-star {
   font-size: 0.8rem;
-  color: rgba(247,243,227,0.15);
+  color: rgba(247,243,227,0.82);
   line-height: 1;
 }
 
@@ -1882,7 +1882,7 @@ img[src*="ancle_guards"] {
 .home-testimonial-card__discipline {
   font-family: var(--font-ui);
   font-size: 0.62rem;
-  color: rgba(247,243,227,0.48);
+  color: rgba(247,243,227,0.82);
 }
 
 
@@ -1922,7 +1922,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-italic);
   font-style: italic;
   font-size: 0.85rem;
-  color: rgba(247, 243, 227, 0.4);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0 0 1.75rem;
 }
 
@@ -1997,7 +1997,7 @@ img[src*="ancle_guards"] {
 
 .auth-card .auth-btn-secondary {
   background: linear-gradient(180deg, rgba(247,243,227,0.08) 0%, rgba(247,243,227,0.04) 100%);
-  color: rgba(247, 243, 227, 0.65);
+  color: rgba(247, 243, 227, 0.82);
   border-color: rgba(247, 243, 227, 0.18);
   box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
 }
@@ -2227,7 +2227,7 @@ img[src*="ancle_guards"] {
 .products-search__clear {
   background: none;
   border: none;
-  color: rgba(247, 243, 227, 0.5);
+  color: rgba(247, 243, 227, 0.82);
   font-size: 0.8rem;
   cursor: pointer;
   padding: 0.2rem 0.3rem;
@@ -2470,7 +2470,7 @@ img[src*="ancle_guards"] {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(247, 243, 227, 0.7);
+  color: rgba(247, 243, 227, 0.82);
   background: rgba(0,0,0,0.45);
   padding: 0.15rem 0.45rem;
   border-radius: 0.2rem;
@@ -2502,7 +2502,7 @@ img[src*="ancle_guards"] {
 .product-card__review-count {
   font-family: var(--font-ui);
   font-size: 0.65rem;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   margin-left: 0.2rem;
 }
 
@@ -2533,7 +2533,7 @@ img[src*="ancle_guards"] {
 
 .star {
   font-size: 0.75rem;
-  color: rgba(247, 243, 227, 0.2);
+  color: rgba(247, 243, 227, 0.82);
   line-height: 1;
 }
 
@@ -2974,7 +2974,7 @@ img[src*="ancle_guards"] {
 }
 
 .cart-header .flow-breadcrumb {
-  color: rgba(247, 243, 227, 0.3);
+  color: rgba(247, 243, 227, 0.82);
   padding-bottom: 0.4rem;
 }
 
@@ -3111,7 +3111,7 @@ img[src*="ancle_guards"] {
 }
 
 .cart-item__meta-label {
-  color: rgba(247, 243, 227, 0.38);
+  color: rgba(247, 243, 227, 0.82);
   font-family: var(--font-heading);
   font-size: 0.62rem;
   text-transform: uppercase;
@@ -3126,7 +3126,7 @@ img[src*="ancle_guards"] {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: rgba(247, 243, 227, 0.5);
+  color: rgba(247, 243, 227, 0.82);
 }
 
 
@@ -3306,7 +3306,7 @@ img[src*="ancle_guards"] {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(247, 243, 227, 0.55);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0 0 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid rgba(247, 243, 227, 0.08);
@@ -3326,14 +3326,14 @@ img[src*="ancle_guards"] {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
-  color: rgba(247, 243, 227, 0.6);
+  color: rgba(247, 243, 227, 0.82);
 }
 
 .cart-summary__label { font-weight: 700; }
 
 .cart-summary__shipping-note {
   font-size: 0.7rem;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   text-transform: none;
   letter-spacing: 0;
   font-style: italic;
@@ -3944,7 +3944,7 @@ img[src*="ancle_guards"] {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(247, 243, 227, 0.75);
+  color: rgba(247, 243, 227, 0.82);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4000,7 +4000,7 @@ img[src*="ancle_guards"] {
 
 .fav-card__size-btn {
   background: rgba(247, 243, 227, 0.08);
-  color: rgba(247, 243, 227, 0.65);
+  color: rgba(247, 243, 227, 0.82);
   font-family: var(--font-heading);
   font-size: 0.7rem;
   font-weight: 700;
@@ -4270,7 +4270,7 @@ img[src*="ancle_guards"] {
 .mp-sidebar__email {
   font-family: var(--font-ui);
   font-size: 0.65rem;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0;
 }
 
@@ -4287,7 +4287,7 @@ img[src*="ancle_guards"] {
   text-align: left;
   font-family: var(--font-ui);
   font-size: 0.82rem;
-  color: rgba(247, 243, 227, 0.6);
+  color: rgba(247, 243, 227, 0.82);
   padding: 0.55rem 0.75rem;
   border-radius: 0.3rem;
   cursor: pointer;
@@ -4420,7 +4420,7 @@ img[src*="ancle_guards"] {
   gap: 1rem;
   padding: 0.6rem 1rem;
   background: var(--color-dark);
-  color: rgba(247,243,227,0.6);
+  color: rgba(247,243,227,0.82);
   font-family: var(--font-heading);
   font-size: 0.62rem;
   text-transform: uppercase;
@@ -4953,7 +4953,7 @@ img[src*="ancle_guards"] {
 .my-pages-header__email {
   font-family: var(--font-ui);
   font-size: 0.8rem;
-  color: rgba(247,243,227,0.38);
+  color: rgba(247,243,227,0.82);
   margin: 0;
 }
 
@@ -4967,7 +4967,7 @@ img[src*="ancle_guards"] {
   font-size: 0.55rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
   margin: 0 0 1rem;
 }
 
@@ -4986,7 +4986,7 @@ img[src*="ancle_guards"] {
   font-size: 0.52rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: rgba(247,243,227,0.28);
+  color: rgba(247,243,227,0.82);
   gap: 1rem;
 }
 
@@ -5010,7 +5010,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-heading);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
-  color: rgba(247,243,227,0.65);
+  color: rgba(247,243,227,0.82);
 }
 
 .my-pages-table__status {
@@ -5018,15 +5018,15 @@ img[src*="ancle_guards"] {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(247,243,227,0.45);
+  color: rgba(247,243,227,0.82);
 }
 
 .my-pages-table__status--shipped,
-.my-pages-table__status--processing { color: rgba(247,243,227,0.75); }
+.my-pages-table__status--processing { color: rgba(247,243,227,0.82); }
 
 .my-pages-table__status--delivered { color: rgba(247,243,227,0.95); }
 
-.my-pages-table__status--cancelled { color: rgba(247,243,227,0.25); text-decoration: line-through; }
+.my-pages-table__status--cancelled { color: rgba(247,243,227,0.82); text-decoration: line-through; }
 
 .my-pages-table__total {
   font-family: var(--font-heading);
@@ -5058,7 +5058,7 @@ img[src*="ancle_guards"] {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(247,243,227,0.25);
+  color: rgba(247,243,227,0.82);
 }
 
 /* ============================================
@@ -5075,7 +5075,7 @@ img[src*="ancle_guards"] {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
   text-align: center;
   margin-bottom: 1.25rem;
 }
@@ -5101,7 +5101,7 @@ img[src*="ancle_guards"] {
 .home-testimonial__text {
   font-family: var(--font-ui);
   font-size: 0.78rem;
-  color: rgba(247,243,227,0.7);
+  color: rgba(247,243,227,0.82);
   line-height: 1.5;
   flex: 1;
   font-style: italic;
@@ -5127,7 +5127,7 @@ img[src*="ancle_guards"] {
 .home-testimonial__role {
   font-family: var(--font-ui);
   font-size: 0.62rem;
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
 }
 
 /* ============================================
@@ -5147,7 +5147,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-heading);
   font-size: 0.75rem;
   font-weight: 700;
-  color: rgba(247,243,227,0.75);
+  color: rgba(247,243,227,0.82);
 }
 
 .product-detail__sold {
@@ -5155,7 +5155,7 @@ img[src*="ancle_guards"] {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(247,243,227,0.4);
+  color: rgba(247,243,227,0.82);
   margin-left: auto;
 }
 
@@ -5172,7 +5172,7 @@ img[src*="ancle_guards"] {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
   margin-bottom: 1rem;
 }
 
@@ -5205,20 +5205,20 @@ img[src*="ancle_guards"] {
 .product-review__date {
   font-family: var(--font-ui);
   font-size: 0.62rem;
-  color: rgba(247,243,227,0.3);
+  color: rgba(247,243,227,0.82);
   margin-left: auto;
 }
 
 .product-review__text {
   font-family: var(--font-ui);
   font-size: 0.82rem;
-  color: rgba(247,243,227,0.65);
+  color: rgba(247,243,227,0.82);
   line-height: 1.55;
   font-style: italic;
 }
 
 /* Shared star styles */
-.star { color: rgba(247,243,227,0.18); font-size: 0.85rem; }
+.star { color: rgba(247,243,227,0.82); font-size: 0.85rem; }
 .star--filled { color: #f5a623; }
 
 /* ============================================
@@ -5261,7 +5261,7 @@ img[src*="ancle_guards"] {
 .contact-hero__sub {
   font-family: var(--font-ui);
   font-size: 0.9rem;
-  color: rgba(247,243,227,0.45);
+  color: rgba(247,243,227,0.82);
   margin: 0;
 }
 
@@ -5283,7 +5283,7 @@ img[src*="ancle_guards"] {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
   margin: 0;
 }
 .contact-info__items { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -5298,14 +5298,14 @@ img[src*="ancle_guards"] {
 .contact-info__value {
   font-family: var(--font-ui);
   font-size: 0.83rem;
-  color: rgba(247,243,227,0.7);
+  color: rgba(247,243,227,0.82);
   line-height: 1.6;
 }
 .contact-social-links { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.3rem; }
 .contact-social-link {
   font-family: var(--font-ui);
   font-size: 0.82rem;
-  color: rgba(247,243,227,0.5);
+  color: rgba(247,243,227,0.82);
   text-decoration: none;
   transition: color 0.18s ease;
 }
@@ -5485,7 +5485,7 @@ img[src*="ancle_guards"] {
   letter-spacing: 0.14em;
   font-weight: 700;
   margin-bottom: 0.6rem;
-  color: rgba(247, 243, 227, 0.35);
+  color: rgba(247, 243, 227, 0.82);
 }
 
 .filter-col {
@@ -5501,7 +5501,7 @@ img[src*="ancle_guards"] {
 
 .filter-option {
   background: rgba(247, 243, 227, 0.06);
-  color: rgba(247, 243, 227, 0.55);
+  color: rgba(247, 243, 227, 0.82);
   font-family: var(--font-heading);
   font-size: 0.62rem;
   text-transform: uppercase;
@@ -5550,10 +5550,10 @@ img[src*="ancle_guards"] {
   border-color: rgba(214, 40, 57, 0.5);
 }
 
-.filter-price-input::placeholder { color: rgba(247,243,227,0.25); }
+.filter-price-input::placeholder { color: rgba(247,243,227,0.82); }
 
 .filter-price-sep {
-  color: rgba(247, 243, 227, 0.3);
+  color: rgba(247, 243, 227, 0.82);
   font-size: 0.8rem;
 }
 
@@ -5567,7 +5567,7 @@ img[src*="ancle_guards"] {
   border: none;
   font-size: 1.3rem;
   cursor: pointer;
-  color: rgba(247, 243, 227, 0.2);
+  color: rgba(247, 243, 227, 0.82);
   padding: 0;
   line-height: 1;
   transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -5586,7 +5586,7 @@ img[src*="ancle_guards"] {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   cursor: pointer;
-  color: rgba(247, 243, 227, 0.55);
+  color: rgba(247, 243, 227, 0.82);
   margin-top: 0.35rem;
 }
 
@@ -5627,7 +5627,7 @@ img[src*="ancle_guards"] {
 
 .filter-reset-btn {
   background: transparent;
-  color: rgba(247, 243, 227, 0.4);
+  color: rgba(247, 243, 227, 0.82);
   font-family: var(--font-heading);
   font-size: 0.62rem;
   text-transform: uppercase;
@@ -5807,7 +5807,7 @@ img[src*="ancle_guards"] {
 .article-page__author {
   font-family: var(--font-ui);
   font-size: 0.78rem;
-  color: rgba(247,243,227,0.6);
+  color: rgba(247,243,227,0.82);
 }
 
 .article-page__read-time {
@@ -5815,13 +5815,13 @@ img[src*="ancle_guards"] {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(247,243,227,0.35);
+  color: rgba(247,243,227,0.82);
 }
 
 .article-page__read-time::before {
   content: '·';
   margin-right: 1rem;
-  color: rgba(247,243,227,0.2);
+  color: rgba(247,243,227,0.82);
 }
 
 .article-page__body {
@@ -5835,7 +5835,7 @@ img[src*="ancle_guards"] {
   font-style: italic;
   font-size: 1.05rem;
   line-height: 1.65;
-  color: rgba(247,243,227,0.65);
+  color: rgba(247,243,227,0.82);
   border-left: 2px solid var(--color-accent);
   padding-left: 1.1rem;
   margin-bottom: 2rem;
@@ -5845,7 +5845,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-ui);
   font-size: 0.95rem;
   line-height: 1.85;
-  color: rgba(247,243,227,0.75);
+  color: rgba(247,243,227,0.82);
   margin-bottom: 1.4rem;
 }
 
@@ -5878,7 +5878,7 @@ img[src*="ancle_guards"] {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(247, 243, 227, 0.4);
+  color: rgba(247, 243, 227, 0.82);
 }
 
 .articles-grid {
@@ -5943,7 +5943,7 @@ img[src*="ancle_guards"] {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(247, 243, 227, 0.7);
+  color: rgba(247, 243, 227, 0.82);
   background: rgba(0,0,0,0.4);
   padding: 0.15rem 0.45rem;
   border-radius: 0.2rem;
@@ -5973,7 +5973,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-ui);
   font-size: 0.72rem;
   line-height: 1.55;
-  color: rgba(247, 243, 227, 0.55);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -5985,7 +5985,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-italic);
   font-style: italic;
   font-size: 0.68rem;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   margin-top: auto;
 }
 
@@ -6161,7 +6161,7 @@ img[src*="ancle_guards"] {
   font-family: var(--font-italic);
   font-style: italic;
   font-size: 0.82rem;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   margin-bottom: 1.25rem;
 }
 
@@ -6186,7 +6186,7 @@ img[src*="ancle_guards"] {
 }
 
 .home-newsletter__input::placeholder {
-  color: rgba(247, 243, 227, 0.3);
+  color: rgba(247, 243, 227, 0.82);
 }
 
 .home-newsletter__input:focus {
@@ -6489,7 +6489,7 @@ img[src*="ancle_guards"] {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(247, 243, 227, 0.45);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0 0 1rem;
   display: flex;
   align-items: center;
@@ -6552,7 +6552,7 @@ img[src*="ancle_guards"] {
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: rgba(247, 243, 227, 0.7);
+  color: rgba(247, 243, 227, 0.82);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -6689,7 +6689,7 @@ img[src*="ancle_guards"] {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(247, 243, 227, 0.65);
+  color: rgba(247, 243, 227, 0.82);
   margin-right: 0.25rem;
 }
 
@@ -6703,7 +6703,7 @@ img[src*="ancle_guards"] {
   padding: 0.4rem 1.1rem;
   border-radius: 2rem;
   transition: box-shadow 0.2s, background 0.2s, border-color 0.2s;
-  color: rgba(247, 243, 227, 0.75);
+  color: rgba(247, 243, 227, 0.82);
   border: 1px solid rgba(247, 243, 227, 0.2);
   background: transparent;
 }
