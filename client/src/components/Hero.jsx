@@ -13,7 +13,7 @@ function Hero({ children }) {
   };
 
   return (
-    <section className="ac-hero">
+    <div className="ac-hero">
       <div className="ac-hero__media">
         <img src="/images/misc/woman_headkick.jpg" alt="" className="ac-hero__img" fetchPriority="high" />
         <div className="ac-hero__shade" />
@@ -21,10 +21,10 @@ function Hero({ children }) {
 
       {children}
 
-      <div className="ac-hero__content">
+      <section className="ac-hero__content" aria-labelledby="hero-title">
         <p className="ac-eyebrow ac-eyebrow--light">Premium equipment · Martial arts</p>
-        <h1 className="ac-hero__title">
-          <span>Fight</span>
+        <h1 className="ac-hero__title" id="hero-title">
+          <span>Fight</span>{" "}
           <span>Gear</span>
         </h1>
         <p className="ac-hero__sub">
@@ -36,7 +36,7 @@ function Hero({ children }) {
           </Link>
           <Link to="/products?sale=true" className="ac-btn ac-btn--glass ac-btn--lg">Shop Sale</Link>
         </div>
-      </div>
+      </section>
 
       <form className="ac-hero__search ac-glass-frost" onSubmit={handleSearch} role="search">
         <label htmlFor="hero-search" className="ac-hero__search-label">
@@ -56,7 +56,7 @@ function Hero({ children }) {
         </div>
         <button type="submit" className="ac-btn ac-btn--ink">Search</button>
       </form>
-    </section>
+    </div>
   );
 }
 

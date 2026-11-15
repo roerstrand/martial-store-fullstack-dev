@@ -1,0 +1,166 @@
+html { scroll-padding-top: 6.5rem; }
+
+.ac-skip {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10000;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--ac-pill);
+  background: var(--ac-ink);
+  color: var(--ac-bone);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.ac-skip:focus,
+.ac-skip:focus-visible { transform: none; color: var(--ac-bone); }
+
+main:focus { outline: none; }
+
+:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]), [role="radio"], [role="button"]):focus-visible {
+  outline: 3px solid var(--ac-focus) !important;
+  outline-offset: 2px !important;
+}
+
+:where(.ac-nav--dark, .ac-glass-smoke, .ac-hero, .ac-footer, .ac-card--dark, .ac-proof, .ac-btn--glass, .ac-totop, .cart-toast, .fav-toast, .contact-page, .article-page, .auth-card, .ac-story-lead)
+  :where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]), [role="radio"]):focus-visible,
+:where(.ac-btn--glass, .ac-totop):focus-visible {
+  outline-color: var(--ac-focus-on-dark) !important;
+}
+
+.ac-stars__icons { color: var(--ac-star); }
+.ac-stars__off { color: var(--ac-text-3); }
+.ac-card--dark .ac-stars__icons { color: var(--ac-star-on-dark); }
+.ac-card--dark .ac-stars__off { color: var(--ac-text-3-on-dark); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.ac-hero__shade {
+  background:
+    linear-gradient(180deg, rgba(16, 12, 12, 0.62) 0%, rgba(16, 12, 12, 0.18) 18%, rgba(16, 12, 12, 0) 32%),
+    linear-gradient(0deg, rgba(16, 12, 12, 0.45) 0%, rgba(16, 12, 12, 0) 30%),
+    linear-gradient(90deg, rgba(16, 12, 12, 0.72) 0%, rgba(16, 12, 12, 0.5) 30%, rgba(16, 12, 12, 0) 62%);
+}
+
+.ac-nav--dark .ac-nav__bar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 55%, rgba(255, 255, 255, 0.06) 100%),
+    rgba(16, 12, 12, 0.42);
+}
+
+.ac-nav--dark .ac-nav__link--sale { color: var(--ac-red-on-dark); }
+
+.ac-btn--glass { background: var(--ac-smoke-sheen), rgba(16, 12, 12, 0.48); }
+.ac-btn--glass:hover { background: var(--ac-smoke-sheen), rgba(16, 12, 12, 0.62); }
+
+.ac-proof::before {
+  background:
+    linear-gradient(180deg, rgba(14, 9, 7, 0.72) 0%, rgba(14, 9, 7, 0.55) 40%, rgba(14, 9, 7, 0.6) 100%),
+    radial-gradient(50% 50% at 0% 0%, rgba(214, 40, 57, 0.22), transparent 70%);
+}
+
+.ac-proof__num em,
+.ac-story-meta__cat { color: var(--ac-red-on-dark); }
+.ac-story-card .ac-story-meta__cat { color: var(--ac-red-text); }
+.ac-story-meta__by { opacity: 1; }
+
+.ac-discipline::after { background: linear-gradient(0deg, rgba(16, 12, 12, 0.72), rgba(16, 12, 12, 0.2) 55%, transparent 80%); }
+
+.ac-badge--glass { background: var(--ac-smoke-sheen), rgba(16, 12, 12, 0.72); }
+.ac-card__cat.ac-glass-thin { background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 60%), rgba(16, 12, 12, 0.72); }
+
+.flow-breadcrumb { background: var(--ac-pane-smoke), rgba(16, 12, 12, 0.55) !important; }
+.flow-breadcrumb, .flow-breadcrumb * { color: rgba(255, 255, 255, 0.9) !important; }
+.flow-breadcrumb .flow-breadcrumb__step--active { color: #fff !important; }
+.confirmation-page .flow-breadcrumb .flow-breadcrumb__step--active { color: var(--ac-red-on-dark) !important; }
+
+.contact-hero__eyebrow,
+.contact-info__label,
+.admin-header__eyebrow { color: var(--ac-red-on-dark) !important; }
+
+.confirmation-track-link { color: var(--ac-red-text) !important; }
+
+.favorites-empty p,
+.mp-stat__label { color: var(--ac-text-3) !important; }
+
+.auth-label {
+  align-self: flex-start;
+  margin: 0.35rem 0 -0.35rem 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ac-on-dark);
+}
+
+::placeholder { color: var(--ac-text-3); opacity: 1; }
+:where(.auth-card, .ac-glass-smoke, .contact-info, .admin-page, .mp-page) ::placeholder { color: rgba(245, 240, 232, 0.78); }
+
+.klarna-modal__option:has(input:focus-visible) {
+  outline: 3px solid var(--ac-focus);
+  outline-offset: 2px;
+}
+.klarna-modal__title { font-size: 1.1rem; text-transform: none; letter-spacing: 0; line-height: 1.3; }
+.klarna-modal__error { color: var(--ac-red-text); font-weight: 600; }
+.klarna-modal__error-sub { font-size: 0.8rem; color: var(--ac-text-3); }
+
+.ac-notfound__code { background: linear-gradient(180deg, #d62839, #8f1622); -webkit-background-clip: text; background-clip: text; }
+
+.app .mp-sidebar__avatar { background: linear-gradient(180deg, var(--ac-red-deep), #8f1622) !important; }
+
+@media (max-width: 767px) {
+  .ac-hero__shade {
+    background:
+      linear-gradient(180deg, rgba(16, 12, 12, 0.62) 0%, rgba(16, 12, 12, 0.3) 22%, rgba(16, 12, 12, 0.3) 60%, rgba(16, 12, 12, 0.6) 100%),
+      linear-gradient(90deg, rgba(16, 12, 12, 0.45) 0%, rgba(16, 12, 12, 0.15) 100%);
+  }
+}
+
+.ac-story-lead__panel.ac-glass-smoke { background: linear-gradient(150deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 50%), rgba(16, 12, 12, 0.8); }
+
+.admin-stats-row { flex-wrap: wrap; }
+.admin-stats-row > .admin-stat-card { flex: 1 1 8.5rem; min-width: 0; }
+
+@media (max-width: 374px) {
+  .ac-nav__bar { gap: 0.25rem; padding-inline: 0.5rem 0.25rem; }
+  .ac-nav__brand { gap: 0.35rem; min-width: 0; }
+  .ac-nav__brand img { width: 1.75rem; height: 1.75rem; }
+  .ac-nav__brand span { font-size: 0.85rem; }
+  .ac-nav__right { gap: 0.1rem; }
+  .ac-nav__icon { width: 2.25rem; height: 2.25rem; }
+}
+
+.app :is(.contact-input, .mp-input, .filter-price-input, .ac-field input, .ac-field select, .ac-field textarea),
+.app :is(.ac-hero__search-field, .ac-search) {
+  border-color: #8a7c72 !important;
+}
+
+.app :is(.contact-input, .mp-input, .filter-price-input, .ac-field input, .ac-field textarea, .ac-hero__search-field input, .ac-search input)::placeholder {
+  color: var(--ac-text-3) !important;
+  opacity: 1;
+}
+
+.app :is(.apex-input, .admin-input, .admin-status-select, .ac-newsletter input) {
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.app :is(.apex-input, .admin-input, .ac-newsletter input)::placeholder {
+  color: rgba(245, 240, 232, 0.78) !important;
+  opacity: 1;
+}
+
+.app .mp-input--error,
+.app .ac-field--error input { border-color: var(--ac-red-text) !important; }
+
+h1.confirmation-section-title { margin-top: 0; }

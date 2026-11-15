@@ -34,8 +34,8 @@ beforeEach(() => {
 
 describe('LoginPage', () => {
   const submit = async (username = 'ninja', password = 'secret') => {
-    await userEvent.type(screen.getByPlaceholderText('Username'), username)
-    await userEvent.type(screen.getByPlaceholderText('Password'), password)
+    await userEvent.type(screen.getByLabelText('Username'), username)
+    await userEvent.type(screen.getByLabelText('Password'), password)
     await userEvent.click(screen.getByRole('button', { name: /login/i }))
   }
 
@@ -65,7 +65,7 @@ describe('LoginPage', () => {
 
     await submit()
 
-    expect(await screen.findByText('Invalid credentials')).toBeInTheDocument()
+    expect(await screen.findByRole('alert')).toHaveTextContent('Invalid credentials')
   })
 
   it('explains when the server is unreachable', async () => {
@@ -78,12 +78,30 @@ describe('LoginPage', () => {
   })
 })
 
+describe('LoginPage fields', () => {
+  it('gives the fields autocomplete hints', () => {
+    renderAt('/login')
+
+    expect(screen.getByLabelText('Username')).toHaveAttribute('autocomplete', 'username')
+    expect(screen.getByLabelText('Password')).toHaveAttribute('autocomplete', 'current-password')
+  })
+})
+
 describe('RegisterPage', () => {
+  it('gives the fields autocomplete hints', () => {
+    renderAt('/register')
+
+    expect(screen.getByLabelText('Username')).toHaveAttribute('autocomplete', 'username')
+    expect(screen.getByLabelText('Email')).toHaveAttribute('autocomplete', 'email')
+    expect(screen.getByLabelText('Password')).toHaveAttribute('autocomplete', 'new-password')
+    expect(screen.getByLabelText('Repeat password')).toHaveAttribute('autocomplete', 'new-password')
+  })
+
   const fill = async ({ name = 'ninja', email = 'ninja@test.com', password = 'secret1', repeat = password } = {}) => {
-    await userEvent.type(screen.getByPlaceholderText('Username'), name)
-    await userEvent.type(screen.getByPlaceholderText('Email'), email)
-    await userEvent.type(screen.getByPlaceholderText('Password'), password)
-    await userEvent.type(screen.getByPlaceholderText('Repeat Password'), repeat)
+    await userEvent.type(screen.getByLabelText('Username'), name)
+    await userEvent.type(screen.getByLabelText('Email'), email)
+    await userEvent.type(screen.getByLabelText('Password'), password)
+    await userEvent.type(screen.getByLabelText('Repeat password'), repeat)
     await userEvent.click(screen.getByRole('button', { name: /register/i }))
   }
 
@@ -106,7 +124,7 @@ describe('RegisterPage', () => {
 
     await fill(input)
 
-    expect(screen.getByText(message)).toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent(message)
     expect(register).not.toHaveBeenCalled()
   })
 

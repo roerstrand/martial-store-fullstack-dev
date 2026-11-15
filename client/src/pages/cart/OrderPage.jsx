@@ -23,14 +23,20 @@ function OrderPage() {
   const navigate = useNavigate();
   const { data: order, loading, error } = useFetch(() => getOrder(orderId));
 
-  if (loading) return <p className="loading">Loading order...</p>;
-  if (error) return <p className="loading">Could not load order.</p>;
-  if (!order) return <p className="loading">Order not found.</p>;
+  const status = loading ? "Loading order..." : error ? "Could not load order." : !order ? "Order not found." : null;
+  if (status) {
+    return (
+      <section aria-labelledby="order-status-title">
+        <h1 id="order-status-title" className="ac-visually-hidden">Order</h1>
+        <p className="loading" role="status">{status}</p>
+      </section>
+    );
+  }
 
   return (
     <div className="confirmation-page">
       <PageNav back="/my-pages" backLabel="Back to My Pages" />
-      <p className="confirmation-section-title">Order tracking</p>
+      <h1 className="confirmation-section-title">Order tracking</h1>
 
       <div className="confirmation-row">
         <span className="confirmation-row__label">Order number</span>

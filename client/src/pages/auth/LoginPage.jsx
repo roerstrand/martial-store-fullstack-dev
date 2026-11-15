@@ -44,22 +44,30 @@ function LoginPage() {
         <h1>Login</h1>
         <p className="auth-tagline">Welcome back, warrior</p>
 
-        {error && <div className="auth-error">{error}</div>}
+        <div role="alert">
+          {error && <div className="auth-error" id="login-error">{error}</div>}
+        </div>
 
-        <form className="auth-form" onSubmit={handleLogin} autoComplete="off">
+        <form className="auth-form" onSubmit={handleLogin}>
+          <label htmlFor="login-username" className="auth-label">Username</label>
           <input
+            id="login-username"
             className="apex-input"
             type="text"
             placeholder="Username"
             autoComplete="username"
+            aria-describedby={error ? "login-error" : undefined}
             {...username.inputProps}
             required
           />
+          <label htmlFor="login-password" className="auth-label">Password</label>
           <input
+            id="login-password"
             className="apex-input"
             type="password"
             placeholder="Password"
             autoComplete="current-password"
+            aria-describedby={error ? "login-error" : undefined}
             {...password.inputProps}
             required
           />

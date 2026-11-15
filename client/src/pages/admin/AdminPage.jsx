@@ -199,34 +199,34 @@ function AdminPage() {
                 <p className="admin-form__title">{editProduct ? "Edit product" : "New product"}</p>
                 <div className="admin-form__grid">
                   <div className="admin-form__field">
-                    <label>Title</label>
-                    <input className="admin-input" value={productForm.title} onChange={e => pf("title", e.target.value)} required />
+                    <label htmlFor="admin-title">Title</label>
+                    <input id="admin-title" className="admin-input" value={productForm.title} onChange={e => pf("title", e.target.value)} required />
                   </div>
                   <div className="admin-form__field">
-                    <label>Price (EUR)</label>
-                    <input className="admin-input" type="number" min="1" value={productForm.price} onChange={e => pf("price", e.target.value)} required />
+                    <label htmlFor="admin-price-eur">Price (EUR)</label>
+                    <input id="admin-price-eur" className="admin-input" type="number" min="1" value={productForm.price} onChange={e => pf("price", e.target.value)} required />
                   </div>
                   <div className="admin-form__field admin-form__field--wide">
-                    <label>Description</label>
-                    <textarea className="admin-input admin-textarea" value={productForm.description} onChange={e => pf("description", e.target.value)} required />
+                    <label htmlFor="admin-description">Description</label>
+                    <textarea id="admin-description" className="admin-input admin-textarea" value={productForm.description} onChange={e => pf("description", e.target.value)} required />
                   </div>
                   <div className="admin-form__field">
-                    <label>Category</label>
-                    <select className="admin-input" value={productForm.category} onChange={e => pf("category", e.target.value)}>
+                    <label htmlFor="admin-category">Category</label>
+                    <select id="admin-category" className="admin-input" value={productForm.category} onChange={e => pf("category", e.target.value)}>
                       {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="admin-form__field">
-                    <label>Image filename</label>
-                    <input className="admin-input" value={productForm.image} onChange={e => pf("image", e.target.value)} placeholder="e.g. bjj_gi.jpg" />
+                    <label htmlFor="admin-image-filename">Image filename</label>
+                    <input id="admin-image-filename" className="admin-input" value={productForm.image} onChange={e => pf("image", e.target.value)} placeholder="e.g. bjj_gi.jpg" />
                   </div>
                   <div className="admin-form__field">
-                    <label>Sale %</label>
-                    <input className="admin-input" type="number" min="0" max="100" value={productForm.sale} onChange={e => pf("sale", e.target.value)} />
+                    <label htmlFor="admin-sale">Sale %</label>
+                    <input id="admin-sale" className="admin-input" type="number" min="0" max="100" value={productForm.sale} onChange={e => pf("sale", e.target.value)} />
                   </div>
                   <div className="admin-form__field">
-                    <label>Rating (1–5)</label>
-                    <input className="admin-input" type="number" min="1" max="5" value={productForm.rating} onChange={e => pf("rating", e.target.value)} />
+                    <label htmlFor="admin-rating-1-5">Rating (1–5)</label>
+                    <input id="admin-rating-1-5" className="admin-input" type="number" min="1" max="5" value={productForm.rating} onChange={e => pf("rating", e.target.value)} />
                   </div>
                 </div>
                 <div className="admin-form__actions">
@@ -270,8 +270,8 @@ function AdminPage() {
                   {chartData.length > 0 && (() => {
                     const max = Math.max(...chartData.map(d => d.sold));
                     return (
-                      <div className="admin-chart">
-                        <p className="admin-chart__title">Units sold per product</p>
+                      <div className="admin-chart" role="region" aria-labelledby="admin-chart-title" tabIndex={0}>
+                        <p className="admin-chart__title" id="admin-chart-title">Units sold per product</p>
                         <div className="admin-chart__bars">
                           {chartData.map((d, i) => (
                             <div key={i} className="admin-chart__col">
@@ -307,8 +307,8 @@ function AdminPage() {
                     <span>{p.rating}</span>
                     <span>{p.sold ?? 0}</span>
                     <div className="admin-table__actions">
-                      <button className="admin-btn-edit" onClick={() => openEdit(p)}>Edit</button>
-                      <button className="admin-btn-delete" onClick={() => handleDeleteProduct(p._id)}>Delete</button>
+                      <button type="button" className="admin-btn-edit" onClick={() => openEdit(p)}>Edit<span className="ac-visually-hidden"> {p.title}</span></button>
+                      <button type="button" className="admin-btn-delete" onClick={() => handleDeleteProduct(p._id)}>Delete<span className="ac-visually-hidden"> {p.title}</span></button>
                     </div>
                   </div>
                 ))}
@@ -335,6 +335,7 @@ function AdminPage() {
                     <span>{o.totalPrice} EUR</span>
                     <select
                       className="admin-status-select"
+                      aria-label={`Status for order ${o._id.slice(-8).toUpperCase()}`}
                       value={o.status}
                       onChange={e => handleStatusChange(o._id, e.target.value)}
                     >
@@ -345,10 +346,10 @@ function AdminPage() {
                     <div className="admin-table__actions">
                       <Link to={`/orders/${o._id}`} className="admin-btn-edit">View</Link>
                       {o.status !== "cancelled" && (
-                        <button className="admin-btn-cancel" onClick={() => handleCancelOrder(o._id)}>Cancel</button>
+                        <button type="button" className="admin-btn-cancel" onClick={() => handleCancelOrder(o._id)}>Cancel<span className="ac-visually-hidden"> order {o._id.slice(-8).toUpperCase()}</span></button>
                       )}
                       {o.status === "cancelled" && (
-                        <button className="admin-btn-delete" onClick={() => handleDeleteOrder(o._id)}>Delete</button>
+                        <button type="button" className="admin-btn-delete" onClick={() => handleDeleteOrder(o._id)}>Delete<span className="ac-visually-hidden"> order {o._id.slice(-8).toUpperCase()}</span></button>
                       )}
                     </div>
                   </div>

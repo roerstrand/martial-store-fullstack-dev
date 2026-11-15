@@ -47,7 +47,7 @@ function FavoritesPage() {
         </div>
       ) : favorites.length === 0 ? (
         <div className="favorites-empty">
-          <span className="favorites-empty__icon">♡</span>
+          <span className="favorites-empty__icon" aria-hidden="true">♡</span>
           <p>No favorites yet</p>
           <Link to="/products" className="auth-btn-secondary">BROWSE PRODUCTS ›</Link>
         </div>

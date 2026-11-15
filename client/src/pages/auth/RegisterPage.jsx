@@ -49,13 +49,20 @@ function RegisterPage() {
         <h1>Create Account</h1>
         <p className="auth-tagline">Join the Apex Core family</p>
 
-        {error && <div className="auth-error">{error}</div>}
+        <div role="alert">
+          {error && <div className="auth-error" id="register-error">{error}</div>}
+        </div>
 
         <form className="auth-form" onSubmit={handleRegister}>
-          <input className="apex-input" type="text" placeholder="Username" {...username.inputProps} required />
-          <input className="apex-input" type="email" placeholder="Email" {...email.inputProps} required />
-          <input className="apex-input" type="password" placeholder="Password" {...password.inputProps} required />
-          <input className="apex-input" type="password" placeholder="Repeat Password" {...repeatPassword.inputProps} required />
+          <label htmlFor="register-username" className="auth-label">Username</label>
+          <input id="register-username" className="apex-input" type="text" placeholder="Username" autoComplete="username" {...username.inputProps} required />
+          <label htmlFor="register-email" className="auth-label">Email</label>
+          <input id="register-email" className="apex-input" type="email" placeholder="name@domain.com" autoComplete="email" aria-describedby={error ? "register-error" : undefined} {...email.inputProps} required />
+          <label htmlFor="register-password" className="auth-label">Password</label>
+          <input id="register-password" className="apex-input" type="password" placeholder="At least 6 characters" autoComplete="new-password" aria-describedby="register-password-hint" {...password.inputProps} required />
+          <span id="register-password-hint" className="ac-visually-hidden">At least 6 characters.</span>
+          <label htmlFor="register-repeat" className="auth-label">Repeat password</label>
+          <input id="register-repeat" className="apex-input" type="password" placeholder="Repeat password" autoComplete="new-password" {...repeatPassword.inputProps} required />
           <button type="submit" className="auth-btn-primary" disabled={loading}>
             {loading ? "CREATING..." : "REGISTER ›"}
           </button>
