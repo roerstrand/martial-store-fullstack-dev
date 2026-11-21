@@ -55,15 +55,17 @@ function ProductDetailPage() {
   }
 
   if (loading) return (
-    <div className="skeleton-detail">
-      <div className="skeleton-detail__img" />
-      <div className="skeleton-detail__info">
-        <div className="skeleton-detail__line" style={{ height: "1.4rem", width: "60%" }} />
-        <div className="skeleton-detail__line" style={{ height: "0.8rem", width: "40%" }} />
-        <div className="skeleton-detail__line" style={{ height: "1.1rem", width: "25%" }} />
-        <div className="skeleton-detail__line" style={{ height: "0.7rem", width: "80%" }} />
-        <div className="skeleton-detail__line" style={{ height: "0.7rem", width: "70%" }} />
-        <div className="skeleton-detail__line" style={{ height: "2.5rem", width: "50%", marginTop: "0.5rem" }} />
+    <div style={{ minHeight: "100vh" }}>
+      <div className="skeleton-detail">
+        <div className="skeleton-detail__img" />
+        <div className="skeleton-detail__info">
+          <div className="skeleton-detail__line" style={{ height: "1.4rem", width: "60%" }} />
+          <div className="skeleton-detail__line" style={{ height: "0.8rem", width: "40%" }} />
+          <div className="skeleton-detail__line" style={{ height: "1.1rem", width: "25%" }} />
+          <div className="skeleton-detail__line" style={{ height: "0.7rem", width: "80%" }} />
+          <div className="skeleton-detail__line" style={{ height: "0.7rem", width: "70%" }} />
+          <div className="skeleton-detail__line" style={{ height: "2.5rem", width: "50%", marginTop: "0.5rem" }} />
+        </div>
       </div>
     </div>
   );

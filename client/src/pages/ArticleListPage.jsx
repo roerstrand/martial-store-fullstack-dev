@@ -37,7 +37,7 @@ function ArticleListPage() {
   const { data: raw, loading, error } = useFetch(getArticles);
   const articles = useMemo(() => raw ? shuffle(raw) : [], [raw]);
 
-  if (loading) return <p className="loading">Loading stories...</p>;
+  if (loading) return <div style={{ minHeight: "100vh" }}><p className="loading">Loading stories...</p></div>;
   if (error) return <p className="loading">Could not load articles.</p>;
 
   const withImage = articles.filter((a) => a.image);
