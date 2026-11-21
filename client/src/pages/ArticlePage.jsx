@@ -21,7 +21,7 @@ function ArticlePage() {
   const { id } = useParams();
   const { data: article, loading, error } = useFetch(() => getArticleById(id), [id]);
 
-  if (loading) return <p className="loading">Loading article...</p>;
+  if (loading) return <div style={{ minHeight: "100vh" }}><p className="loading">Loading article...</p></div>;
   if (error || !article) return <p className="loading">Article not found.</p>;
 
   const minutes = readingTime(article.content);
