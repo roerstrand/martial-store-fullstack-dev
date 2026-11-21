@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -9,7 +10,9 @@ function MinimalLayout() {
       <SkipLink />
       <Navbar variant="light" />
       <main id="main" className="content" tabIndex={-1}>
-        <Outlet />
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
     </div>

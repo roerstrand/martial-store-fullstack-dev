@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -12,25 +13,26 @@ import MinimalLayout from "./layouts/MinimalLayout";
 import PrivateRoute from "./components/PrivateRoute";
 
 import HomePage from "./pages/HomePage";
-import ProductListPage from "./pages/products/ProductListPage";
-import ProductDetailPage from "./pages/products/ProductDetailPage";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
-import CartPage from "./pages/cart/CartPage";
-import CheckoutPage from "./pages/cart/CheckoutPage";
-import ContactPage from "./pages/ContactPage";
-import FavoritesPage from "./pages/FavoritesPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import OrderConfirmationPage from "./pages/cart/OrderConfirmationPage";
-import OrderPage from "./pages/cart/OrderPage";
-import MyPagesPage from "./pages/MyPagesPage";
-import ArticlePage from "./pages/ArticlePage";
-import ArticleListPage from "./pages/ArticleListPage";
-import InfoPage from "./pages/InfoPage";
-import AdminPage from "./pages/admin/AdminPage";
 import "./styles/apex-glass.css";
 import "./styles/apex-glass-ui.css";
 import "./styles/accessibility.css";
+
+const ProductListPage = lazy(() => import("./pages/products/ProductListPage"));
+const ProductDetailPage = lazy(() => import("./pages/products/ProductDetailPage"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/auth/RegisterPage"));
+const CartPage = lazy(() => import("./pages/cart/CartPage"));
+const CheckoutPage = lazy(() => import("./pages/cart/CheckoutPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const FavoritesPage = lazy(() => import("./pages/FavoritesPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const OrderConfirmationPage = lazy(() => import("./pages/cart/OrderConfirmationPage"));
+const OrderPage = lazy(() => import("./pages/cart/OrderPage"));
+const MyPagesPage = lazy(() => import("./pages/MyPagesPage"));
+const ArticlePage = lazy(() => import("./pages/ArticlePage"));
+const ArticleListPage = lazy(() => import("./pages/ArticleListPage"));
+const InfoPage = lazy(() => import("./pages/InfoPage"));
+const AdminPage = lazy(() => import("./pages/admin/AdminPage"));
 
 function App() {
   return (
