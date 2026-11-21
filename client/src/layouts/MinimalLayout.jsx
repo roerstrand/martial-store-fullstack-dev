@@ -10,7 +10,7 @@ function MinimalLayout() {
       <SkipLink />
       <Navbar variant="light" />
       <main id="main" className="content" tabIndex={-1}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
           <Outlet />
         </Suspense>
       </main>
